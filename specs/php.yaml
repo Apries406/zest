@@ -1,3 +1,66 @@
-# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+# yaml-language-server: $schema=../schema/spec.schema.json
+# Written for zest (the Fig spec read the options from `php -h` at runtime).
 name: php
 description: Run the PHP interpreter
+icon: php
+options:
+  - name: -a
+    description: Run as an interactive shell
+  - name: -c
+    description: Look for php.ini in this folder, or use this file
+    args: { name: path, template: filepaths }
+  - name: -n
+    description: Use no php.ini file
+  - name: -d
+    description: Set an ini entry, e.g. -d memory_limit=-1
+    args: { name: "key=value" }
+  - name: -e
+    description: Generate extended information for a debugger or profiler
+  - name: -f
+    description: Parse and run a file
+    args: { name: file, template: filepaths }
+  - name: -h
+    description: Show help
+  - name: -i
+    description: Show PHP information (phpinfo)
+  - name: -l
+    description: Check the syntax only (lint)
+    args: { name: file, template: filepaths }
+  - name: -m
+    description: Show the compiled-in modules
+  - name: -r
+    description: Run PHP code without the <?php tag
+    args: { name: code }
+  - name: -S
+    description: Run the built-in web server, e.g. -S localhost:8000
+    args: { name: "address:port", suggestions: ["localhost:8000", "0.0.0.0:8000"] }
+  - name: -t
+    description: Document root for the built-in web server
+    args: { name: folder, template: folders }
+  - name: -s
+    description: Output HTML syntax highlighted source
+  - name: -v
+    description: Show the version
+  - name: -w
+    description: Output source with comments and whitespace removed
+  - name: --ini
+    description: Show the configuration file names
+  - name: --rf
+    description: Show information about a function
+    args: { name: function }
+  - name: --rc
+    description: Show information about a class
+    args: { name: class }
+  - name: --re
+    description: Show information about an extension
+    args: { name: extension, generators: { script: "php -m 2>/dev/null | grep -v '^\\['" } }
+  - name: --ri
+    description: Show the configuration of an extension
+    args: { name: extension, generators: { script: "php -m 2>/dev/null | grep -v '^\\['" } }
+args:
+  name: file
+  isOptional: true
+  template: filepaths
+  generators:
+    template: filepaths
+    filter: { extensions: [php, phar] }

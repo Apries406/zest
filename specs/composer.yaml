@@ -1,3 +1,156 @@
-# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+# yaml-language-server: $schema=../schema/spec.schema.json
+# Written for zest (the Fig spec built this list at runtime).
 name: composer
-description: Composer Command
+description: Dependency manager for PHP
+icon: composer
+options:
+  - name: [-h, --help]
+    description: Display help for the given command
+    isPersistent: true
+  - name: [-q, --quiet]
+    description: Do not output any message
+    isPersistent: true
+  - name: [-V, --version]
+    description: Display this application version
+  - name: [-n, --no-interaction]
+    description: Do not ask any interactive question
+    isPersistent: true
+  - name: [-d, --working-dir]
+    description: Use the given directory as working directory
+    isPersistent: true
+    args: { name: dir, template: folders }
+  - name: --no-plugins
+    description: Whether to disable plugins
+    isPersistent: true
+  - name: --no-scripts
+    description: Skips the execution of all scripts defined in composer.json
+    isPersistent: true
+  - name: [-v, -vv, -vvv, --verbose]
+    description: Increase the verbosity of messages
+    isPersistent: true
+  - name: --ansi
+    description: Force ANSI output
+    isPersistent: true
+  - name: --no-ansi
+    description: Disable ANSI output
+    isPersistent: true
+subcommands:
+  - name: [install, i]
+    description: Install the dependencies from composer.lock, or composer.json if there is none
+    priority: 80
+    options:
+      - name: --prefer-dist
+        description: Download packages as dist archives
+      - name: --prefer-source
+        description: Clone packages from source
+      - name: --dry-run
+        description: Show what would happen without installing
+      - name: --no-dev
+        description: Skip packages listed in require-dev
+      - name: [-o, --optimize-autoloader]
+        description: Optimize the autoloader
+      - name: --ignore-platform-reqs
+        description: Ignore all platform requirements
+  - name: [update, u, upgrade]
+    description: Update dependencies to the newest versions allowed by composer.json
+    priority: 75
+    options:
+      - name: [-w, --with-dependencies]
+        description: Also update the dependencies of the listed packages
+      - name: [-W, --with-all-dependencies]
+        description: Also update all dependencies, including root requirements
+      - name: --dry-run
+        description: Show what would happen without updating
+      - name: --no-dev
+        description: Skip packages listed in require-dev
+      - name: --lock
+        description: Only update the lock file hash
+    args: { name: packages, isOptional: true, isVariadic: true, generators: { script: "composer show --name-only 2>/dev/null" } }
+  - name: [require, r]
+    description: Add packages to composer.json and install them
+    priority: 75
+    options:
+      - name: --dev
+        description: Add the packages to require-dev
+      - name: --no-update
+        description: Only change composer.json
+      - name: [-W, --with-all-dependencies]
+        description: Allow updates of all dependencies
+    args: { name: packages, isVariadic: true }
+  - name: [remove, rm]
+    description: Remove packages from composer.json and uninstall them
+    options:
+      - name: --dev
+        description: Remove the packages from require-dev
+    args: { name: packages, isVariadic: true, generators: { script: "composer show --direct --name-only 2>/dev/null" } }
+  - name: [dump-autoload, dumpautoload]
+    description: Regenerate the autoloader
+    options:
+      - name: [-o, --optimize]
+        description: Optimize the autoloader for production
+      - name: --classmap-authoritative
+        description: Only load classes from the classmap
+  - name: [run-script, run]
+    description: Run the scripts defined in composer.json
+    args:
+      name: script
+      generators:
+        script: "composer run-script --list 2>/dev/null | sed -nE 's/^  ([^ ]+) +(.*)$/\\1\\t\\2/p'"
+        descriptionSeparator: "\t"
+  - name: [show, info]
+    description: Show information about packages
+    options:
+      - name: [-i, --installed]
+        description: List installed packages only
+      - name: [-o, --outdated]
+        description: Show only outdated packages
+      - name: [-D, --direct]
+        description: Show only packages required by the root package
+      - name: [-t, --tree]
+        description: List the dependencies as a tree
+    args: { name: package, isOptional: true, generators: { script: "composer show --name-only 2>/dev/null" } }
+  - name: outdated
+    description: Show packages that have updates
+  - name: create-project
+    description: Create a new project from a package
+    args: [{ name: package }, { name: directory, isOptional: true, template: folders }]
+  - name: init
+    description: Create a basic composer.json in the current folder
+  - name: [validate]
+    description: Validate composer.json and composer.lock
+  - name: audit
+    description: Check installed packages for known security issues
+  - name: [why, depends]
+    description: Show which packages require a package
+    args: { name: package, generators: { script: "composer show --name-only 2>/dev/null" } }
+  - name: [why-not, prohibits]
+    description: Show which packages prevent installing a package
+    args: { name: package }
+  - name: [search]
+    description: Search packages on Packagist
+    args: { name: query }
+  - name: config
+    description: Set config options
+    options:
+      - name: [-g, --global]
+        description: Use the global config file
+      - name: [-l, --list]
+        description: List configuration settings
+  - name: [global, g]
+    description: Run a command in the global Composer folder
+    args: { name: command, isCommand: true }
+  - name: exec
+    description: Run a vendored binary
+    args:
+      name: binary
+      generators: { script: "ls vendor/bin 2>/dev/null" }
+  - name: [self-update, selfupdate]
+    description: Update composer.phar to the latest version
+  - name: diagnose
+    description: Check for common problems
+  - name: licenses
+    description: Show the licenses of dependencies
+  - name: [clear-cache, clearcache, cc]
+    description: Clear Composer's cache
+  - name: list
+    description: List the commands

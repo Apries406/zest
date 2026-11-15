@@ -92,6 +92,7 @@ What to keep in mind:
 
 ```bash
 zest validate ~/.config/zest/specs/notes.yaml   # finds unknown fields, typos, wrong types
+zest validate --deep ~/.config/zest/specs/notes.yaml   # also types `notes `, `notes -`, … and checks the suggestions
 zest complete 'notes '                          # what the popup shows
 zest complete 'notes tag --color='
 zest complete 'notes open '

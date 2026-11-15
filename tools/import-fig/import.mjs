@@ -170,7 +170,8 @@ function common(node) {
     priority: num(node.priority),
     hidden: bool(node.hidden),
     deprecated: deprecated(node.deprecated),
-    insertValue: str(node.insertValue),
+    // Fig ran the command when insertValue ended in a newline; zest never runs anything.
+    insertValue: str(node.insertValue)?.replace(/\n+$/, ""),
   };
 }
 
@@ -339,6 +340,27 @@ function isWithfig(source) {
   }
 }
 
+// Specs with `generateSpec` build their content by running the tool. Call it once with a
+// shell that prints nothing: most return their static fallback (e.g. kamal's commands).
+// Functions created by that call are not in the companion, so their generators are dropped.
+async function fillFromGenerateSpec(spec) {
+  if (typeof spec.generateSpec !== "function") return;
+  const exec = async (arg) => (typeof arg === "string" ? "" : { stdout: "", stderr: "", status: 1 });
+  try {
+    const generated = await Promise.race([
+      spec.generateSpec([spec.name], exec),
+      new Promise((resolve) => setTimeout(() => resolve(null), 2000)),
+    ]);
+    if (!generated || typeof generated !== "object") return;
+    for (const key of ["subcommands", "options", "args", "additionalSuggestions"]) {
+      if (!spec[key] && generated[key]) spec[key] = generated[key];
+    }
+    stats.generated = (stats.generated || 0) + 1;
+  } catch {
+    // The fallback needs real output; keep the static part.
+  }
+}
+
 // --- Main ------------------------------------------------------------------------
 
 const all = new Map();
@@ -361,7 +383,10 @@ for (const [name, { file, source }] of [...all.entries()].sort()) {
     stats.failed.push(`${name}: no spec object exported`);
     continue;
   }
+  // Number the functions before generateSpec adds anything: zest numbers them the same way
+  // in the companion, where generateSpec is never called.
   const functions = collectFunctions(spec);
+  await fillFromGenerateSpec(spec);
   const { spec: converted, usesJS } = convertSpec(spec, functions);
   const target = path.join(outDir, name);
   fs.mkdirSync(path.dirname(target), { recursive: true });
@@ -410,10 +435,28 @@ stats.failed = stats.failed.filter((line) => {
   if (!fs.readdirSync(dir).length) fs.rmdirSync(dir);
   return false;
 });
+// Drop `loadSpec` references to files that do not exist (upstream has a few).
+let dangling = 0;
+(function walk(dir) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, entry.name);
+    if (entry.isDirectory()) { walk(p); continue; }
+    if (!p.endsWith(".yaml")) continue;
+    const text = fs.readFileSync(p, "utf8");
+    const fixed = text.replace(/^(\s*)loadSpec: (\S+)\n/gm, (line, indent, target) => {
+      if (fs.existsSync(path.join(outDir, target + ".yaml"))) return line;
+      dangling++;
+      return "";
+    });
+    if (fixed !== text) fs.writeFileSync(p, fixed);
+  }
+})(outDir);
+if (dangling) console.log(`Removed ${dangling} loadSpec references to missing files.`);
+
 // Helper modules that are not specs.
 stats.failed = stats.failed.filter((line) => !/: no spec object exported$/.test(line) || !/\/(shared|generators|regions|index)$/.test(line.split(":")[0]));
 
-console.log(`Imported ${stats.specs} specs (${stats.withJS} with JavaScript generators).`);
+console.log(`Imported ${stats.specs} specs (${stats.withJS} with JavaScript generators, ${stats.generated || 0} filled from generateSpec).`);
 if (Object.keys(stats.dropped).length) console.log("Dropped unsupported features:", stats.dropped);
 if (stats.failed.length) {
   console.log(`Failed (${stats.failed.length}):`);

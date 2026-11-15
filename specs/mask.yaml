@@ -1,2 +1,19 @@
-# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+# yaml-language-server: $schema=../schema/spec.schema.json
+# Written for zest: commands are the `##` headings of maskfile.md.
 name: mask
+description: A CLI task runner defined by a simple markdown file
+options:
+  - name: --maskfile
+    description: Path to a different maskfile
+    args: { name: file, template: filepaths }
+  - name: [-h, --help]
+    description: Print help information
+  - name: [-V, --version]
+    description: Print version information
+  - name: --introspect
+    description: Print the maskfile as JSON
+args:
+  name: command
+  generators:
+    script: "sed -nE 's/^##+ +([A-Za-z0-9_:-]+).*/\\1/p' maskfile.md 2>/dev/null"
+    cache: { ttl: 5, cacheByDirectory: true }

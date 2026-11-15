@@ -28,7 +28,7 @@ jobs:
       - name: Check specs
         run: |
           swift build -c release --product zest
-          .build/release/zest validate --quiet specs
+          .build/release/zest validate --quiet --deep specs
 
       - name: Check specs against the JSON schema
         run: |

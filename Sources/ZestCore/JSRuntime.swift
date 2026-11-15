@@ -10,7 +10,7 @@ import JavaScriptCore
 final class JSRuntime {
     private let shell: ShellRunner
     private var modules: [String: [JSValue]] = [:]
-    private var failed: Set<String> = []
+    private var failed: [String: String] = [:]
     private let vm = JSVirtualMachine()
 
     /// Must match `collectFunctions` in tools/import-fig/import.mjs.
@@ -35,23 +35,26 @@ final class JSRuntime {
 
     func function(spec: String, index: Int, store: SpecStore) -> JSValue? {
         if let list = modules[spec] { return index < list.count ? list[index] : nil }
-        if failed.contains(spec) { return nil }
+        if failed[spec] != nil { return nil }
         guard let url = store.companionScript(for: spec),
               let source = try? String(contentsOf: url, encoding: .utf8),
               let context = JSContext(virtualMachine: vm)
         else {
-            failed.insert(spec)
+            failed[spec] = "the .js file is missing"
             return nil
         }
         install(in: context)
         context.evaluateScript(Self.collectScript)
         context.evaluateScript(source, withSourceURL: url)
-        guard context.exception == nil,
-              let spec_ = context.objectForKeyedSubscript("__zestSpec"), !spec_.isUndefined,
+        if let exception = context.exception {
+            failed[spec] = exception.toString() ?? "exception"
+            return nil
+        }
+        guard let spec_ = context.objectForKeyedSubscript("__zestSpec"), !spec_.isUndefined,
               let list = context.objectForKeyedSubscript("__zestCollect")?.call(withArguments: [spec_]),
               let count = list.objectForKeyedSubscript("length")?.toInt32()
         else {
-            failed.insert(spec)
+            failed[spec] = "the .js file does not define __zestSpec"
             return nil
         }
         var functions: [JSValue] = []
@@ -60,6 +63,13 @@ final class JSRuntime {
         }
         modules[spec] = functions
         return index < functions.count ? functions[index] : nil
+    }
+
+    /// Why a spec's companion could not be loaded, or nil if it loads (or has none).
+    func loadError(spec: String, store: SpecStore) -> String? {
+        guard store.companionScript(for: spec) != nil else { return nil }
+        _ = function(spec: spec, index: 0, store: store)
+        return failed[spec]
     }
 
     // MARK: - Calls

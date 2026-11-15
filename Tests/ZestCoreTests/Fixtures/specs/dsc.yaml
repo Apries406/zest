@@ -1,0 +1,7 @@
+name: dsc
+subcommands:
+  - name: -q
+    description: Query
+    options:
+      - name: -a
+        description: Attribute

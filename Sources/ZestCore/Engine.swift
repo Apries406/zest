@@ -119,7 +119,9 @@ public final class Engine: @unchecked Sendable {
         } else {
             var words = context.words
             // Skip `FOO=bar` assignments and zsh precommand modifiers.
-            while let first = words.first, Self.isAssignment(first.value) || Self.precommands.contains(first.value) {
+            while let first = words.first,
+                  Self.isAssignment(first.value)
+                  || (Self.precommands.contains(first.value) && store.file(for: first.value) == nil) {
                 words.removeFirst()
             }
             completeCommand(words: words, current: context.current, request: request, into: &collector)
@@ -187,7 +189,7 @@ public final class Engine: @unchecked Sendable {
         }
 
         let name = Self.commandName(first.value)
-        guard let spec = store.spec(named: name) else {
+        guard let spec = rootSpec(name) else {
             // No spec: still complete paths that are clearly paths.
             let v = current.value
             if v.hasPrefix("/") || v.hasPrefix(".") || v.hasPrefix("~") || v.contains("/") {
@@ -196,7 +198,7 @@ public final class Engine: @unchecked Sendable {
             return
         }
 
-        var state = State(node: spec, spec: name, path: [name])
+        var state = State(node: spec.node, spec: spec.file, path: [name])
         let all = words.map(\.value) + [current.value]
         var i = 1
         while i < words.count {
@@ -224,6 +226,21 @@ public final class Engine: @unchecked Sendable {
         suggest(for: current, state: state, tokens: all, request: request, into: &c)
     }
 
+    /// The spec for a command. A spec that only says `loadSpec: other` is an alias for
+    /// `other` (e.g. `speedtest` → `speedtest-cli`).
+    private func rootSpec(_ name: String) -> (node: Subcommand, file: String)? {
+        guard var spec = store.spec(named: name) else { return nil }
+        var file = name
+        var seen: Set<String> = [name]
+        while let target = spec.loadSpec, seen.insert(target).inserted, let loaded = store.spec(named: target) {
+            let description = spec.description
+            spec = loaded
+            if spec.description?.isEmpty ?? true { spec.description = description }
+            file = target
+        }
+        return (spec, file)
+    }
+
     /// Handles subcommands and options. Returns false for a positional argument.
     private func consume(_ t: String, state: inout State) -> Bool {
         if !state.pendingArgs.isEmpty {
@@ -240,6 +257,20 @@ public final class Engine: @unchecked Sendable {
         }
         if !state.endOfOptions && t == "--" {
             state.endOfOptions = true
+            return true
+        }
+        // Options without a dash, e.g. `launchctl limit cpu 10`.
+        if !state.endOfOptions, !t.hasPrefix("-"),
+           let option = state.options.first(where: { o in o.name.all.contains(t) && !o.name.all.contains(where: { $0.hasPrefix("-") }) }) {
+            markUsed(option, &state)
+            state.pendingArgs = option.separator == nil ? option.argList : []
+            state.pendingOption = state.pendingArgs.isEmpty ? nil : option
+            return true
+        }
+        // A subcommand that looks like an option, e.g. `dscacheutil -q`.
+        if state.argsConsumed == 0, t.hasPrefix("-"),
+           let sub = state.node.subcommands?.first(where: { $0.name.all.contains(t) }) {
+            enter(sub, state: &state)
             return true
         }
         if !state.endOfOptions && t.hasPrefix("-") && t.count > 1 {
@@ -369,6 +400,10 @@ public final class Engine: @unchecked Sendable {
             for s in state.node.additionalSuggestions ?? [] {
                 addSuggestion(s, kind: .argument, token: token, usagePrefix: usagePrefix, into: &c)
             }
+            // Options without a dash (`dd bs=`, `dig +short`) are typed like words.
+            if !state.endOfOptions && state.pendingArgs.isEmpty {
+                addOptions(state: state, token: token, usagePrefix: usagePrefix, into: &c, dashless: true)
+            }
         }
 
         // With nothing else to offer, show the options.
@@ -377,9 +412,9 @@ public final class Engine: @unchecked Sendable {
         }
     }
 
-    private func addOptions(state: State, token: Token, usagePrefix: String, into c: inout Collector) {
+    private func addOptions(state: State, token: Token, usagePrefix: String, into c: inout Collector, dashless: Bool = false) {
         let usedNames = Set(state.used.keys)
-        for option in state.options {
+        for option in state.options where !dashless || !option.name.all.contains(where: { $0.hasPrefix("-") }) {
             let count = state.used[option.name.first] ?? 0
             if count > 0 && !(option.isRepeatable ?? .no).allows(count: count) { continue }
             if let exclusive = option.exclusiveOn, exclusive.contains(where: { name in

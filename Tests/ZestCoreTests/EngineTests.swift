@@ -219,9 +219,43 @@ import Testing
         #expect(engine.names("jst custom ") == ["x", "y"])
     }
 
+    @Test func specThatLoadsAnotherSpec() {
+        #expect(engine.names("speedy ch").first == "checkout")
+    }
+
+    @Test func optionsWithoutDash() throws {
+        #expect(engine.names("ddx ").contains("bs"))
+        #expect(engine.names("ddx +").contains("+short"))
+        #expect(!engine.names("ddx ").contains("--verbose"))
+        let item = try #require(engine.first("ddx b"))
+        #expect(Engine.apply(item, buffer: "ddx b", cursor: 5).buffer == "ddx bs=")
+    }
+
+    @Test func subcommandThatLooksLikeAnOption() {
+        #expect(engine.names("dsc -q -") == ["-a"])
+    }
+
+    @Test func precommandWithItsOwnSpec() {
+        #expect(engine.names("command -") == ["-v"])
+        #expect(engine.names("noglob git ch").first == "checkout")
+    }
+
+    @Test func insertTextHasNoNewlines() throws {
+        let item = try #require(engine.complete(CompletionRequest(buffer: "runner ", cwd: "/work")).items.first)
+        #expect(item.insertText == "-")
+    }
+
     @Test func unknownCommandOnlyCompletesPaths() {
         #expect(engine.names("foo ").isEmpty)
         #expect(engine.names("foo Desktop/").contains("todo.txt"))
+    }
+}
+
+@Suite struct GeneratorOutputTests {
+    @Test func namesWithDescriptions() {
+        let items = GeneratorRunner.split("build\tBuild the app\ntest\t\nlint", on: "\n", descriptions: "\t")
+        #expect(items.map(\.name.first) == ["build", "test", "lint"])
+        #expect(items.map(\.description) == ["Build the app", nil, nil])
     }
 }
 

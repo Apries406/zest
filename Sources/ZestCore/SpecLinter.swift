@@ -19,7 +19,7 @@ public enum SpecLinter {
     ]
     static let suggestionKeys = common.union(["type"])
     static let generatorKeys: Set<String> = [
-        "script", "splitOn", "template", "filter", "cache", "scriptTimeout", "trigger", "getQueryTerm", "js",
+        "script", "splitOn", "descriptionSeparator", "template", "filter", "cache", "scriptTimeout", "trigger", "getQueryTerm", "js",
     ]
 
     public static func lint(url: URL) -> [String] {

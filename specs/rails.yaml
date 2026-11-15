@@ -2,3 +2,210 @@
 name: rails
 description: Ruby on Rails CLI
 icon: https://avatars.githubusercontent.com/u/4223?s=48&v=4
+subcommands:
+  - name: new
+    description: Create a new rails application
+    options:
+      - name: -skip-namespace
+        description: Skip namespace (affects only isolated applications)
+        args: {}
+      - name:
+          - -r
+          - --ruby
+        description: Path to the Ruby binary of your choice
+        args: {}
+      - name: -m
+        description: Path to some application template (can be a filesystem path or URL)
+      - name: -d
+        description: Preconfigure for selected database - defaults to sqlite3
+        args:
+          name: database
+          suggestions:
+            - mysql
+            - postgresql
+            - sqlite3
+            - oracle
+            - frontbase
+            - ibm_db
+            - sqlserver
+            - jdbcmysql
+            - jdbcsqlite3
+            - jdbcpostgresql
+            - jdbc
+      - name: --skip-gemfile
+        description: Don't create a Gemfile
+      - name: -G
+        description: Skip .gitignore file
+      - name: --skip-keeps
+        description: Skip source control .keep files
+      - name: -M
+        description: Skip Action Mailer files
+      - name: --skip-action-mailbox
+        description: Skip Action Mailbox gem
+      - name: --skip-action-text
+        description: Skip Action Text gem
+      - name: -O
+        description: Skip Active Record files
+      - name: --skip-active-storage
+        description: Skip Active Storage files
+      - name: -P
+        description: Skip Puma related files
+      - name: -C
+        description: Skip Action Cable files
+      - name: -S
+        description: Skip Sprockets files
+      - name: --skip-spring
+        description: Don't install Spring application preloader
+      - name: --skip-listen
+        description: Don't generate configuration that depends on the listen gem
+      - name: -J
+        description: Skip JavaScript files
+      - name: --skip-turbolinks
+        description: Skip turbolinks gem
+      - name: -T
+        description: Skip test files
+      - name: --skip-system-test
+        description: Skip system test files
+      - name: --skip-bootsnap
+        description: Skip bootsnap gem
+      - name: --dev
+        description: Setup the application with Gemfile pointing to your Rails checkout
+      - name: --edge
+        description: Setup the application with Gemfile pointing to Rails repository
+      - name: --rc
+        description: Path to file containing extra configuration options for rails command
+        args:
+          name: path
+      - name: --no-rc
+        description: Skip loading of extra configuration options from .railsrc file
+      - name: --api
+        description: Preconfigure smaller stack for API only apps
+      - name: -B
+        description: Don't run bundle install
+      - name: --webpacker
+        description: Preconfigure Webpack with a particular framework
+        args:
+          name: framework
+          suggestions:
+            - react
+            - vue
+            - angular
+            - elm
+            - stimulus
+      - name: --skip-webpack-install]
+        description: Don't run Webpack install
+      - name:
+          - --f
+          - --force
+        description: Overwrite files that already exist
+      - name:
+          - --p
+          - --pretend
+        description: Run but do not make any changes
+      - name:
+          - --q
+          - --quiet
+        description: Suppress status output
+      - name:
+          - --s
+          - --skip
+        description: Skip files that already exist
+      - name:
+          - --h
+          - --help
+        description: Show this help message and quit
+      - name:
+          - --v
+          - --version
+        description: Show Rails version number and quit
+    args:
+      name: path
+      description: Path to directory to be created containing the new application
+  # Commands inside a Rails app. The Fig spec read them from `rails --help` at runtime.
+  - name: [server, s]
+    description: Start the Rails server
+    priority: 80
+    options:
+      - name: [-p, --port]
+        description: Run on this port
+        args: { name: port, suggestions: ["3000", "3001", "8080"] }
+      - name: [-b, --binding]
+        description: Bind to this IP address
+        args: { name: ip, suggestions: ["0.0.0.0", "127.0.0.1"] }
+      - name: [-e, --environment]
+        description: Environment to run in
+        args: { name: env, suggestions: [development, test, production] }
+      - name: [-d, --daemon]
+        description: Run as a daemon
+  - name: [console, c]
+    description: Start the Rails console
+    priority: 80
+    options:
+      - name: [-e, --environment]
+        description: Environment to run in
+        args: { name: env, suggestions: [development, test, production] }
+      - name: [-s, --sandbox]
+        description: Roll back database changes on exit
+  - name: [generate, g]
+    description: Generate new code (models, controllers, migrations…)
+    priority: 80
+    args:
+      - name: generator
+        suggestions:
+          - { name: model, description: Create a model and its migration }
+          - { name: controller, description: Create a controller and its views }
+          - { name: migration, description: Create a database migration }
+          - { name: scaffold, description: "Create a model, controller, views and routes" }
+          - { name: resource, description: Create a model and a RESTful resource }
+          - { name: mailer, description: Create a mailer }
+          - { name: job, description: Create an Active Job }
+          - { name: channel, description: Create an Action Cable channel }
+          - { name: helper, description: Create a helper }
+          - { name: authentication, description: Create basic authentication }
+      - name: name
+      - name: fields
+        isOptional: true
+        isVariadic: true
+  - name: [destroy, d]
+    description: Remove code created by generate
+    args:
+      - name: generator
+        suggestions: [model, controller, migration, scaffold, resource, mailer, job, channel, helper]
+      - name: name
+  - name: [dbconsole, db]
+    description: Start a console for the database
+  - name: [test, t]
+    description: Run tests
+    args: { name: files, isOptional: true, isVariadic: true, template: filepaths }
+  - name: db:migrate
+    description: Run pending migrations
+  - name: db:rollback
+    description: Roll back the last migration
+  - name: db:seed
+    description: Load the seed data
+  - name: db:create
+    description: Create the database
+  - name: db:drop
+    description: Drop the database
+  - name: db:reset
+    description: Drop, create, migrate and seed the database
+  - name: db:prepare
+    description: Create the database if needed and run migrations
+  - name: routes
+    description: List all routes
+    options:
+      - name: [-g, --grep]
+        description: Only show routes matching this pattern
+        args: { name: pattern }
+      - name: [-c, --controller]
+        description: Only show routes for this controller
+        args: { name: controller }
+  - name: [runner, r]
+    description: Run Ruby code in the context of the app
+    args: { name: code }
+  - name: credentials:edit
+    description: Edit encrypted credentials
+  - name: assets:precompile
+    description: Compile all assets
+  - name: about
+    description: Show versions of Ruby, Rails and the app's environment

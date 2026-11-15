@@ -22,9 +22,9 @@ build: ## Build everything (debug)
 test: ## Run the unit tests
 	swift test $(TEST_FLAGS)
 
-specs: ## Check every spec (fields, types, typos)
+specs: ## Check every spec, including simulated typing (no scripts are run)
 	swift build -c release --product zest
-	.build/release/zest validate --quiet specs
+	.build/release/zest validate --quiet --deep specs
 
 zsh-test: ## Run the zsh end-to-end test
 	scripts/test-zsh.sh

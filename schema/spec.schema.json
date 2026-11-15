@@ -138,6 +138,7 @@
           "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
         },
         "splitOn": { "type": "string", "description": "Split the output into suggestions on this string. Default: newline." },
+        "descriptionSeparator": { "type": "string", "description": "Each entry is `name<separator>description`, e.g. a tab." },
         "template": { "$ref": "#/definitions/template" },
         "filter": {
           "type": "object",

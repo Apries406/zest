@@ -1,0 +1,9 @@
+name: ddx
+options:
+  - name: bs
+    description: Block size
+    requiresSeparator: true
+    args: { name: size }
+  - name: +short
+    description: Short output
+  - name: --verbose

@@ -1,0 +1,7 @@
+name: command
+options:
+  - name: -v
+    description: Describe the command
+args:
+  name: command
+  isCommand: true

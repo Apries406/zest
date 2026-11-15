@@ -1,3 +1,22 @@
-# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+# yaml-language-server: $schema=../schema/spec.schema.json
+# Written for zest: the commands come from `bin/magento list`, so modules' commands show up too.
 name: magento
-description: Open-source E-commerce
+description: Magento command line
+options:
+  - name: [-h, --help]
+    description: Display help for the given command
+  - name: [-q, --quiet]
+    description: Do not output any message
+    isPersistent: true
+  - name: [-n, --no-interaction]
+    description: Do not ask any interactive question
+    isPersistent: true
+  - name: [-v, -vv, -vvv, --verbose]
+    description: Increase the verbosity of messages
+    isPersistent: true
+args:
+  name: command
+  generators:
+    script: "{ [ -x bin/magento ] && bin/magento list --raw || magento list --raw; } 2>/dev/null | sed -E 's/  +/\\t/'"
+    descriptionSeparator: "\t"
+    cache: { ttl: 300, cacheByDirectory: true }

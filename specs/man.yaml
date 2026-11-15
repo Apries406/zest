@@ -77,6 +77,8 @@ args:
   isVariadic: true
   generators:
     scriptTimeout: 15
+    # Listing every man page takes seconds; the list rarely changes.
+    cache: { ttl: 3600 }
     js:
       custom: 1
       trigger: 0

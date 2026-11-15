@@ -140,6 +140,8 @@ public struct Generator: Codable, Sendable, Equatable {
     public var script: Script?
     /// Split the script output into suggestions on this string. Default: newline.
     public var splitOn: String?
+    /// Each entry is `name<separator>description`, e.g. `"\t"` for `build<TAB>Build the app`.
+    public var descriptionSeparator: String?
     /// List files and/or folders instead of running a script.
     public var template: OneOrMany<Template>?
     /// Only show some of the files listed by `template`.

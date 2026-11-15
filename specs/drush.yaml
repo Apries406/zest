@@ -1,3 +1,30 @@
-# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+# yaml-language-server: $schema=../schema/spec.schema.json
+# Written for zest: the commands come from `drush list`, so modules' commands show up too.
 name: drush
-description: Drush is a command line shell and Unix scripting interface for Drupal
+description: Command line shell for Drupal
+options:
+  - name: [-h, --help]
+    description: Display help for the given command
+  - name: [-y, --yes]
+    description: Answer yes to all questions
+    isPersistent: true
+  - name: [-n, --no]
+    description: Answer no to all questions
+    isPersistent: true
+  - name: [-l, --uri]
+    description: The base URL of the site
+    isPersistent: true
+    args: { name: uri }
+  - name: [-r, --root]
+    description: The Drupal root folder
+    isPersistent: true
+    args: { name: path, template: folders }
+  - name: [-v, -vv, -vvv, --verbose]
+    description: Increase the verbosity of messages
+    isPersistent: true
+args:
+  name: command
+  generators:
+    script: "drush list --raw 2>/dev/null | sed -E 's/  +/\\t/'"
+    descriptionSeparator: "\t"
+    cache: { ttl: 300, cacheByDirectory: true }

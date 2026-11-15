@@ -22,6 +22,5 @@ args:
 additionalSuggestions:
   - name: "-"
     description: Run the last command
-    insertValue: |
-      -
+    insertValue: "-"
     type: shortcut

@@ -115,7 +115,13 @@ public final class GeneratorRunner: @unchecked Sendable {
             guard let fn = js.function(spec: job.spec, index: index, store: store) else { return [] }
             return js.postProcess(fn, output: output, tokens: job.tokens)
         }
-        return Self.split(output, on: g.splitOn ?? "\n")
+        return Self.split(output, on: g.splitOn ?? "\n", descriptions: g.descriptionSeparator)
+    }
+
+    /// Why a spec's JavaScript companion does not load, or nil.
+    func companionError(spec: String) -> String? {
+        guard let store else { return nil }
+        return jsQueue.sync { js.loadError(spec: spec, store: store) }
     }
 
     /// The query term for a token when the generator defines `getQueryTerm` as a function.
@@ -127,14 +133,20 @@ public final class GeneratorRunner: @unchecked Sendable {
         }
     }
 
-    static func split(_ output: String, on separator: String) -> [Suggestion] {
+    static func split(_ output: String, on separator: String, descriptions: String? = nil) -> [Suggestion] {
         let parts = separator.isEmpty ? [output] : output.components(separatedBy: separator)
         var seen = Set<String>()
         var result: [Suggestion] = []
         for part in parts {
-            let name = part.trimmingCharacters(in: .whitespacesAndNewlines)
+            var name = part.trimmingCharacters(in: .whitespacesAndNewlines)
+            var description: String?
+            if let descriptions, !descriptions.isEmpty, let range = part.range(of: descriptions) {
+                name = part[..<range.lowerBound].trimmingCharacters(in: .whitespaces)
+                let rest = part[range.upperBound...].trimmingCharacters(in: .whitespacesAndNewlines)
+                description = rest.isEmpty ? nil : rest
+            }
             guard !name.isEmpty, seen.insert(name).inserted else { continue }
-            result.append(Suggestion(name: Names(name)))
+            result.append(Suggestion(name: Names(name), description: description))
         }
         return result
     }

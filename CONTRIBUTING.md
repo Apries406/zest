@@ -77,7 +77,9 @@ with the app's popup view. Run it again when the popup's look changes.
 ## Pull requests
 
 - Keep each pull request to one change, and describe what it fixes or adds and how you tested it.
-- Run `make check` before pushing; CI runs the same checks.
+- Run `make check` before pushing; CI runs the same checks. `make specs` simulates typing for
+  every spec (`zest validate --deep`): it catches broken `loadSpec` references, JavaScript that does
+  not load, subcommands that suggest nothing and slow specs, without running any scripts.
 - Code style: follow the surrounding code. Comments explain *why*, not *what*.
 - Spec changes: descriptions are short sentences without a final period, and generators must be
   fast and read-only.

@@ -77,6 +77,9 @@ struct Validate: ParsableCommand {
     @Flag(help: "Only print problems.")
     var quiet = false
 
+    @Flag(help: "Also type typical command lines for each spec and check the suggestions (no scripts are run).")
+    var deep = false
+
     func run() throws {
         let targets = paths.isEmpty ? [SpecStore.userSpecsDirectory.path] : paths
         var files: [URL] = []
@@ -106,8 +109,41 @@ struct Validate: ParsableCommand {
                 for issue in issues { print("error \(url.path): \(issue)") }
             }
         }
-        print("\(files.count) specs checked, \(problems) problems.")
+        if deep { problems += runDeep(files) }
+        print("\(files.count) spec files checked, \(problems) problems.")
         if problems > 0 { throw ExitCode.failure }
+    }
+}
+
+extension Validate {
+    /// Simulates typing for every top-level spec. Nested files are reached through `loadSpec`.
+    func runDeep(_ files: [URL]) -> Int {
+        var byRoot: [URL: [String]] = [:]
+        for path in paths.isEmpty ? [SpecStore.userSpecsDirectory.path] : paths {
+            let url = URL(fileURLWithPath: path).standardizedFileURL
+            var isDir: ObjCBool = false
+            FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir)
+            let root = isDir.boolValue ? url : url.deletingLastPathComponent()
+            let names: [String]
+            if isDir.boolValue {
+                names = ((try? FileManager.default.contentsOfDirectory(atPath: url.path)) ?? [])
+                    .filter { ["yaml", "yml"].contains(($0 as NSString).pathExtension) }
+                    .map { ($0 as NSString).deletingPathExtension }
+            } else {
+                names = [url.deletingPathExtension().lastPathComponent]
+            }
+            byRoot[root, default: []] += names
+        }
+        var count = 0
+        for (root, names) in byRoot {
+            let simulator = SpecSimulator(directories: [root])
+            for name in names.sorted() {
+                let problems = simulator.check(name)
+                for problem in problems { print("deep  \(problem)") }
+                count += problems.count
+            }
+        }
+        return count
     }
 }
 

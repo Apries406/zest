@@ -30,7 +30,7 @@ struct Collector {
         let shown = display ?? primary
         items.append(Completion(
             kind: kind, name: shown,
-            insertText: insert ?? (escape ? primary.shellEscaped(inQuote: token.openQuote) : primary),
+            insertText: Self.clean(insert ?? (escape ? primary.shellEscaped(inQuote: token.openQuote) : primary)),
             description: description, icon: icon,
             matchedIndices: display == nil && name == primary ? match.indices : [],
             score: score, appendSpace: appendSpace,
@@ -61,10 +61,17 @@ struct Collector {
         if option.deprecated == true { score -= 5 }
         if option.isRequired == true { score += 10 }
         items.append(Completion(
-            kind: .option, name: shown, insertText: option.insertValue ?? (name + insertSuffix),
+            kind: .option, name: shown, insertText: Self.clean(option.insertValue ?? (name + insertSuffix)),
             description: option.description, icon: option.icon, matchedIndices: indices,
             score: score, appendSpace: appendSpace, replaceStart: token.start, replaceEnd: token.end,
             deprecated: option.deprecated == true, usageKey: usageKey + "|" + all[0]))
+    }
+
+    /// Fig used a trailing newline in `insertValue` to run the command right away; zest
+    /// never runs anything, so newlines and other control characters are dropped.
+    static func clean(_ text: String) -> String {
+        guard text.contains(where: { $0.isNewline || ($0.asciiValue.map { $0 < 32 } ?? false) }) else { return text }
+        return String(text.filter { !$0.isNewline && !($0.asciiValue.map { $0 < 32 } ?? false) })
     }
 
     private func best(_ names: [String], query: String, fuzzy: Bool) -> (String, Matcher.Match)? {

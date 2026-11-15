@@ -91,6 +91,7 @@ A generator produces suggestions while you type. Use one of `script` or `templat
 | --- | --- | --- |
 | `script` | string or list | A shell command run with `zsh -f -c` in the current folder, or an argv list run directly. Each output line becomes a suggestion. |
 | `splitOn` | string | Split the output on this instead of newlines. |
+| `descriptionSeparator` | string | Each entry is a name, this separator, then a description. With `"\t"`, the line `build<TAB>Build the app` becomes `build` described as "Build the app". |
 | `template` | `filepaths`, `folders` | List files instead of running a script. |
 | `filter.extensions` | list | With `template`: only files with these extensions, e.g. `[js, mjs]`. `tar.gz` works. |
 | `filter.equals` | list | Only these file names, e.g. `[Makefile]`. |

@@ -13,7 +13,6 @@ subcommands:
     loadSpec: gcloud/ai-platform
   - name: alpha
     description: "*(ALPHA)*  Alpha versions of gcloud commands"
-    loadSpec: gcloud/alpha
   - name: anthos
     description: Anthos command Group
     loadSpec: gcloud/anthos
@@ -34,7 +33,6 @@ subcommands:
     loadSpec: gcloud/auth
   - name: beta
     description: "*(BETA)*  Beta versions of gcloud commands"
-    loadSpec: gcloud/beta
   - name: bigtable
     description: Manage your Cloud Bigtable storage
     loadSpec: gcloud/bigtable
