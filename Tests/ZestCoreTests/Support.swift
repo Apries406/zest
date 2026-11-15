@@ -69,3 +69,11 @@ extension Engine {
         complete(CompletionRequest(buffer: buffer, cwd: "/work")).items.first
     }
 }
+
+/// Writes `contents` to a new temporary file and returns its path.
+/// (Test files that import both Testing and Foundation need Xcode, so file helpers live here.)
+func temporaryFile(_ contents: String) throws -> String {
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent("zest-test-\(UUID().uuidString)")
+    try contents.write(to: url, atomically: true, encoding: .utf8)
+    return url.path
+}
