@@ -516,6 +516,20 @@ public final class Engine: @unchecked Sendable {
     // MARK: - Commands
 
     private func addCommands(token: Token, request: CompletionRequest, into c: inout Collector) {
+        // Typed in the wrong keyboard layout: suggest the command it was meant to be.
+        if let converted = Self.switchLayout(token.value), !converted.isEmpty {
+            var latin = token
+            latin.value = converted
+            let names = Set(store.commands().keys).union(request.aliases.keys).union(Self.zshBuiltins)
+                .union(settings.pathCommands ? pathCommandSet() : [])
+            for name in names.filter({ $0.hasPrefix(converted) }).sorted(by: { $0.count < $1.count || ($0.count == $1.count && $0 < $1) }).prefix(5) {
+                c.add(
+                    kind: .command, names: [name], display: nil, insert: nil,
+                    description: "Keyboard layout: \(token.value) → \(name)", icon: store.commands()[name]?.icon,
+                    priority: 90, hidden: nil, deprecated: nil, token: latin, appendSpace: true,
+                    usageKey: "", filter: .prefix, settings: settings)
+            }
+        }
         var seen = Set<String>()
         for (name, info) in store.commands().sorted(by: { $0.key < $1.key }) {
             seen.insert(name)
@@ -641,7 +655,8 @@ public final class Engine: @unchecked Sendable {
         var seen = Set<String>()
         var added = 0
         for entry in request.history where added < 3 {
-            guard entry.hasPrefix(trimmed), entry != String(trimmed), !entry.contains("\n"), seen.insert(entry).inserted else { continue }
+            guard entry.hasPrefix(trimmed), entry != String(trimmed), !entry.contains("\n"),
+                  seen.insert(entry).inserted, commandExists(in: entry, request: request) else { continue }
             c.items.append(Completion(
                 kind: .history, name: entry, insertText: entry, description: nil, icon: nil,
                 matchedIndices: Array(0..<trimmed.count), score: -1000 - Double(added),
@@ -649,6 +664,56 @@ public final class Engine: @unchecked Sendable {
                 replaceEnd: context.current.end, deprecated: false, usageKey: ""))
             added += 1
         }
+    }
+
+    /// False for history entries that failed because the command does not exist,
+    /// e.g. `св ю` typed with the wrong keyboard layout.
+    private func commandExists(in line: String, request: CompletionRequest) -> Bool {
+        let words = Lexer.tokenize(Array(line.unicodeScalars)).filter { $0.kind == .word }.map(\.value)
+        guard let first = words.first(where: { !Self.isAssignment($0) && !Self.precommands.contains($0) }) else { return true }
+        if first.contains("/") || first.hasPrefix("$") || first.hasPrefix("~") { return true }
+        if Self.zshBuiltins.contains(first) || request.aliases[first] != nil || store.commands()[first] != nil {
+            return true
+        }
+        return pathCommandSet().contains(first)
+    }
+
+    private var pathSet: (date: Date, names: Set<String>)?
+
+    private func pathCommandSet() -> Set<String> {
+        if let cache = pathSet, Date().timeIntervalSince(cache.date) < 60 { return cache.names }
+        let names = Set(pathCommands())
+        pathSet = (Date(), names)
+        return names
+    }
+
+    static let zshBuiltins: Set<String> = [
+        "alias", "autoload", "bg", "bindkey", "break", "builtin", "cd", "chdir", "command", "continue",
+        "declare", "dirs", "disown", "echo", "emulate", "eval", "exec", "exit", "export", "false", "fc",
+        "fg", "functions", "getopts", "hash", "history", "jobs", "kill", "let", "local", "logout",
+        "popd", "print", "printf", "pushd", "pwd", "read", "readonly", "rehash", "return", "set",
+        "setopt", "shift", "source", "suspend", "test", "time", "trap", "true", "type", "typeset",
+        "ulimit", "umask", "unalias", "unfunction", "unhash", "unset", "unsetopt", "wait", "whence",
+        "where", "which", "zle", "zmodload", "zstyle", ".", "[", "[[",
+    ]
+
+    /// Russian and Ukrainian ЙЦУКЕН keys mapped to the US keys at the same place.
+    static let layoutMap: [Character: Character] = {
+        let cyrillic = Array("йцукенгшщзхъфывапролджэячсмитьбюёіїєґ")
+        let latin = Array("qwertyuiop[]asdfghjkl;'zxcvbnm,.`s]'`")
+        var map: [Character: Character] = [:]
+        for (c, l) in zip(cyrillic, latin) {
+            map[c] = l
+            if let upper = String(c).uppercased().first { map[upper] = Character(String(l).uppercased()) }
+        }
+        return map
+    }()
+
+    /// `св` typed with a Cyrillic layout is `cd`. Returns nil if the word has no Cyrillic letters.
+    static func switchLayout(_ word: String) -> String? {
+        guard word.contains(where: { layoutMap[$0] != nil }) else { return nil }
+        let converted = String(word.map { layoutMap[$0] ?? $0 })
+        return converted.allSatisfy({ $0.isASCII }) ? converted : nil
     }
 
     // MARK: - Helpers

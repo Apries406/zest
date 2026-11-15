@@ -178,6 +178,21 @@ import Testing
         #expect(names.filter { $0 == "git commit -m fix" }.count == 1)
     }
 
+    @Test func historySkipsCommandsThatDoNotExist() {
+        let names = engine.names("св", history: ["св ю", "св юю/"])
+        #expect(!names.contains("св ю"))
+        #expect(engine.names("ec", history: ["echo hi"]).contains("echo hi"))
+    }
+
+    @Test func wrongKeyboardLayout() throws {
+        #expect(Engine.switchLayout("св") == "cd")
+        #expect(Engine.switchLayout("пше") == "git")
+        #expect(Engine.switchLayout("ls") == nil)
+        let item = try #require(engine.first("пш"))
+        #expect(item.name == "git")
+        #expect(Engine.apply(item, buffer: "пш", cursor: 2).buffer == "git ")
+    }
+
     @Test func usageMovesItemsUp() {
         let usage = UsageStore(url: nil)
         let engine = Fixtures.engine(usage: usage)
