@@ -14,7 +14,7 @@ jobs:
     name: Build and test
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Swift version
         run: swift --version
@@ -42,7 +42,7 @@ jobs:
       - name: Build the app
         run: scripts/build-app.sh
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: Zest-unsigned
           path: dist/Zest.zip
