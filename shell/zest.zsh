@@ -18,7 +18,7 @@ zmodload zsh/net/socket 2>/dev/null || return 0
 zmodload zsh/datetime 2>/dev/null
 autoload -Uz add-zle-hook-widget 2>/dev/null || return 0
 
-typeset -g _zest_socket="$HOME/Library/Application Support/zest/zest.sock"
+typeset -g _zest_socket="${ZEST_SOCKET:-$HOME/Library/Application Support/zest/zest.sock}"
 typeset -g _zest_fd=""
 typeset -g _zest_seq=0
 typeset -g _zest_last=""

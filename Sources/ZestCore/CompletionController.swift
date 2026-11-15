@@ -61,7 +61,8 @@ public final class CompletionController: @unchecked Sendable {
     public init(engine: Engine) {
         self.engine = engine
         engine.generators.onUpdate = { [weak self] in
-            self?.queue.async { self?.refresh() }
+            guard let self else { return }
+            self.queue.async { self.refresh() }
         }
     }
 
@@ -149,7 +150,9 @@ public final class CompletionController: @unchecked Sendable {
             buffer: line.buffer, cursor: line.cursor, cwd: line.cwd,
             aliases: session.aliases, history: history.entries)
         result = engine.complete(request)
-        let selectedName = keepSelection ? state.selectedItem?.name : nil
+        // Keep the selection only once you moved it; otherwise new results (e.g. from a
+        // generator that just finished) start at the top.
+        let selectedName = keepSelection && navigated ? state.selectedItem?.name : nil
         state.items = result.items
         state.isLoading = result.isLoading
         state.selected = selectedName.flatMap { name in result.items.firstIndex { $0.name == name } } ?? 0

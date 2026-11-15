@@ -9,7 +9,7 @@ struct Zest: ParsableCommand {
         abstract: "Autocomplete popup for zsh on macOS.",
         discussion: "The popup itself runs in Zest.app. This tool helps you write and check specs.",
         version: ZestVersion.current,
-        subcommands: [Complete.self, Validate.self, Gen.self, BuildSpecs.self, Init.self, Doctor.self]
+        subcommands: [Complete.self, Validate.self, Gen.self, BuildSpecs.self, Init.self, Doctor.self, Serve.self]
     )
 }
 
@@ -246,5 +246,44 @@ struct Doctor: ParsableCommand {
         line(zshrc.contains("zest"), "~/.zshrc loads zest")
         line(FileManager.default.fileExists(atPath: Paths.socket.path), "Zest.app is running (\(Paths.socket.path))")
         line(ProcessInfo.processInfo.environment["ZEST_SESSION"] != nil, "This shell is connected to zest")
+    }
+}
+
+// MARK: - serve
+
+struct Serve: ParsableCommand {
+    static let configuration = CommandConfiguration(
+        abstract: "Run the completion server without the popup and print what it would show.",
+        discussion: """
+        For debugging specs and the zsh integration: start this, then in another terminal run
+        `ZEST_SOCKET=<path> zsh` and type. Used by scripts/test-zsh.sh.
+        """)
+
+    @ArgumentParser.Option(help: "Socket path.")
+    var socket: String = Paths.socket.path + ".debug"
+
+    @OptionGroup var specs: SpecOptions
+
+    func run() throws {
+        let engine = Engine(store: specs.store())
+        let controller = CompletionController(engine: engine)
+        controller.onChange = { state in
+            let line = state.line.map { "\($0.buffer)|" } ?? ""
+            if state.visible {
+                let items = state.items.prefix(5).enumerated()
+                    .map { ($0.offset == state.selected ? ">" : " ") + $0.element.name }
+                print("popup [\(line)] " + items.joined(separator: " "))
+            } else {
+                print("hidden [\(line)]")
+            }
+            fflush(stdout)
+        }
+        let server = SocketServer(path: socket) { controller.handle($0) }
+        try server.start()
+        print("listening on \(socket)")
+        fflush(stdout)
+        signal(SIGINT) { _ in Foundation.exit(0) }
+        signal(SIGTERM) { _ in Foundation.exit(0) }
+        dispatchMain()
     }
 }

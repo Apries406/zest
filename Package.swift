@@ -27,7 +27,9 @@ let package = Package(
         ),
         .executableTarget(
             name: "ZestApp",
-            dependencies: ["ZestCore"]
+            dependencies: ["ZestCore"],
+            // AppKit and the Accessibility API are not annotated for Swift 6 concurrency yet.
+            swiftSettings: [.swiftLanguageMode(.v5)]
         ),
         .testTarget(
             name: "ZestCoreTests",

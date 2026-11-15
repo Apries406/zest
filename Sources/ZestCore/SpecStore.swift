@@ -120,13 +120,15 @@ public final class SpecStore: @unchecked Sendable {
                 for entry in entries { index[entry.name] = entry }
                 continue
             }
-            let files = (try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? []
+            let files = ((try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? [])
+                .filter { Self.extensions.contains(($0 as NSString).pathExtension) && $0 != "index.json" }
+            // Without an index, read descriptions only from small folders (your own specs);
+            // parsing a thousand YAML files would freeze the popup.
+            let readDescriptions = files.count <= 200
             for file in files {
                 let url = dir.appendingPathComponent(file)
-                guard Self.extensions.contains(url.pathExtension) else { continue }
                 let name = url.deletingPathExtension().lastPathComponent
-                if file == "index.json" { continue }
-                let spec = try? Self.load(url: url)
+                let spec = readDescriptions ? try? Self.load(url: url) : nil
                 index[name] = CommandInfo(name: name, description: spec?.description, icon: spec?.icon)
             }
         }

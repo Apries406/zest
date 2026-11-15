@@ -41,6 +41,25 @@ public struct Completion: Sendable, Equatable {
     public var deprecated: Bool
     /// Key for counting how often this item is picked.
     public var usageKey: String
+
+    public init(
+        kind: CompletionKind, name: String, insertText: String, description: String?, icon: String?,
+        matchedIndices: [Int], score: Double, appendSpace: Bool, replaceStart: Int, replaceEnd: Int,
+        deprecated: Bool, usageKey: String
+    ) {
+        self.kind = kind
+        self.name = name
+        self.insertText = insertText
+        self.description = description
+        self.icon = icon
+        self.matchedIndices = matchedIndices
+        self.score = score
+        self.appendSpace = appendSpace
+        self.replaceStart = replaceStart
+        self.replaceEnd = replaceEnd
+        self.deprecated = deprecated
+        self.usageKey = usageKey
+    }
 }
 
 public struct CompletionResult: Sendable, Equatable {

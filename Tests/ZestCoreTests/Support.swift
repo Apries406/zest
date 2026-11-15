@@ -30,6 +30,16 @@ enum Fixtures {
         Bundle.module.resourceURL!.appendingPathComponent("Fixtures/specs")
     }
 
+    /// The real icon assets in the repository.
+    static var iconDirectory: URL {
+        URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .appendingPathComponent("../../assets/icons/material").standardized
+    }
+
+    static var iconIndex: URL {
+        iconDirectory.deletingLastPathComponent().appendingPathComponent("material.json")
+    }
+
     static let fileSystem = FakeFileSystem(tree: [
         "/work": [
             FileEntry(name: "Desktop", isDirectory: true),
