@@ -107,6 +107,18 @@ import Testing
         #expect(!controller.current.visible)
     }
 
+    @Test func metafiedHistory() throws {
+        // How zsh writes "cd Прив": every byte of a non-ASCII character becomes 0x83, byte ^ 0x20.
+        var bytes: [UInt8] = Array("cd ".utf8)
+        for byte in "Прив".utf8 {
+            bytes += byte >= 0x83 ? [0x83, byte ^ 0x20] : [byte]
+        }
+        let path = try temporaryFile(bytes: bytes + [0x0A])
+        var store = HistoryStore()
+        store.load(path: path)
+        #expect(store.entries == ["cd Прив"])
+    }
+
     @Test func historyFileFormats() throws {
         let path = try temporaryFile(": 1700000000:0;ls -la\n: 1700000001:0;echo one\\\ntwo\nplain command\nls -la\n")
         var store = HistoryStore()

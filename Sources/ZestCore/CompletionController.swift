@@ -234,9 +234,7 @@ struct HistoryStore {
     mutating func load(path: String) {
         guard !path.isEmpty, loaded.insert(path).inserted,
               let data = FileManager.default.contents(atPath: path) else { return }
-        // zsh writes the history in its own "metafied" encoding; plain UTF-8 covers
-        // nearly everything, and invalid bytes become replacement characters.
-        let text = String(decoding: data, as: UTF8.self)
+        let text = String(decoding: Self.unmetafy(data), as: UTF8.self)
         var commands: [String] = []
         var pending = ""
         for raw in text.split(separator: "\n", omittingEmptySubsequences: false) {
@@ -260,6 +258,26 @@ struct HistoryStore {
             if merged.count >= Self.limit { break }
         }
         entries = merged
+    }
+
+    /// zsh stores history "metafied": a byte that has a special meaning to zsh
+    /// (0x83–0xFF and a few others, so every byte of non-ASCII UTF-8 such as Cyrillic)
+    /// is written as 0x83 followed by the byte XOR 0x20.
+    static func unmetafy(_ data: Data) -> Data {
+        guard data.contains(0x83) else { return data }
+        var out = Data(capacity: data.count)
+        var meta = false
+        for byte in data {
+            if meta {
+                out.append(byte ^ 0x20)
+                meta = false
+            } else if byte == 0x83 {
+                meta = true
+            } else {
+                out.append(byte)
+            }
+        }
+        return out
     }
 
     mutating func add(_ command: String) {

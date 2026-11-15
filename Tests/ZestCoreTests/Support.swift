@@ -108,3 +108,9 @@ func touch(_ path: String, modified: TimeInterval) throws {
 func specStore(_ dir: String) -> SpecStore {
     SpecStore(directories: [URL(fileURLWithPath: dir)])
 }
+
+func temporaryFile(bytes: [UInt8]) throws -> String {
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent("zest-test-\(UUID().uuidString)")
+    try Data(bytes).write(to: url)
+    return url.path
+}
