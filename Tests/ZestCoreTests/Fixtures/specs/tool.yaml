@@ -1,0 +1,5 @@
+name: tool
+description: Loads a subcommand from another file
+subcommands:
+  - name: sub
+    loadSpec: tool/sub

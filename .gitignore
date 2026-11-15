@@ -1,0 +1,8 @@
+.build/
+.swiftpm/
+/dist/
+*.xcodeproj
+xcuserdata/
+.DS_Store
+/tools/import-fig/node_modules/
+/tools/import-fig/.cache/

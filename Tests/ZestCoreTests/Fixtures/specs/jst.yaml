@@ -1,0 +1,13 @@
+name: jst
+subcommands:
+  - name: post
+    args:
+      name: item
+      generators:
+        script: list-items
+        js: { postProcess: 0 }
+  - name: custom
+    args:
+      name: item
+      generators:
+        js: { custom: 1 }

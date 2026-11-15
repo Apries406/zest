@@ -1,0 +1,4 @@
+name: sub
+subcommands:
+  - name: deep
+    description: From the loaded file

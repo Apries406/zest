@@ -1,0 +1,8 @@
+name: sudo
+description: Run as another user
+options:
+  - name: -u
+    args: { name: user }
+args:
+  name: command
+  isCommand: true

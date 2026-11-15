@@ -1,0 +1,38 @@
+name: git
+description: Version control
+subcommands:
+  - name: [checkout, co]
+    description: Switch branches
+    options:
+      - name: -b
+        description: Create a branch
+        args: { name: branch }
+    args:
+      name: branch
+      generators:
+        script: git branch
+  - name: commit
+    description: Record changes
+    options:
+      - name: [-m, --message]
+        description: Commit message
+        args: { name: message }
+      - name: --amend
+        description: Amend the last commit
+      - name: --format
+        requiresSeparator: true
+        args:
+          name: format
+          suggestions: [short, full]
+  - name: clone
+    description: Clone a repository
+    args: { name: repo }
+  - name: secret
+    hidden: true
+options:
+  - name: --version
+    description: Print the version
+  - name: -C
+    description: Run as if started in path
+    isPersistent: true
+    args: { name: path, template: folders }
