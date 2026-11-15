@@ -63,6 +63,18 @@ asks for three things:
 Then open a new terminal window and start typing.
 
 <details>
+<summary>Install with Homebrew</summary>
+
+```bash
+brew tap rostik32/tap
+brew trust rostik32/tap      # recent Homebrew versions ask you to trust third-party taps
+brew install --cask zest
+```
+
+Then open zest from Applications. The cask always installs the latest release; zest updates itself.
+</details>
+
+<details>
 <summary>Install by hand, or build from source</summary>
 
 Download `Zest.zip` from the [latest release](https://github.com/rostik32/zest/releases/latest),
