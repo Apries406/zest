@@ -87,3 +87,24 @@ func temporaryFile(_ contents: String) throws -> String {
     try contents.write(to: url, atomically: true, encoding: .utf8)
     return url.path
 }
+
+func temporaryDirectory() throws -> String {
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent("zest-test-\(UUID().uuidString)")
+    try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+    return url.path
+}
+
+/// Writes a file. `modified` moves its modification date into the future by that many
+/// seconds, so a change is visible even within the same second.
+func write(_ text: String, to path: String, modified: TimeInterval = 0) throws {
+    try text.write(toFile: path, atomically: true, encoding: .utf8)
+    if modified != 0 { try touch(path, modified: modified) }
+}
+
+func touch(_ path: String, modified: TimeInterval) throws {
+    try FileManager.default.setAttributes([.modificationDate: Date().addingTimeInterval(modified)], ofItemAtPath: path)
+}
+
+func specStore(_ dir: String) -> SpecStore {
+    SpecStore(directories: [URL(fileURLWithPath: dir)])
+}

@@ -1,0 +1,30 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you type, what did you expect, and what did you see? Screenshots help.
+    validations:
+      required: true
+  - type: input
+    id: terminal
+    attributes:
+      label: Terminal app
+      placeholder: Terminal.app / VS Code / Cursor / …
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: zest and macOS versions
+      placeholder: zest 0.1.0, macOS 15.1
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: Output of `zest doctor`
+      render: text

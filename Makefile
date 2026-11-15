@@ -10,12 +10,36 @@ TEST_FLAGS := -Xswiftc -F -Xswiftc $(CLT_FRAMEWORKS) -Xlinker -F -Xlinker $(CLT_
 	-Xlinker -rpath -Xlinker $(CLT_FRAMEWORKS) -Xlinker -rpath -Xlinker $(CLT_LIBS)
 endif
 
-.PHONY: help build test
+BIN_DIR ?= $(HOME)/.local/bin
+
+.PHONY: help build test specs zsh-test check app install icons
 help: ## Show this help
-	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-14s %s\n", $$1, $$2}'
+	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-10s %s\n", $$1, $$2}'
 
 build: ## Build everything (debug)
 	swift build
 
-test: ## Run the tests
+test: ## Run the unit tests
 	swift test $(TEST_FLAGS)
+
+specs: ## Check every spec (fields, types, typos)
+	swift build -c release --product zest
+	.build/release/zest validate --quiet specs
+
+zsh-test: ## Run the zsh end-to-end test
+	scripts/test-zsh.sh
+
+check: test specs zsh-test ## Everything CI checks, except the schema check (needs Node)
+
+app: ## Build dist/Zest.app and dist/Zest.zip
+	scripts/build-app.sh
+
+install: app ## Build, install to /Applications and link the zest command
+	-osascript -e 'tell application id "io.github.rostik32.zest" to quit' 2>/dev/null; sleep 1
+	ditto dist/Zest.app /Applications/Zest.app
+	mkdir -p $(BIN_DIR)
+	ln -sf /Applications/Zest.app/Contents/Helpers/zest $(BIN_DIR)/zest
+	open /Applications/Zest.app
+
+icons: ## Download the icon sets again (Material Icon Theme, Codicons)
+	scripts/update-icons.sh

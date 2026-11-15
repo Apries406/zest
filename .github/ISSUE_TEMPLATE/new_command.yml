@@ -1,0 +1,24 @@
+name: Command request or spec fix
+description: Suggestions are missing or wrong for a command
+labels: [spec]
+body:
+  - type: input
+    id: command
+    attributes:
+      label: Command
+      placeholder: e.g. terraform
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What is missing or wrong?
+      description: Which subcommands, options or values should be suggested? Link to the tool's documentation if you can.
+    validations:
+      required: true
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Can you help?
+      options:
+        - label: I'd like to write the spec myself (see docs/adding-a-command.md)

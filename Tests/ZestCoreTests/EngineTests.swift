@@ -226,3 +226,38 @@ import Testing
         #expect(!f.accepts("src/", isDirectory: true))
     }
 }
+
+@Suite struct SpecStoreTests {
+    @Test func editedSpecIsReloaded() throws {
+        let dir = try temporaryDirectory()
+        let file = dir + "/tool.yaml"
+        try write("name: tool\nsubcommands: [{name: one}]\n", to: file)
+        let store = specStore(dir)
+        #expect(store.spec(named: "tool")?.subcommands?.map(\.name.first) == ["one"])
+        try write("name: tool\nsubcommands: [{name: two}]\n", to: file, modified: 60)
+        #expect(store.spec(named: "tool")?.subcommands?.map(\.name.first) == ["two"])
+    }
+
+    @Test func newSpecAppearsInCommands() throws {
+        let dir = try temporaryDirectory()
+        let store = specStore(dir)
+        #expect(store.commands().isEmpty)
+        try write("name: added\ndescription: New\n", to: dir + "/added.yaml")
+        try touch(dir, modified: 60)
+        #expect(store.commands()["added"]?.description == "New")
+    }
+
+    @Test func brokenSpecReportsError() throws {
+        let dir = try temporaryDirectory()
+        try write("name: bad\noptions: oops\n", to: dir + "/bad.yaml")
+        let store = specStore(dir)
+        #expect(store.spec(named: "bad") == nil)
+        #expect(store.loadError(for: "bad") != nil)
+    }
+
+    @Test func linterFindsTypos() {
+        let issues = SpecLinter.lint(yaml: "name: x\ndescripton: typo\n")
+        #expect(issues.count == 1)
+        #expect(issues.first?.contains("did you mean `description`") == true)
+    }
+}

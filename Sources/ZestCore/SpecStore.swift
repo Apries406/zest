@@ -20,8 +20,14 @@ public final class SpecStore: @unchecked Sendable {
 
     public let directories: [URL]
     private let lock = NSLock()
-    private var cache: [String: Spec] = [:]
-    private var missing: Set<String> = []
+    private struct Cached {
+        var spec: Spec
+        var url: URL
+        var modified: Date?
+    }
+
+    private var cache: [String: Cached] = [:]
+    private var indexStamp: [Date?] = []
     private var commandIndex: [String: CommandInfo]?
     private var errors: [String: String] = [:]
 
@@ -48,7 +54,6 @@ public final class SpecStore: @unchecked Sendable {
         lock.lock()
         defer { lock.unlock() }
         cache.removeAll()
-        missing.removeAll()
         commandIndex = nil
         errors.removeAll()
     }
@@ -63,24 +68,33 @@ public final class SpecStore: @unchecked Sendable {
     /// Loads a spec by name. `name` may contain `/` for specs split into files, e.g. `aws/s3`.
     public func spec(named name: String) -> Spec? {
         guard Self.isValidName(name) else { return nil }
+        let url = file(for: name)
+        let modified = url.flatMap(Self.modificationDate)
         lock.lock()
-        if let cached = cache[name] { lock.unlock(); return cached }
-        if missing.contains(name) { lock.unlock(); return nil }
+        // Reuse the parsed spec while its file is unchanged, so edits apply right away.
+        if let cached = cache[name], cached.url == url, cached.modified == modified {
+            lock.unlock()
+            return cached.spec
+        }
         lock.unlock()
+        guard let url else { return nil }
 
         var result: Spec?
         var error: String?
-        if let url = file(for: name) {
-            do {
-                result = try Self.load(url: url)
-            } catch let loadError {
-                error = Self.describe(loadError)
-            }
+        do {
+            result = try Self.load(url: url)
+        } catch let loadError {
+            error = Self.describe(loadError)
         }
 
         lock.lock()
         defer { lock.unlock() }
-        if let result { cache[name] = result } else { missing.insert(name) }
+        if let result {
+            cache[name] = Cached(spec: result, url: url, modified: modified)
+            errors[name] = nil
+        } else {
+            cache[name] = nil
+        }
         if let error { errors[name] = error }
         return result
     }
@@ -107,8 +121,10 @@ public final class SpecStore: @unchecked Sendable {
 
     /// All top-level commands that have a spec, with descriptions for the popup.
     public func commands() -> [String: CommandInfo] {
+        // Rebuild when a spec folder changed (a file was added, removed or renamed).
+        let stamp = directories.map(Self.modificationDate)
         lock.lock()
-        if let index = commandIndex { lock.unlock(); return index }
+        if let index = commandIndex, stamp == indexStamp { lock.unlock(); return index }
         lock.unlock()
 
         var index: [String: CommandInfo] = [:]
@@ -135,8 +151,13 @@ public final class SpecStore: @unchecked Sendable {
 
         lock.lock()
         commandIndex = index
+        indexStamp = stamp
         lock.unlock()
         return index
+    }
+
+    static func modificationDate(_ url: URL) -> Date? {
+        (try? FileManager.default.attributesOfItem(atPath: url.path))?[.modificationDate] as? Date
     }
 
     // MARK: - Decoding
