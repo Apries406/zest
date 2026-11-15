@@ -1,5 +1,6 @@
 import SwiftUI
 import ZestCore
+import ZestUI
 
 struct SettingsView: View {
     @ObservedObject var model: AppModel

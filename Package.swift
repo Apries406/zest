@@ -25,11 +25,20 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
+        .target(
+            name: "ZestUI",
+            dependencies: ["ZestCore"]
+        ),
         .executableTarget(
             name: "ZestApp",
-            dependencies: ["ZestCore"],
+            dependencies: ["ZestCore", "ZestUI"],
             // AppKit and the Accessibility API are not annotated for Swift 6 concurrency yet.
             swiftSettings: [.swiftLanguageMode(.v5)]
+        ),
+        // Renders docs/images/demo.gif with the real engine and popup (`make demo`).
+        .executableTarget(
+            name: "ZestDemo",
+            dependencies: ["ZestCore", "ZestUI"]
         ),
         .testTarget(
             name: "ZestCoreTests",

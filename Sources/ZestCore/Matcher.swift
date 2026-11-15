@@ -25,8 +25,10 @@ public enum Matcher {
             let exact: Double = q.count == c.count ? 50 : 0
             // `-l` before `-L` when you typed `-l`.
             let sameCase: Double = candidate.hasPrefix(query) ? 1 : 0
+            // With only `-` or `--` typed, keep the spec's order instead of shortest first.
+            let lengthPenalty = query.allSatisfy({ $0 == "-" }) ? 0 : Double(c.count) * 0.01
             return Match(
-                score: prefixScore + exact + sameCase - Double(c.count) * 0.01,
+                score: prefixScore + exact + sameCase - lengthPenalty,
                 indices: Array(0..<q.count), isPrefix: true)
         }
         guard fuzzy else { return nil }

@@ -1,0 +1,212 @@
+import AppKit
+import SwiftUI
+import ZestCore
+
+/// What the popup view shows.
+@MainActor
+public final class PopupModel: ObservableObject {
+    public init() {}
+
+    @Published public var items: [Completion] = []
+    @Published public var selected = 0
+    @Published public var isLoading = false
+    @Published public var fontSize: CGFloat = 13
+    @Published public var visibleRows = 8
+    @Published public var showDescriptions = true
+
+    public var rowHeight: CGFloat { (fontSize + 9).rounded() }
+    public var footerHeight: CGFloat { showDescriptions ? rowHeight + 2 : 0 }
+    public var iconSize: CGFloat { (fontSize + 3).rounded() }
+
+    public func height(itemCount: Int) -> CGFloat {
+        CGFloat(min(itemCount, visibleRows)) * rowHeight + footerHeight + 8
+    }
+}
+
+// MARK: - View
+
+public struct PopupView: View {
+    @ObservedObject var model: PopupModel
+    let icons: IconResolver
+
+    public init(model: PopupModel, icons: IconResolver) {
+        self.model = model
+        self.icons = icons
+    }
+
+    public var body: some View {
+        VStack(spacing: 0) {
+            ScrollViewReader { proxy in
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack(spacing: 0) {
+                        ForEach(Array(model.items.enumerated()), id: \.offset) { index, item in
+                            Row(item: item, selected: index == model.selected, model: model, icons: icons)
+                                .id(index)
+                        }
+                    }
+                }
+                .onChange(of: model.selected) { _, new in proxy.scrollTo(new) }
+                .onChange(of: model.items) { _, _ in proxy.scrollTo(model.selected) }
+            }
+            if model.showDescriptions {
+                Rectangle().fill(Theme.border).frame(height: 1)
+                Footer(model: model)
+            }
+        }
+        .padding(.vertical, 4)
+        .background(Theme.background)
+        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 6, style: .continuous).stroke(Theme.border, lineWidth: 1))
+    }
+}
+
+private struct Row: View {
+    let item: Completion
+    let selected: Bool
+    @ObservedObject var model: PopupModel
+    let icons: IconResolver
+
+    var body: some View {
+        HStack(spacing: 8) {
+            IconView(icon: icons.icon(for: item), size: model.iconSize)
+            Text(highlighted)
+                .font(.custom("Menlo", size: model.fontSize))
+                .lineLimit(1)
+                .strikethrough(item.deprecated, color: Theme.dim)
+            Spacer(minLength: 12)
+            if model.showDescriptions, let description = item.description, !selected {
+                Text(description)
+                    .font(.system(size: model.fontSize - 2))
+                    .foregroundStyle(Theme.dim)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .frame(maxWidth: 180, alignment: .trailing)
+            }
+        }
+        .padding(.horizontal, 8)
+        .frame(height: model.rowHeight)
+        .background(selected ? Theme.selection : .clear)
+        .clipShape(RoundedRectangle(cornerRadius: 3))
+        .padding(.horizontal, 4)
+    }
+
+    private var highlighted: AttributedString {
+        var text = AttributedString(item.name)
+        text.foregroundColor = selected ? Theme.selectedText : Theme.text
+        let characters = Array(item.name)
+        for index in item.matchedIndices where index < characters.count {
+            let start = text.index(text.startIndex, offsetByCharacters: index)
+            let end = text.index(start, offsetByCharacters: 1)
+            text[start..<end].foregroundColor = Theme.match
+            text[start..<end].font = .custom("Menlo-Bold", size: model.fontSize)
+        }
+        return text
+    }
+}
+
+private struct Footer: View {
+    @ObservedObject var model: PopupModel
+
+    var body: some View {
+        HStack(spacing: 6) {
+            let item = model.items.indices.contains(model.selected) ? model.items[model.selected] : nil
+            Text(item?.description ?? item?.name ?? "")
+                .font(.system(size: model.fontSize - 1).italic())
+                .foregroundStyle(Theme.subcommand)
+                .lineLimit(1)
+                .truncationMode(.tail)
+            Spacer(minLength: 4)
+            if model.isLoading {
+                ProgressView().controlSize(.mini).tint(Theme.dim)
+            }
+        }
+        .padding(.horizontal, 12)
+        .frame(height: model.rowHeight)
+    }
+}
+
+public struct IconView: View {
+    let icon: IconResolver.Icon
+    let size: CGFloat
+
+    public init(icon: IconResolver.Icon, size: CGFloat) {
+        self.icon = icon
+        self.size = size
+    }
+
+    public var body: some View {
+        Group {
+            switch icon {
+            case .material(let name):
+                if let image = IconCache.shared.material(name) {
+                    Image(nsImage: image).resizable().interpolation(.high)
+                } else {
+                    Codicon(name: "symbol-variable", color: Theme.dim, size: size)
+                }
+            case .codicon(let name, let role):
+                Codicon(name: name, color: Self.color(role), size: size)
+            case .emoji(let emoji):
+                Text(emoji).font(.system(size: size - 3))
+            }
+        }
+        .frame(width: size, height: size)
+    }
+
+    public static func color(_ role: IconResolver.Role) -> Color {
+        switch role {
+        case .command: return Theme.command
+        case .subcommand: return Theme.subcommand
+        case .option: return Theme.option
+        case .argument: return Theme.argument
+        case .history: return Theme.history
+        }
+    }
+}
+
+private struct Codicon: View {
+    let name: String
+    let color: Color
+    let size: CGFloat
+
+    var body: some View {
+        Text(IconCache.shared.codicon(name))
+            .font(.custom("codicon", size: size - 1))
+            .foregroundStyle(color)
+    }
+}
+
+/// Loads icons on first use and keeps them.
+@MainActor
+public final class IconCache {
+    public static let shared = IconCache()
+    public var materialDirectory: URL?
+    private var images: [String: NSImage] = [:]
+    private var codepoints: [String: String] = [:]
+
+    public func configure(icons: URL?) {
+        guard let icons else { return }
+        materialDirectory = icons.appendingPathComponent("material")
+        let font = icons.appendingPathComponent("codicon.ttf")
+        CTFontManagerRegisterFontsForURL(font as CFURL, .process, nil)
+        if let data = try? Data(contentsOf: icons.appendingPathComponent("codicons.json")),
+           let map = try? JSONDecoder().decode([String: String].self, from: data) {
+            for (name, hex) in map {
+                if let value = UInt32(hex, radix: 16), let scalar = Unicode.Scalar(value) {
+                    codepoints[name] = String(Character(scalar))
+                }
+            }
+        }
+    }
+
+    func material(_ name: String) -> NSImage? {
+        if let image = images[name] { return image }
+        guard let url = materialDirectory?.appendingPathComponent(name + ".svg"),
+              let image = NSImage(contentsOf: url) else { return nil }
+        images[name] = image
+        return image
+    }
+
+    func codicon(_ name: String) -> String {
+        codepoints[name] ?? "•"
+    }
+}

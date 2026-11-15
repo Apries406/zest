@@ -531,19 +531,25 @@ public final class Engine: @unchecked Sendable {
             }
         }
         var seen = Set<String>()
+        let used = Self.commandCounts(request.history)
+        // Commands you run often come first: `n` suggests npm before nc or ng.
+        func bonus(_ name: String) -> Double {
+            guard let count = used[name] else { return 0 }
+            return min(60, log2(Double(count) + 1) * 15)
+        }
         for (name, info) in store.commands().sorted(by: { $0.key < $1.key }) {
             seen.insert(name)
             c.add(
                 kind: .command, names: [name], display: nil, insert: nil, description: info.description,
                 icon: info.icon, priority: 55, hidden: nil, deprecated: nil, token: token,
-                appendSpace: true, usageKey: "", filter: nil, settings: settings)
+                appendSpace: true, usageKey: "", filter: nil, settings: settings, bonus: bonus(name))
         }
         for (alias, expansion) in request.aliases.sorted(by: { $0.key < $1.key }) where !seen.contains(alias) {
             seen.insert(alias)
             c.add(
                 kind: .command, names: [alias], display: nil, insert: nil, description: "alias: \(expansion)",
                 icon: nil, priority: 50, hidden: nil, deprecated: nil, token: token,
-                appendSpace: true, usageKey: "", filter: nil, settings: settings)
+                appendSpace: true, usageKey: "", filter: nil, settings: settings, bonus: bonus(alias))
         }
         // Executables on PATH only once something is typed; there are thousands.
         guard settings.pathCommands, !token.value.isEmpty else { return }
@@ -552,7 +558,7 @@ public final class Engine: @unchecked Sendable {
             c.add(
                 kind: .command, names: [name], display: nil, insert: nil, description: nil, icon: nil,
                 priority: 40, hidden: nil, deprecated: nil, token: token, appendSpace: true,
-                usageKey: "", filter: .prefix, settings: settings)
+                usageKey: "", filter: .prefix, settings: settings, bonus: bonus(name))
         }
     }
 
@@ -685,6 +691,17 @@ public final class Engine: @unchecked Sendable {
         let names = Set(pathCommands())
         pathSet = (Date(), names)
         return names
+    }
+
+
+    /// How often each command starts a line in the history.
+    static func commandCounts(_ history: [String]) -> [String: Int] {
+        var counts: [String: Int] = [:]
+        for line in history {
+            let first = line.prefix { $0 != " " && $0 != "\t" }
+            if !first.isEmpty { counts[String(first), default: 0] += 1 }
+        }
+        return counts
     }
 
     static let zshBuiltins: Set<String> = [

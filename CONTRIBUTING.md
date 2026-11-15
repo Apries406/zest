@@ -68,6 +68,12 @@ so you will be asked to grant it again after each rebuild: remove the old zest e
 Settings → Privacy & Security → Accessibility and add the new one. Maintainers can avoid this with
 `scripts/setup-local-signing.sh` (see [Releasing](docs/releasing.md)).
 
+## The README demo
+
+`docs/images/demo.gif` and `hero.png` are rendered by `make demo` (needs `ffmpeg`): it types a script
+into the real engine in a throwaway project, runs the commands for their output and draws each step
+with the app's popup view. Run it again when the popup's look changes.
+
 ## Pull requests
 
 - Keep each pull request to one change, and describe what it fixes or adds and how you tested it.

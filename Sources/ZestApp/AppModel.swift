@@ -2,6 +2,7 @@ import AppKit
 import Combine
 import ServiceManagement
 import ZestCore
+import ZestUI
 
 /// Owns the services: specs, engine, socket server and popup.
 @MainActor

@@ -16,7 +16,7 @@ struct Collector {
         kind: CompletionKind, names: [String], display: String?, insert: String?,
         description: String?, icon: String?, priority: Double?, hidden: Bool?, deprecated: Bool?,
         token: Token, appendSpace: Bool, usageKey: String, filter: FilterStrategy?,
-        settings: EngineSettings, escape: Bool = false
+        settings: EngineSettings, escape: Bool = false, bonus: Double = 0
     ) {
         let query = token.value
         let fuzzy = filter == .prefix ? false : settings.fuzzy
@@ -24,7 +24,7 @@ struct Collector {
               let (name, match) = best(names, query: query, fuzzy: fuzzy) else { return }
         if hidden == true && !(match.isPrefix && query.count >= 2) { return }
 
-        var score = match.score + ((priority ?? 50) - 50) * 3
+        var score = match.score + ((priority ?? 50) - 50) * 3 + bonus
         if deprecated == true { score -= 5 }
         // Aliases match too, but the popup shows and inserts the main name.
         let shown = display ?? primary

@@ -34,7 +34,7 @@ import Testing
 
     @Test func optionsAfterDash() {
         // Persistent options from `git` are valid in `git commit` too.
-        #expect(engine.names("git commit -") == ["-m, --message", "-C", "--amend", "--format"])
+        #expect(engine.names("git commit -") == ["-m, --message", "--amend", "--format", "-C"])
     }
 
     @Test func longOptionsOnly() {
@@ -43,7 +43,7 @@ import Testing
     }
 
     @Test func usedOptionIsNotSuggestedAgain() {
-        #expect(engine.names("git commit --amend -") == ["-m, --message", "-C", "--format"])
+        #expect(engine.names("git commit --amend -") == ["-m, --message", "--format", "-C"])
     }
 
     @Test func optionArgumentIsNotASubcommand() {
@@ -176,6 +176,12 @@ import Testing
         let names = engine.names("git co", history: ["git commit -m fix", "git commit -m fix", "ls"])
         #expect(names.last == "git commit -m fix")
         #expect(names.filter { $0 == "git commit -m fix" }.count == 1)
+    }
+
+    @Test func frequentCommandsComeFirst() {
+        #expect(engine.names("s").first == "sudo")
+        let history = ["tool sub deep", "tool sub", "tool"]
+        #expect(engine.names("t", history: history).first == "tool")
     }
 
     @Test func historySkipsCommandsThatDoNotExist() {

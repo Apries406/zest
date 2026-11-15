@@ -1,6 +1,7 @@
 import AppKit
 import SwiftUI
 import ZestCore
+import ZestUI
 
 @main
 struct ZestApp: App {

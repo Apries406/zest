@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/images/terminal-git.png" width="720" alt="zest suggesting git subcommands in Terminal">
+  <img src="docs/images/demo.gif" width="760" alt="zest suggesting git branches, npm scripts, docker options and folders while typing">
 </p>
 
 ## Why
@@ -110,7 +110,7 @@ updates, reload specs or quit. In Settings you can change the Enter key behavior
 history suggestions, font size, popup width and the number of visible rows.
 
 <p align="center">
-  <img src="docs/images/cursor-cd.png" width="720" alt="zest suggesting folders in the Cursor terminal">
+  <img src="docs/images/hero.png" width="720" alt="zest listing git branches for git checkout">
 </p>
 
 ## Add a command
