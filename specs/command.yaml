@@ -1,0 +1,8 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: command
+description: Run an external command
+options:
+  - name: -v
+    description: Print the location of the command
+args:
+  isCommand: true

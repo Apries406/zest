@@ -1,0 +1,8 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: pwd
+description: Return working directory name
+options:
+  - name: -L
+    description: Display the logical current working directory
+  - name: -P
+    description: Display the physical current working directory

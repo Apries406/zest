@@ -1,0 +1,24 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: git-profile
+description: Switch profiles
+subcommands:
+  - name: use
+    description: Use a profile
+    args:
+      name: profile
+      description: Profile you want to apply in this repository
+      generators:
+        script:
+          - git-profile
+          - list
+        js:
+          postProcess: 0
+options:
+  - name:
+      - --help
+      - -h
+    description: Help for git-profile script
+  - name:
+      - --config
+      - -c
+    description: Config file (default "~/.gitprofile")

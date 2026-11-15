@@ -20,13 +20,13 @@ struct Collector {
     ) {
         let query = token.value
         let fuzzy = filter == .prefix ? false : settings.fuzzy
-        guard let (name, match) = best(names, query: query, fuzzy: fuzzy) else { return }
+        guard let primary = names.first, !primary.isEmpty,
+              let (name, match) = best(names, query: query, fuzzy: fuzzy) else { return }
         if hidden == true && !(match.isPrefix && query.count >= 2) { return }
 
         var score = match.score + ((priority ?? 50) - 50) * 3
         if deprecated == true { score -= 5 }
         // Aliases match too, but the popup shows and inserts the main name.
-        let primary = names[0]
         let shown = display ?? primary
         items.append(Completion(
             kind: kind, name: shown,

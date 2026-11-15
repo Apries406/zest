@@ -1,0 +1,37 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: fc-match
+options:
+  - name:
+      - -s
+      - --sort
+    description: display sorted list of matches
+  - name:
+      - -a
+      - --all
+    description: display unpruned sorted list of matches
+  - name:
+      - -v
+      - --verbose
+    description: display entire font pattern verbosely
+  - name:
+      - -b
+      - --brief
+    description: display entire font pattern briefly
+  - name:
+      - -f
+      - --format
+    description: use the given output format
+    args:
+      name: FORMAT
+  - name:
+      - -V
+      - --version
+    description: display font config version and exit
+  - name:
+      - -h
+      - --help
+    description: display this help and exit
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

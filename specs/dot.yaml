@@ -1,0 +1,79 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: dot
+options:
+  - name: -V
+    description: "- Print version and exit"
+  - name: -v
+    description: "- Enable verbose mode at level 1, or set to the level 'n' if provided"
+    args:
+      name: "n"
+      isOptional: true
+  - name: -Gname
+    description: "- Set graph attribute 'name' to 'val'"
+  - name: -Nname
+    description: "- Set node attribute 'name' to 'val'"
+  - name: -Ename
+    description: "- Set edge attribute 'name' to 'val'"
+  - name: -Aname
+    description: "- Set attribute 'name' to 'val' for graph, node, and edge"
+  - name: -Tv
+    description: "- Set output format to 'v'"
+  - name: -Kv
+    description: "- Set layout engine to 'v' (overrides default based on command name)"
+  - name: -lv
+    description: "- Use external library 'v'"
+  - name: -ofile
+    description: "- Write output to 'file'"
+  - name: -O
+    description: "- Automatically generate an output filename based on the input filename with a .'format' appended. (Causes all -ofile options to be ignored.)"
+  - name: -P
+    description: "- Internally generate a graph of the current plugins."
+  - name: -q
+    description: "- Set level of message suppression (=1)"
+    args:
+      name: l
+      isOptional: true
+  - name: -s
+    description: "- Scale input by 'v' (=72)"
+    args:
+      name: v
+      isOptional: true
+  - name: -y
+    description: "- Invert y coordinate in output"
+  - name: -n
+    description: "- No layout mode 'v' (=1)"
+    args:
+      name: v
+      isOptional: true
+  - name: -x
+    description: "- Reduce graph"
+  - name: -Lg
+    description: "- Don't use grid"
+  - name: -LO
+    description: "- Use old attractive force"
+  - name: -Ln
+    description: "- Set number of iterations to i"
+    args:
+      name: i
+  - name: -LU
+    description: "- Set unscaled factor to i"
+    args:
+      name: i
+  - name: -LC
+    description: "- Set overlap expansion factor to v"
+    args:
+      name: v
+  - name: -LT
+    description: "- Set temperature (temperature factor) to v"
+    args:
+      - name: "*"
+        isOptional: true
+      - name: v
+  - name: -c
+    description: "- Configure plugins (Writes $prefix/lib/graphviz/config with available plugin information.  Needs write privilege.)"
+  - name: -?
+    description: "- Print usage and exit"
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

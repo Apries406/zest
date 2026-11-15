@@ -1,0 +1,10 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: vi
+description: Vi[m] is an one of two powerhouse text editors in the Unix world, the other being EMACS
+options:
+  - name:
+      - -h
+      - --help
+    description: Print help message for vi and exit
+args:
+  template: filepaths

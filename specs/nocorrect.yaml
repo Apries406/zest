@@ -1,0 +1,6 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: nocorrect
+description: ZSH pre-command modifier that disables correction
+hidden: true
+args:
+  isCommand: true

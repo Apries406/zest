@@ -1,0 +1,18 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: pdfunite
+description: Combine multiple pdfs
+options:
+  - name: -v
+    description: Print copyright and version info
+  - name:
+      - -h
+      - --help
+      - -?
+    description: Print usage information
+args:
+  isVariadic: true
+  generators:
+    template: filepaths
+    filter:
+      extensions:
+        - pdf

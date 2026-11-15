@@ -1,0 +1,4 @@
+var __zestModule=(()=>{var a=Object.defineProperty;var s=Object.getOwnPropertyDescriptor;var o=Object.getOwnPropertyNames;var p=Object.prototype.hasOwnProperty;var l=(n,e)=>{for(var t in e)a(n,t,{get:e[t],enumerable:!0})},c=(n,e,t,r)=>{if(e&&typeof e=="object"||typeof e=="function")for(let i of o(e))!p.call(n,i)&&i!==t&&a(n,i,{get:()=>e[i],enumerable:!(r=s(e,i))||r.enumerable});return n};var m=n=>c(a({},"__esModule",{value:!0}),n);var v={};l(v,{default:()=>b});var d={script:["env"],postProcess:n=>n.length===0?[]:n.split(`
+`).map(e=>e.split("=")[0]).map(e=>({name:`${e}`,type:"arg",description:"Environment Variable"}))},g={name:"unset",description:"Named variable shall be undefined",args:{name:"string",generators:d},options:[{name:"-v",description:"Variable definition will be unset"}]},b=g;return m(v);})();
+
+var __zestSpec = __zestModule.default;

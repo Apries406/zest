@@ -1,0 +1,5 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: if
+description: Conditionally execute based on the return value of a command
+args:
+  isCommand: true

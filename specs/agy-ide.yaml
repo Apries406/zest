@@ -1,0 +1,153 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: agy-ide
+subcommands:
+  - name: chat
+    description: Pass in a prompt to run in a chat session in the current working directory.
+    options:
+      - name: -m
+        description: "The mode to use for the chat session. Available options: 'ask', 'edit', 'agent', or the identifier of a custom mode. Defaults to 'agent'."
+        args:
+          name: mode
+      - name: -a
+        description: Add files as context to the chat session.
+        args:
+          name: path
+      - name: --maximize
+        description: Maximize the chat session view.
+      - name: -r
+        description: Force to use the last active window for the chat session.
+      - name: -n
+        description: Force to open an empty window for the chat session.
+      - name: --profile
+        description: profile and associates the profile with the workspace. If the profile does not exist, a new empty one is created.
+        args:
+          name: profileName
+  - name: serve-web
+    description: Run a server that displays the editor UI in browsers.
+  - name: tunnel
+    description: Make the current machine accessible from vscode.dev or other machines through a secure tunnel.
+options:
+  - name: -d
+    description: Compare two files with each other.
+    args:
+      - name: file
+      - name: file
+  - name: -m
+    description: providing paths for two modified versions of a file, the common origin of both modified versions and the output file to save merge results.
+    args:
+      - name: path1
+      - name: path2
+      - name: base
+      - name: result
+  - name: -a
+    description: Add folder(s) to the last active window.
+    args:
+      name: folder
+  - name: --remove
+    description: Remove folder(s) from the last active window.
+    args:
+      name: folder
+  - name: -g
+    description: Open a file at the path on the specified line and character position.
+    args:
+      name: file:line[:character
+  - name: -n
+    description: Force to open a new window.
+  - name: -r
+    description: Force to open a file or folder in an already opened window.
+  - name: -w
+    description: Wait for the files to be closed before returning.
+  - name: --locale
+    description: The locale to use (e.g. en-US or zh-TW).
+    args:
+      name: locale
+  - name: --user-data-dir
+    description: Specifies the directory that user data is kept in. Can be used to open multiple distinct instances of Code.
+    args:
+      name: dir
+  - name: --profile
+    description: Opens the provided folder or workspace with the given profile and associates the profile with the workspace. If the profile does not exist, a new empty one is created.
+    args:
+      name: profileName
+  - name: -h
+    description: Print usage.
+  - name: --extensions-dir
+    description: Set the root path for extensions.
+    args:
+      name: dir
+  - name: --list-extensions
+    description: List the installed extensions.
+  - name: --show-versions
+    description: Show versions of installed extensions, when using --list-extensions.
+  - name: --category
+    description: Filters installed extensions by provided category, when using --list-extensions.
+    args:
+      name: category
+  - name: --install-extension
+    description: "argument is either an extension id or a path to a VSIX. The identifier of an extension is '${publisher}.${name}'. Use '--force' argument to update to latest version. To install a specific version provide '@${version}'. For example:"
+    args:
+      name: ext-id | path
+  - name: --pre-release
+    description: Installs the pre-release version of the extension, when using --install-extension
+  - name: --uninstall-extension
+    description: Uninstalls an extension.
+    args:
+      name: ext-id
+  - name: --update-extensions
+    description: Update the installed extensions.
+  - name: --enable-proposed-api
+    description: Enables proposed API features for extensions. Can receive one or more extension IDs to enable individually.
+    args:
+      name: ext-id
+  - name: --add-mcp
+    description: profile. Accepts JSON input in the form '{"name":"server-name","command":...}'
+    args:
+      name: json
+  - name: -v
+    description: Print version.
+  - name: --verbose
+    description: Print verbose output (implies --wait).
+  - name: --log
+    description: "Log level to use. Default is 'info'. Allowed values are 'critical', 'error', 'warn', 'info', 'debug', 'trace', 'off'. You can also configure the log level of an extension by passing extension id and log level in the following format:"
+    args:
+      name: level
+  - name: -s
+    description: Print process usage and diagnostics information.
+  - name: --prof-startup
+    description: Run CPU profiler during startup.
+  - name: --disable-extensions
+    description: Disable all installed extensions. This option is not persisted and is effective only when the command opens a new window.
+  - name: --disable-extension
+    description: Disable the provided extension. This option is not persisted and is effective only when the command opens a new window.
+    args:
+      name: ext-id
+  - name: --sync
+    description: Turn sync on or off.
+    args:
+      name: on | off
+  - name: --inspect-extensions
+    description: Allow debugging and profiling of extensions. Check the developer tools for the connection URI.
+    args:
+      name: port
+  - name: --inspect-brk-extensions
+    description: Allow debugging and profiling of extensions with the extension host being paused after start. Check the developer tools for the connection URI.
+    args:
+      name: port
+  - name: --disable-lcd-text
+    description: Disable LCD font rendering.
+  - name: --disable-gpu
+    description: Disable GPU hardware acceleration.
+  - name: --disable-chromium-sandbox
+    description: Use this option only when there is requirement to launch the application as sudo user on Linux or when running as an elevated user in an applocker environment on Windows.
+  - name: --locate-shell-integration-path
+    description: integration script. Allowed values are 'bash', 'pwsh', 'zsh' or 'fish'.
+    args:
+      name: shell
+  - name: --telemetry
+    description: Shows all telemetry events which VS code collects.
+  - name: --transient
+    description: Run with temporary data and extension directories, as if launched for the first time.
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

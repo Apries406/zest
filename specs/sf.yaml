@@ -1,0 +1,249 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: sf
+subcommands:
+  - name: alias
+    description: Use the alias commands to manage your aliases.
+    subcommands:
+      - name: alias
+        description: List all aliases currently set on your local computer.
+  - name: analytics
+    description: Work with analytics assets.
+    subcommands:
+      - name: analytics
+        description: Create analytics templates.
+  - name: apex
+    description: Use the apex commands to create Apex classes, execute anonymous blocks, view your logs, run Apex tests, and view Apex test results.
+    subcommands:
+      - name: apex
+        description: Create an apex class or trigger.
+  - name: api
+    description: Commands to interact with API calls.
+    subcommands:
+      - name: api
+        description: Commands that make API requests.
+  - name: cmdt
+    description: Generate a field for a custom metadata type based on the provided field type.
+    subcommands:
+      - name: cmdt
+        description: Generate a field for a custom metadata type based on the provided field type.
+  - name: community
+    description: Create an Experience Cloud site using a template.
+    subcommands:
+      - name: community
+        description: Retrieve the list of templates available in your org.
+  - name: config
+    description: Commands to configure Salesforce CLI.
+    subcommands:
+      - name: config
+        description: Get the value of a configuration variable.
+  - name: data
+    description: Manage records in your org.
+    subcommands:
+      - name: data
+        description: Get the results of a bulk ingest job that you previously ran.
+  - name: deploy
+    description: Deploy a Salesforce Function to an org from your local project.
+    subcommands:
+      - name: deploy
+        description: Deploy a Salesforce Function to an org from your local project.
+  - name: dev
+    description: Audit messages in a plugin's messages directory to locate unused messages and missing messages that have references in source code.
+    subcommands:
+      - name: dev
+        description: Audit messages in a plugin's messages directory to locate unused messages and missing messages that have references in source code.
+  - name: env
+    description: Add a Heroku user as a collaborator on this Functions account, allowing them to attach Heroku add-ons to compute environments.
+    subcommands:
+      - name: env
+        description: Add a Heroku user as a collaborator on this Functions account, allowing them to attach Heroku add-ons to compute environments.
+  - name: force
+    description: Legacy commands for backward compatibility.
+    subcommands:
+      - name: force
+        description: Manage records in your org using Bulk API V1.
+  - name: generate
+    description: Create a Salesforce Function with basic scaffolding specific to a given language.
+    subcommands:
+      - name: generate
+        description: Create a Salesforce Function with basic scaffolding specific to a given language.
+  - name: info
+    description: Access Salesforce CLI information from the command line.
+    subcommands:
+      - name: info
+        description: Read the Salesforce CLI release notes.
+  - name: lightning
+    description: Work with Lightning Web and Aura components.
+    subcommands:
+      - name: lightning
+        description: Create LWC and Aura components and associated metadata.
+  - name: login
+    description: Log in to Salesforce Functions.
+  - name: logout
+    description: Log out of your Salesforce Functions account.
+  - name: org
+    description: Commands to create and manage orgs and scratch org users.
+    subcommands:
+      - name: org
+        description: Used to assign permissions to a user
+  - name: package
+    description: Commands to develop and install unlocked packages and managed 2GP packages.
+    subcommands:
+      - name: package
+        description: Command to report on installed packages.
+  - name: package1
+    description: Commands to develop first-generation managed and unmanaged packages.
+    subcommands:
+      - name: package1
+        description: Commands to manage first-generation package versions.
+  - name: plugins
+    description: list installed plugins
+    subcommands:
+      - name: plugins
+        description: validate a digital signature for a npm package
+    options:
+      - name: --core
+        description: Show core plugins.
+      - name: --json
+        description: Format output as json.
+  - name: project
+    description: Work with projects, such as deploy and retrieve metadata.
+    subcommands:
+      - name: project
+        description: Commands to change the format of your project source files.
+  - name: run
+    description: Send a cloudevent to a function.
+    subcommands:
+      - name: run
+        description: Send a cloudevent to a function.
+  - name: scanner
+    description: Add custom rules to Salesforce Code Analyzer's registry to run them along with the built-in rules.
+    subcommands:
+      - name: scanner
+        description: Add custom rules to Salesforce Code Analyzer's registry to run them along with the built-in rules.
+  - name: schema
+    description: Generate metadata files.
+    subcommands:
+      - name: schema
+        description: Generate metadata files for various Salesforce database schema.
+  - name: sobject
+    description: Commands to interact with Salesforce objects.
+    subcommands:
+      - name: sobject
+        description: Display the metadata for a standard or custom object or a Tooling API object.
+  - name: static-resource
+    description: Work with static resources.
+    subcommands:
+      - name: static-resource
+        description: Generate a static resource.
+  - name: update
+    description: update the sf CLI
+  - name: version
+    options:
+      - name: --verbose
+        description: Show additional information about the CLI.
+      - name: --json
+        description: Format output as json.
+  - name: visualforce
+    description: Work with Visualforce components.
+    subcommands:
+      - name: visualforce
+        description: Create a Visualforce page or component.
+  - name: whoami
+    description: Show information on your Salesforce Functions login.
+    subcommands:
+      - name: whoami
+        description: Show information on your Salesforce Functions login.
+  - name: autocomplete
+    description: Display autocomplete installation instructions.
+    options:
+      - name:
+          - -r
+          - --refresh-cache
+        description: Refresh cache (ignores displaying instructions)
+  - name: commands
+    description: List all sf commands.
+    options:
+      - name:
+          - -c
+          - --columns
+        description: "Only show provided columns (comma-separated). <options: id|plugin|summary|type>"
+        args:
+          name: option
+      - name:
+          - -x
+          - --extended
+        description: Show extra columns.
+      - name: --deprecated
+        description: Show deprecated commands.
+      - name: --hidden
+        description: Show hidden commands.
+      - name: --no-truncate
+        description: Do not truncate output.
+      - name: --sort
+        description: "[default: id] Property to sort by. <options: id|plugin|summary|type>"
+        args:
+          name: option
+      - name: --tree
+        description: Show tree of commands.
+      - name: --json
+        description: Format output as json.
+  - name: doctor
+    description: Gather CLI configuration data and run diagnostic tests to discover and report potential problems in your environment.
+    options:
+      - name:
+          - -c
+          - --command
+        description: Command to run in debug mode; results are written to a log file.
+        args:
+          name: value
+      - name:
+          - -d
+          - --output-dir
+        description: Directory to save all created files rather than the current working directory.
+        args:
+          name: value
+      - name:
+          - -i
+          - --create-issue
+        description: Create a new issue on our GitHub repo and attach all diagnostic results.
+      - name:
+          - -p
+          - --plugin
+        description: Specific plugin on which to run diagnostics.
+        args:
+          name: value
+      - name: --flags-dir
+        description: Import flag values from a directory.
+        args:
+          name: value
+      - name: --json
+        description: Format output as json.
+      - name: --plugin
+  - name: help
+    description: Display help for sf.
+  - name: search
+    description: Search for a command.
+  - name: whatsnew
+    description: Display Salesforce CLI release notes on the command line.
+    options:
+      - name:
+          - -v
+          - --version
+        description: CLI version or tag for which to display release notes.
+        args:
+          name: value
+      - name: --flags-dir
+        description: Import flag values from a directory.
+        args:
+          name: value
+      - name: --json
+        description: Format output as json.
+  - name: which
+    description: Show which plugin a command is in.
+    options:
+      - name: --json
+        description: Format output as json.
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

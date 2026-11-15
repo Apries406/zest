@@ -1,0 +1,10 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: defaultbrowser
+description: Change your default browser from the CLI
+args:
+  isOptional: true
+  generators:
+    script:
+      - defaultbrowser
+    js:
+      postProcess: 0

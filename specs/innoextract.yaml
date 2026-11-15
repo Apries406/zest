@@ -1,0 +1,138 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: innoextract
+options:
+  - name: -h
+    description: Show supported options
+    args:
+      name: --help
+      isOptional: true
+  - name: -v
+    description: Print version information
+    args:
+      name: --version
+      isOptional: true
+  - name: --license
+    description: Show license information
+  - name: -t
+    description: Only verify checksums, don't write anything
+    args:
+      name: --test
+      isOptional: true
+  - name: -e
+    description: Extract files (default action)
+    args:
+      name: --extract
+      isOptional: true
+  - name: -l
+    description: Only list files, don't write anything
+    args:
+      name: --list
+      isOptional: true
+  - name: --list-sizes
+    description: List file sizes
+  - name: --list-checksums
+    description: List file checksums
+  - name: -i
+    description: Print information about the installer
+    args:
+      name: --info
+      isOptional: true
+  - name: --list-languages
+    description: List languages supported by the installer
+  - name: --gog-game-id
+    description: Determine the installer's GOG.com game ID
+  - name: --show-password
+    description: Show password check information
+  - name: --check-password
+    description: Abort if the password is incorrect
+  - name: -V
+    description: Only print the data version
+    args:
+      name: --data-version
+      isOptional: true
+  - name: --codepage
+    description: Encoding for ANSI strings
+  - name: --collisions
+    description: How to handle duplicate files
+  - name: --default-language
+    description: Default language for renaming
+  - name: --dump
+    description: Dump contents without converting filenames
+  - name: -L
+    description: Convert extracted filenames to lower-case
+    args:
+      name: --lowercase
+      isOptional: true
+  - name: -T
+    description: Timezone for file times or "local" or "none"
+    args:
+      name: --timestamps
+      isOptional: true
+  - name: -d
+    description: Extract files into the given directory
+    args:
+      name: --output-dir
+      isOptional: true
+  - name: -P
+    description: Password for encrypted files
+    args:
+      name: --password
+      isOptional: true
+  - name: --password-file
+    description: File to load password from
+  - name: -g
+    description: Extract additional archives from GOG.com installers
+    args:
+      name: --gog
+      isOptional: true
+  - name: --no-gog-galaxy
+    description: Don't re-assemble GOG Galaxy file parts
+  - name: -n
+    description: Don't extract unknown Inno Setup versions
+    args:
+      name: --no-extract-unknown
+      isOptional: true
+  - name: -m
+    description: Don't extract temporary files
+    args:
+      name: --exclude-temp
+      isOptional: true
+  - name: --language
+    description: Extract only files for this language
+  - name: --language-only
+    description: Only extract language-specific files
+  - name: -I
+    description: Extract only files that match this path
+    args:
+      name: --include
+      isOptional: true
+  - name: -q
+    description: Output less information
+    args:
+      name: --quiet
+      isOptional: true
+  - name: -s
+    description: Output only error/warning information
+    args:
+      name: --silent
+      isOptional: true
+  - name: --no-warn-unused
+    description: Don't warn on unused .bin files
+  - name: -c
+    description: Enable/disable color output
+    args:
+      - name: --color
+        isOptional: true
+      - name: =arg(=1)
+        isOptional: true
+  - name: -p
+    description: Enable/disable the progress bar
+    args:
+      - name: --progress
+        isOptional: true
+      - name: =arg(=1)
+        isOptional: true
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

@@ -1,0 +1,125 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: rsvg-convert
+options:
+  - name:
+      - -?
+      - --help
+    description: Display the help
+  - name:
+      - -v
+      - --version
+    description: Display the version information
+  - name:
+      - -d
+      - --dpi-x
+    description: "Pixels per inch [default: 96]"
+    args:
+      name: number
+  - name:
+      - -p
+      - --dpi-y
+    description: "Pixels per inch [default: 96]"
+    args:
+      name: number
+  - name:
+      - -x
+      - --x-zoom
+    description: Horizontal zoom factor
+    args:
+      name: number
+  - name:
+      - -y
+      - --y-zoom
+    description: Vertical zoom factor
+    args:
+      name: number
+  - name:
+      - -z
+      - --zoom
+    description: Zoom factor
+    args:
+      name: number
+  - name:
+      - -w
+      - --width
+    description: Width [defaults to the width of the SVG]
+    args:
+      name: length
+  - name:
+      - -h
+      - --height
+    description: Height [defaults to the height of the SVG]
+    args:
+      name: length
+  - name: --top
+    description: Distance between top edge of page and the image [defaults to 0]
+    args:
+      name: length
+  - name: --left
+    description: Distance between left edge of page and the image [defaults to 0]
+    args:
+      name: length
+  - name: --page-width
+    description: Width of output media [defaults to the width of the SVG]
+    args:
+      name: length
+  - name: --page-height
+    description: Height of output media [defaults to the height of the SVG]
+    args:
+      name: length
+  - name:
+      - -f
+      - --format
+    description: "Output format [default: png] [possible values: png, pdf, pdf1.7, pdf1.6, pdf1.5, pdf1.4, ps, eps, svg]"
+    args:
+      name: format
+  - name:
+      - -o
+      - --output
+    description: Output filename [defaults to stdout]
+    args:
+      name: filename
+  - name:
+      - -i
+      - --export-id
+    description: SVG id of object to export [default is to export all objects]
+    args:
+      name: object-id
+  - name:
+      - -l
+      - --accept-language
+    description: Languages to accept, for example "es-MX,de,en" [default uses language from the environment]
+    args:
+      name: language-tags
+  - name:
+      - -a
+      - --keep-aspect-ratio
+    description: Preserve the aspect ratio
+  - name:
+      - -b
+      - --background-color
+    description: "Set the background color using a CSS color spec [default: none]"
+    args:
+      name: color
+  - name:
+      - -s
+      - --stylesheet
+    description: Filename of CSS stylesheet to apply
+    args:
+      name: filename.css
+  - name:
+      - -u
+      - --unlimited
+    description: Allow huge SVG files
+  - name: --keep-image-data
+    description: Keep image data
+  - name: --no-keep-image-data
+    description: Do not keep image data
+  - name: --completion
+    description: "Output shell completion for the given shell [possible values: bash, elvish, fish, powershell, zsh]"
+    args:
+      name: shell-name
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

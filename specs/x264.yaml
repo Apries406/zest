@@ -1,0 +1,100 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: x264
+options:
+  - name:
+      - -h
+      - --help
+    description: List basic options
+  - name: --longhelp
+    description: List more options
+  - name: --fullhelp
+    description: List all options
+  - name: --profile
+    description: Force the limits of an H.264 profile Overrides all settings. - baseline, main, high, high10, high422, high444
+    args:
+      name: string
+  - name: --preset
+    description: Use a preset to select encoding settings [medium] Overridden by user settings. - ultrafast,superfast,veryfast,faster,fast - medium,slow,slower,veryslow,placebo
+    args:
+      name: string
+  - name: --tune
+    description: "Tune the settings for a particular type of source or situation Overridden by user settings. Multiple tunings are separated by commas. Only one psy tuning can be used at a time. - psy tunings: film,animation,grain,"
+    args:
+      name: string
+  - name:
+      - -I
+      - --keyint
+    args:
+      - name: integer or "infinite"
+      - name: "250"
+        isOptional: true
+  - name: --tff
+    description: Enable interlaced mode (top field first)
+  - name: --bff
+    description: Enable interlaced mode (bottom field first)
+  - name: --pulldown
+    description: Use soft pulldown to change frame rate - none, 22, 32, 64, double, triple, euro (requires cfr input)
+    args:
+      name: string
+  - name:
+      - -B
+      - --bitrate
+    description: Set bitrate (kbit/s)
+    args:
+      name: integer
+  - name: --crf
+    description: Quality-based VBR (-12-51) [23.0]
+    args:
+      name: float
+  - name: --vbv-maxrate
+    args:
+      - name: integer
+      - name: "0"
+        isOptional: true
+  - name: --vbv-bufsize
+    args:
+      - name: integer
+      - name: "0"
+        isOptional: true
+  - name:
+      - -p
+      - --pass
+    description: "Enable multipass ratecontrol - 1: First pass, creates stats file - 2: Last pass, does not overwrite stats file"
+    args:
+      name: integer
+  - name:
+      - -o
+      - --output
+    description: Specify output file
+    args:
+      name: string
+  - name: --sar
+    description: Specify Sample Aspect Ratio
+  - name: --fps
+    description: Specify framerate
+    args:
+      name: float|rational
+  - name: --seek
+    description: First frame to encode
+    args:
+      name: integer
+  - name: --frames
+    description: Maximum number of frames to encode
+    args:
+      name: integer
+  - name: --level
+    description: Specify level (as defined by Annex A)
+    args:
+      name: string
+  - name: --quiet
+    description: Quiet Mode
+  - name:
+      - --vf
+      - --video-filter
+    args:
+      - name: filter0
+      - name: filter1
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

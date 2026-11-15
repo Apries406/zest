@@ -1,0 +1,428 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: agent
+subcommands:
+  - name: install-shell-integration
+    description: Install shell integration to ~/.zshrc
+    options:
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name: uninstall-shell-integration
+    description: Remove shell integration from ~/.zshrc
+    options:
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name: login
+    description: Authenticate with Cursor. Set NO_OPEN_BROWSER to disable browser opening.
+  - name: logout
+    description: Sign out and clear stored authentication
+  - name: mcp
+    description: Manage MCP servers
+    subcommands:
+      - name: login
+        description: Authenticate with an MCP server configured in .cursor/mcp.json or ~/.cursor/mcp.json
+        args:
+          name: identifier
+      - name: list
+        description: List configured MCP servers and their status
+        options:
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+      - name: list-tools
+        description: List available tools and their argument names for a specific MCP
+        options:
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+        args:
+          name: identifier
+      - name: enable
+        description: Add an MCP server to the local approved list
+        options:
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+        args:
+          name: identifier
+      - name: disable
+        description: Disable an MCP server (it will not be loaded or prompted for approval)
+        options:
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+        args:
+          name: identifier
+    options:
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name: plugin
+    description: Manage plugins and plugin marketplaces
+    subcommands:
+      - name: marketplace
+        description: Manage plugin marketplaces
+        subcommands:
+          - name: add
+            description: Add a plugin marketplace from a git repository URL
+            args:
+              name: gitUrl
+          - name: list
+            description: List plugin marketplaces visible to this account
+          - name: remove
+            description: Remove a plugin marketplace by name or git repository URL
+            args:
+              name: nameOrUrl
+          - name: update
+            description: Re-index a plugin marketplace from its git repository
+            args:
+              name: nameOrUrl
+        options:
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+    options:
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name: worker
+    description: Start a private cloud worker that connects to Cursor to run agents in your environment
+    subcommands:
+      - name: start
+        description: Start the worker and connect to Cursor
+        options:
+          - name: --verbose
+            description: Enable verbose worker startup logs (includes debug)
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+      - name: debug
+        description: Run private worker preflight diagnostics for auth, privacy, routing, and visibility
+        options:
+          - name: --json
+            description: "Output debug report as JSON (default: false)"
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+      - name: help
+        description: Display help for command
+    options:
+      - name: --auth-token-file
+        description: Path to a file containing the worker auth token. Intended for operator-managed Secret mounts.
+        args:
+          name: path
+      - name: --worker-dir
+        description: Workspace root to expose to agents (repeatable; first value is the assignment identity and defaults to current directory)
+        args:
+          name: path
+      - name: --management-addr
+        description: "Listen address for an optional HTTP server: GET /healthz, /readyz (Kubernetes probes), and /metrics (Prometheus text scrape) (e.g. ':8080' or '0.0.0.0:8080')"
+        args:
+          name: address
+      - name: --label
+        description: "Add a label to the worker (format: key=value, can be used multiple times). Cannot be used with --labels-file."
+        args:
+          name: key=value
+      - name: --labels-file
+        description: "Path to a JSON or TOML file containing labels. Cannot be used with --label. Can also be set via CURSOR_WORKER_LABELS_FILE env var. (env: CURSOR_WORKER_LABELS_FILE)"
+        args:
+          name: path
+      - name: --idle-release-timeout
+        description: Seconds the worker may stay connected after becoming idle before it is released. When the timeout hits, the worker exits with code 0 so a supervisor can restart a clean process. Default 3600. Pass 0 to disable
+        args:
+          name: seconds
+      - name: --pool
+        description: Register for pool assignment (one cloud agent claims this worker at a time). Optional pool name; defaults to 'default'. Without --pool, the worker allows shared assignment (multiple concurrent agents).
+        args:
+          name: name
+          isOptional: true
+      - name: --mint-github-token
+        description: Receive short-lived GitHub tokens during claimed runs. Pool workers only (requires --pool). This does not enable dashboard secret sync. Requires your team admin to enable GitHub token minting for self-hosted
+      - name: --sync-dashboard-secrets
+        description: Receive eligible dashboard Cloud Agent secrets as environment variables during claimed runs. Pool workers only (requires --pool). This does not enable GitHub token delivery. Requires your team admin to enable
+      - name: --identity-socket
+        description: Expose a per-claim OIDC identity socket to claimed agents (published as CURSOR_AGENT_SOCKET in agent shells). Agents can POST /v1/tokens/oidc over it to mint short-lived Cursor cloud-agent identity tokens for an audience of their choice. Off
+      - name: --computer-use
+        description: Let claimed cloud agents drive this machine's desktop (screenshot, click, type). Explicit opt-in, off by default; never enabled by the server. Requires a Linux worker with a reachable X11 display plus
+      - name: --single-use
+        description: Same as --pool (legacy alias).
+      - name: --pool-name
+        description: "Deprecated alias for --pool <name>. Requires --pool or --single-use. (env: CURSOR_WORKER_POOL_NAME)"
+        args:
+          name: name
+      - name: --name
+        description: "Custom display name for this worker. Defaults to the machine hostname. (env: CURSOR_WORKER_NAME)"
+        args:
+          name: name
+      - name: --data-dir
+        description: "Base directory for logs, artifacts, and recording data. Defaults to /opt/cursor if writable, otherwise ~/.local/share/cursor-agent. (env: CURSOR_DATA_DIR)"
+        args:
+          name: path
+      - name: --wait
+        description: Wait for another worker using this data directory to stop. With no value, wait indefinitely; with seconds, exit if the timeout elapses.
+        args:
+          name: seconds
+          isOptional: true
+      - name: --debug
+        description: Print worker debug diagnostics before starting bridge mode
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name:
+      - status
+      - whoami
+    description: View authentication status
+    options:
+      - name: --format
+        description: 'Output format (choices: "text", "json", default: "text")'
+        args:
+          name: format
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name: models
+    description: List available models for this account
+    options:
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name: bedrock
+    description: Configure AWS Bedrock usage for CLI
+    subcommands:
+      - name: configure
+        description: Configure AWS Bedrock settings (credentials, region, test model)
+        options:
+          - name: --access-key
+            description: AWS Access Key ID
+            args:
+              name: key
+          - name: --secret-key
+            description: AWS Secret Access Key
+            args:
+              name: key
+          - name: --from-env
+            description: Read credentials from AWS_* environment variables
+          - name: --region
+            description: AWS region (e.g. us-east-1)
+            args:
+              name: region
+          - name: --test-model
+            description: Bedrock model ID used for validation
+            args:
+              name: model
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+      - name: enable
+        description: Enable Bedrock mode (requires stored credentials)
+        options:
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+      - name: status
+        description: Show Bedrock configuration and team-role availability
+        options:
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+      - name: test
+        description: Validate stored Bedrock credentials with the backend
+        options:
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+      - name: clear
+        description: Clear Bedrock credentials from secure storage and disable mode
+        options:
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+      - name: disable
+        description: Disable Bedrock mode but keep stored credentials
+        options:
+          - name:
+              - -h
+              - --help
+            description: Display help for command
+      - name: help
+        description: Display help for command
+    options:
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name: about
+    description: Display version, system, and account information
+    options:
+      - name: --format
+        description: 'Output format (choices: "text", "json", default: "text")'
+        args:
+          name: format
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name: update
+    description: Update Cursor Agent to the latest version
+  - name: create-chat
+    description: Create a new empty chat and return its ID
+    options:
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name:
+      - generate-rule
+      - rule
+    description: Generate a new Cursor rule with interactive prompts
+    options:
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name: agent
+    description: Start the Cursor Agent
+    options:
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+    args:
+      name: prompt
+      isOptional: true
+      isVariadic: true
+  - name: ls
+    description: Resume a chat session
+    options:
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name: resume
+    description: Resume the latest chat session
+    options:
+      - name:
+          - -h
+          - --help
+        description: Display help for command
+  - name: help
+    description: Display help for command
+options:
+  - name:
+      - -v
+      - --version
+    description: Output the version number
+  - name: --api-key
+    description: API key for authentication (can also use CURSOR_API_KEY env var)
+    args:
+      name: key
+  - name:
+      - -H
+      - --header
+    description: "Add custom header to agent requests (format: 'Name: Value', can be used multiple times)"
+    args:
+      name: header
+  - name:
+      - -e
+      - --endpoint
+    description: 'Target API endpoint URL (can also use CURSOR_API_ENDPOINT env var) (default: "https://api2.cursor.sh", env: CURSOR_API_ENDPOINT)'
+    args:
+      name: url
+  - name:
+      - -p
+      - --print
+    description: "Print responses to console (for scripts or non-interactive use). Has access to all tools, including write and shell. (default: false)"
+  - name: --output-format
+    description: 'Output format (only works with --print): text | json | stream-json (default: "text")'
+    args:
+      name: format
+  - name: --stream-partial-output
+    description: "Stream partial output as individual text deltas (only works with --print and stream-json format) (default: false)"
+  - name: --mode
+    description: 'Start in the given execution mode. plan: read-only/planning (analyze, propose plans, no edits). ask: Q&A style for explanations and questions (read-only). (choices: "plan", "ask")'
+    args:
+      name: mode
+  - name: --plan
+    description: "Start in plan mode (shorthand for --mode=plan). (default: false)"
+  - name: --resume
+    description: "Select a session to resume (default: false)"
+    args:
+      name: chatId
+      isOptional: true
+  - name: --continue
+    description: "Continue previous session (default: false)"
+  - name: --model
+    description: Model to use (e.g., gpt-5, sonnet-4-thinking). Parameterized models accept quoted bracket overrides, e.g. 'claude-opus-4-8[context=1m,effort=high,fast=false]'
+    args:
+      name: model
+  - name: --list-models
+    description: "List available models and exit (default: false)"
+  - name:
+      - -f
+      - --force
+    description: "Force allow commands unless explicitly denied (default: false)"
+  - name: --yolo
+    description: "Alias for --force (Run Everything) (default: false)"
+  - name: --auto-review
+    description: "Use Auto-review (Smart Auto): a server classifier auto-runs safe tool calls and prompts for the rest (default: false)"
+  - name: --sandbox
+    description: 'Explicitly enable or disable sandbox mode (overrides config) (choices: "enabled", "disabled")'
+    args:
+      name: mode
+  - name: --approve-mcps
+    description: "Automatically approve all MCP servers (default: false)"
+  - name: --trust
+    description: "Trust the current workspace without prompting (default: false)"
+  - name: --workspace
+    description: Workspace directory or saved workspace name to use (defaults to current working directory)
+    args:
+      name: path-or-name
+  - name: --add-dir
+    description: Add an additional workspace root directory (can be specified multiple times)
+    args:
+      name: path
+  - name: --plugin-dir
+    description: Load a local plugin directory (can be specified multiple times)
+    args:
+      name: path
+  - name:
+      - -w
+      - --worktree
+    description: Start in an isolated git worktree at ~/.cursor/worktrees/<reponame>/<name>. If omitted, a name is generated.
+    args:
+      name: name
+      isOptional: true
+  - name: --worktree-base
+    description: "Branch or ref to base the new worktree on (default: current HEAD)"
+    args:
+      name: branch
+  - name: --skip-worktree-setup
+    description: "Skip running worktree setup scripts from .cursor/worktrees.json (default: false)"
+  - name:
+      - -h
+      - --help
+    description: Display help for command
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

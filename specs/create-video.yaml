@@ -1,0 +1,4 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: create-video
+description: CLI used to create remotion video project
+icon: https://raw.githubusercontent.com/remotion-dev/remotion/main/packages/docs/static/img/logo-small.png

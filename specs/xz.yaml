@@ -1,0 +1,67 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: xz
+options:
+  - name:
+      - -z
+      - --compress
+    description: force compression
+  - name:
+      - -d
+      - --decompress
+    description: force decompression
+  - name:
+      - -t
+      - --test
+    description: test compressed file integrity
+  - name:
+      - -l
+      - --list
+    description: list information about .xz files
+  - name:
+      - -k
+      - --keep
+    description: keep (don't delete) input files
+  - name:
+      - -f
+      - --force
+    description: force overwrite of output file and (de)compress links
+  - name:
+      - -c
+      - --stdout
+    description: write to standard output and don't delete input files
+  - name: "-0"
+    description: compression preset; default is 6; take compressor *and* decompressor memory usage into account before using 7-9!
+  - name:
+      - -e
+      - --extreme
+    description: try to improve compression ratio by using more CPU time; does not affect decompressor memory requirements
+  - name:
+      - -T
+      - --threads
+    description: use at most NUM threads; the default is 0 which uses as many threads as there are processor cores
+    args:
+      name: NUM
+  - name:
+      - -q
+      - --quiet
+    description: suppress warnings; specify twice to suppress errors too
+  - name:
+      - -v
+      - --verbose
+    description: be verbose; specify twice for even more verbose
+  - name:
+      - -h
+      - --help
+    description: display this short help and exit
+  - name:
+      - -H
+      - --long-help
+    description: display the long help (lists also the advanced options)
+  - name:
+      - -V
+      - --version
+    description: display the version number and exit
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

@@ -203,3 +203,26 @@ import Testing
         #expect(engine.names("foo Desktop/").contains("todo.txt"))
     }
 }
+
+@Suite struct TemplateFilterTests {
+    @Test func extensions() {
+        let f = TemplateFilter(extensions: ["js", "tar.gz"])
+        #expect(f.accepts("app.js", isDirectory: false))
+        #expect(f.accepts("a.tar.gz", isDirectory: false))
+        #expect(!f.accepts("app.ts", isDirectory: false))
+        #expect(f.accepts("src/", isDirectory: true))
+    }
+
+    @Test func equalsAndRegex() {
+        let f = TemplateFilter(equals: ["Makefile"], matches: #"^Dockerfile"#)
+        #expect(f.accepts("Makefile", isDirectory: false))
+        #expect(f.accepts("Dockerfile.dev", isDirectory: false))
+        #expect(!f.accepts("README", isDirectory: false))
+    }
+
+    @Test func filterFolders() {
+        var f = TemplateFilter(extensions: ["js"])
+        f.filterFolders = true
+        #expect(!f.accepts("src/", isDirectory: true))
+    }
+}

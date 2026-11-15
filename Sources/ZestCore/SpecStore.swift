@@ -10,6 +10,12 @@ public final class SpecStore: @unchecked Sendable {
         public var name: String
         public var description: String?
         public var icon: String?
+
+        public init(name: String, description: String?, icon: String?) {
+            self.name = name
+            self.description = description
+            self.icon = icon
+        }
     }
 
     public let directories: [URL]

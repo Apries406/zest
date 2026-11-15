@@ -1,0 +1,19 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: envsubst
+options:
+  - name:
+      - -v
+      - --variables
+    description: output the variables occurring in SHELL-FORMAT
+  - name:
+      - -h
+      - --help
+    description: display this help and exit
+  - name:
+      - -V
+      - --version
+    description: output version information and exit
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

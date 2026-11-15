@@ -1,0 +1,26 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: rushx
+description: Run arbitrary package scripts for rush project. analogous to npm run
+options:
+  - name:
+      - -h
+      - --help
+    description: Show this help message and exit
+  - name:
+      - -q
+      - --quiet
+    description: Hide rushx startup information
+args:
+  name: Scripts
+  description: Script to run from your package.json
+  isCommand: true
+  generators:
+    script:
+      - bash
+      - -c
+      - until [[ -f package.json ]] || [[ $PWD = '/' ]]; do cd ..; done; cat package.json
+    cache:
+      cacheByDirectory: true
+    js:
+      postProcess: 0
+  filterStrategy: fuzzy

@@ -142,6 +142,8 @@ public struct Generator: Codable, Sendable, Equatable {
     public var splitOn: String?
     /// List files and/or folders instead of running a script.
     public var template: OneOrMany<Template>?
+    /// Only show some of the files listed by `template`.
+    public var filter: TemplateFilter?
     public var cache: GeneratorCache?
     /// Seconds before the script is killed. Default: 5.
     public var scriptTimeout: Double?
@@ -157,6 +159,39 @@ public struct Generator: Codable, Sendable, Equatable {
         self.script = script
         self.splitOn = splitOn
         self.template = template
+    }
+}
+
+/// Which files a `template` generator shows. A file is shown when any condition matches.
+/// Folders are always shown, so you can navigate into them, unless `filterFolders` is set.
+public struct TemplateFilter: Codable, Sendable, Equatable {
+    /// File extensions without the dot, e.g. `[js, mjs, json]`. `tar.gz` works too.
+    public var extensions: [String]?
+    /// Exact file names, e.g. `[Makefile]`.
+    public var equals: [String]?
+    /// A regular expression the file name must match.
+    public var matches: String?
+    public var filterFolders: Bool?
+
+    public init(extensions: [String]? = nil, equals: [String]? = nil, matches: String? = nil) {
+        self.extensions = extensions
+        self.equals = equals
+        self.matches = matches
+    }
+
+    func accepts(_ name: String, isDirectory: Bool) -> Bool {
+        if isDirectory && filterFolders != true { return true }
+        let bare = isDirectory && name.hasSuffix("/") ? String(name.dropLast()) : name
+        if let equals, equals.contains(bare) { return true }
+        if let matches, bare.range(of: matches, options: .regularExpression) != nil { return true }
+        if let extensions {
+            let parts = bare.split(separator: ".", omittingEmptySubsequences: false).dropFirst()
+            // `a.tar.gz` matches `gz` and `tar.gz`.
+            for i in parts.indices where extensions.contains(parts[i...].joined(separator: ".")) {
+                return true
+            }
+        }
+        return false
     }
 }
 

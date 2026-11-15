@@ -23,7 +23,11 @@ public enum Matcher {
         if c.starts(with: q) {
             // Shorter candidates first: `git` before `git-lfs` for query `gi`.
             let exact: Double = q.count == c.count ? 50 : 0
-            return Match(score: prefixScore + exact - Double(c.count) * 0.01, indices: Array(0..<q.count), isPrefix: true)
+            // `-l` before `-L` when you typed `-l`.
+            let sameCase: Double = candidate.hasPrefix(query) ? 1 : 0
+            return Match(
+                score: prefixScore + exact + sameCase - Double(c.count) * 0.01,
+                indices: Array(0..<q.count), isPrefix: true)
         }
         guard fuzzy else { return nil }
 
@@ -34,12 +38,14 @@ public enum Matcher {
                 indices: Array(range..<(range + q.count)))
         }
 
-        // Subsequence match, preferring characters at word boundaries.
+        // Subsequence match, preferring characters at word boundaries. The first
+        // character must start a word, so `che` does not match `archive`.
+        guard let start = c.indices.first(where: { c[$0] == q[0] && isBoundary(c, $0) }) else { return nil }
         var indices: [Int] = []
         var score: Double = 0
         var qi = 0
         var previous = -2
-        for (ci, ch) in c.enumerated() where qi < q.count {
+        for (ci, ch) in c.enumerated() where qi < q.count && ci >= start {
             guard ch == q[qi] else { continue }
             var s: Double = 1
             if ci == previous + 1 { s += 5 }

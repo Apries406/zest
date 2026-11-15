@@ -1,0 +1,14 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: w
+description: Display who is logged in and what they are doing
+options:
+  - name: -h
+    description: Suppress the heading
+  - name: -i
+    description: Output is sorted by idle time
+args:
+  name: user
+  isOptional: true
+  isVariadic: true
+parserDirectives:
+  optionsMustPrecedeArguments: true

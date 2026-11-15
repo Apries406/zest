@@ -1,0 +1,400 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: x265
+options:
+  - name: -h
+    description: Show this help text and exit
+  - name: --fullhelp
+    description: Show all options and exit
+  - name: -V
+    description: Show version info and exit
+  - name: -o
+    description: Bitstream output file name
+    args:
+      name: filename
+  - name: -D
+    description: Output bit depth (also internal bit depth). Default 8
+  - name: --log-level
+    description: "Logging level: none error warning info debug full. Default info"
+    args:
+      name: string
+  - name: --no-progress
+    description: Disable CLI progress reports
+  - name: --csv
+    description: Comma separated log file, if csv-log-level > 0 frame level statistics, else one line per run
+    args:
+      name: filename
+  - name: --csv-log-level
+    description: "Level of csv logging, if csv-log-level > 0 frame level statistics, else one line per run: 0-2"
+    args:
+      name: integer
+  - name: --input
+    description: Raw YUV or Y4M input file name. `-` for stdin
+    args:
+      name: filename
+  - name: --fps
+    description: Source frame rate (float or num/denom), auto-detected if Y4M
+    args:
+      name: float|rational
+  - name: --input-res
+    description: Source picture size [w x h], auto-detected if Y4M
+  - name: --dolby-vision-profile
+    args:
+      name: float|integer
+  - name: --dolby-vision-rpu
+    description: If given, x265's Dolby Vision metadata parser will fill the RPU field of input pictures with the metadata read from the file. Default NULL (disabled).
+    args:
+      name: filename
+  - name: --nalu-file
+    description: "Text file containing SEI messages in the following format : <POC><space><PREFIX><space><NAL UNIT TYPE>/<SEI TYPE><space><SEI Payload>"
+    args:
+      name: filename
+  - name: -f
+    description: Maximum number of frames to encode. Default all
+    args:
+      name: integer
+  - name: --seek
+    description: First frame to encode
+    args:
+      name: integer
+  - name: -P
+    description: "Enforce an encode profile: main, main10, mainstillpicture"
+    args:
+      name: string
+  - name: --level-idc
+    description: Force a minimum required decoder level (as '5.0' or '50')
+    args:
+      name: integer|float
+  - name: --uhd-bd
+    description: Enable UHD Bluray compatibility support
+  - name: --pools
+    description: Comma-separated thread count per thread pool (pool per NUMA node) '-' implies no threads on node, '+' implies one thread per core on node
+    args:
+      name: integer,
+      isVariadic: true
+  - name: -F
+    description: "Number of concurrently encoded frames. 0: auto-determined by core count"
+    args:
+      name: integer
+  - name: -p
+    description: Trade off performance for compression efficiency. Default medium ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow, or placebo
+    args:
+      name: string
+  - name: -t
+    description: "Tune the settings for a particular type of source or situation: psnr, ssim, grain, zerolatency, fastdecode"
+    args:
+      name: string
+  - name: -s
+    description: Maximum CU size (WxH). Default 64
+    args:
+      name: 64|32|16
+  - name: --min-cu-size
+    description: Minimum CU size (WxH). Default 8
+    args:
+      name: 64|32|16|8
+  - name: --max-tu-size
+    description: Maximum TU size (WxH). Default 32
+    args:
+      name: 32|16|8|4
+  - name: --tu-intra-depth
+    description: Max TU recursive depth for intra CUs. Default 1
+    args:
+      name: integer
+  - name: --tu-inter-depth
+    description: Max TU recursive depth for inter CUs. Default 1
+    args:
+      name: integer
+  - name: --limit-tu
+    description: Enable early exit from TU recursion for inter-coded blocks. Default 0
+    args:
+      name: 0..4
+  - name: --rd
+    description: Level of RDO in mode decision 1:least....6:full RDO. Default 3
+    args:
+      name: 1..6
+  - name: --dynamic-rd
+    description: Strength of dynamic RD, 0 to disable. Default 0.00
+    args:
+      name: 0..4.0
+  - name: --rskip
+    description: "Enable recursion skip for an early exit from CTU analysis during inter-prediction. - 0: disabled. - 1: exit using RD cost & CU homogeneity. - 2: exit using CU edge density. Default 1"
+    args:
+      name: Integer
+  - name: --ctu-info
+    description: "Enable receiving ctu information asynchronously and determine the reaction to the CTU information (0, 1, 2, 4, 6) Default 0 - 1: force the partitions if CTU information is present - 2: functionality of (1) and reduce qp if CTU information has changed"
+    args:
+      name: integer
+  - name: -w
+    description: Enable weighted prediction in P slices. Default enabled
+    args:
+      name: no-
+      isOptional: true
+  - name: --max-merge
+    description: Maximum number of merge candidates. Default 3
+    args:
+      name: 1..5
+  - name: --ref
+    description: max number of L0 references to be allowed (1 .. 16) Default 3
+    args:
+      name: integer
+  - name: --limit-refs
+    description: Limit references per depth (1) or CU (2) or both (3). Default 1
+    args:
+      name: 0|1|2|3
+  - name: --me
+    description: Motion search method dia hex umh star full. Default 1
+    args:
+      name: string
+  - name: -m
+    description: Amount of subpel refinement to perform (0:least .. 7:most). Default 2
+    args:
+      name: integer
+  - name: --merange
+    description: Motion search range. Default 57
+    args:
+      name: integer
+  - name: --rdpenalty
+    description: penalty for 32x32 intra TU in non-I slices. 0:disabled 1:RD-penalty 2:maximum. Default 0
+    args:
+      name: 0..2
+  - name: --cra-nal
+    description: Force nal type to CRA to all frames except the first frame, works only with keyint 1. Default disabled
+  - name: -I
+    description: Max IDR period in frames. -1 for infinite-gop. Default 250
+    args:
+      name: integer
+  - name: -i
+    description: "Scenecuts closer together than this are coded as I, not IDR. Default: auto"
+    args:
+      name: integer
+  - name: --gop-lookahead
+    description: Extends gop boundary if a scenecut is found within this from keyint boundary. Default 0
+    args:
+      name: integer
+  - name: --no-scenecut
+    description: Disable adaptive I-frame decision
+  - name: --scenecut
+    description: How aggressively to insert extra I-frames. Default 40
+    args:
+      name: integer
+  - name: --hist-scenecut
+    description: Enables histogram-based scene-cut detection using a histogram-based algorithm.
+  - name: --no-hist-scenecut
+    description: Disables histogram-based scene-cut detection using a histogram-based algorithm.
+  - name: --radl
+    description: Number of RADL pictures allowed in front of IDR. Default 0
+    args:
+      name: integer
+  - name: --intra-refresh
+    description: Use Periodic Intra Refresh instead of IDR frames
+  - name: --rc-lookahead
+    description: Number of frames for frame-type lookahead (determines encoder latency) Default 20
+    args:
+      name: integer
+  - name: --lookahead-threads
+    args:
+      name: integer
+  - name: -b
+    description: Maximum number of consecutive b-frames. Default 4
+    args:
+      name: 0..16
+  - name: --b-adapt
+    description: 0 - none, 1 - fast, 2 - full (trellis) adaptive B frame scheduling. Default 2
+    args:
+      name: 0..2
+  - name: --bitrate
+    description: Target bitrate (kbps) for ABR (implied). Default 0
+    args:
+      name: integer
+  - name: --crf
+    description: Quality-based VBR (0-51). Default 28.0
+    args:
+      name: float
+  - name: --vbv-maxrate
+    description: Max local bitrate (kbit/s). Default 0
+    args:
+      name: integer
+  - name: --vbv-bufsize
+    description: Set size of the VBV buffer (kbit). Default 0
+    args:
+      name: integer
+  - name: --vbv-init
+    description: Initial VBV buffer occupancy (fraction of bufsize or in kbits). Default 0.90
+    args:
+      name: float
+  - name: --vbv-end
+    description: Final VBV buffer emptiness (fraction of bufsize or in kbits). Default 0 (disabled)
+    args:
+      name: float
+  - name: --min-vbv-fullness
+    description: Minimum VBV fullness percentage to be maintained. Default 50.00
+    args:
+      name: double
+  - name: --max-vbv-fullness
+    description: Maximum VBV fullness percentage to be maintained. Default 80.00
+    args:
+      name: double
+  - name: --vbv-end-fr-adj
+    description: Frame from which qp has to be adjusted to achieve final decode buffer emptiness. Default 0
+    args:
+      name: float
+  - name: --chunk-start
+    description: First frame of the chunk. Default 0 (disabled)
+    args:
+      name: integer
+  - name: --chunk-end
+    description: Last frame of the chunk. Default 0 (disabled)
+    args:
+      name: integer
+  - name: --pass
+    description: "Multi pass rate control. - 1 : First pass, creates stats file - 2 : Last pass, does not overwrite the stats file - 3 : Nth pass, overwrites the stats file"
+  - name: --stats
+    description: Filename for stats file in multipass pass rate control. Default x265_2pass.log
+  - name: --analysis-save
+    description: Dump analysis info into the specified file. Default Disabled
+    args:
+      name: filename
+  - name: --analysis-load
+    description: Load analysis buffers from the file specified. Default Disabled
+    args:
+      name: filename
+  - name: --analysis-reuse-file
+    description: Specify the file name used for either dumping or reading analysis data. Default x265_analysis.dat
+    args:
+      name: filename
+  - name: --analysis-reuse-level
+    description: Level of analysis reuse indicates the amount of info stored/reused in save/load mode, 1:least..10:most. Now deprecated. Default 0
+    args:
+      name: 1..10
+  - name: --analysis-save-reuse-level
+    args:
+      name: 1..10
+  - name: --analysis-load-reuse-level
+    args:
+      name: 1..10
+  - name: --refine-analysis-type
+    description: Reuse analysis information received through API call. Supported options are AVC and HEVC. Default disabled - 0
+    args:
+      name: string
+  - name: --scale-factor
+    description: Specify the factor by which the input video is scaled down for analysis save mode. Default 0
+    args:
+      name: int
+  - name: --refine-intra
+    description: "Enable intra-refinement for encode that uses analysis-load. - 0 : Forces both mode and depth from the save encode. - 1 : Functionality of (0) + evaluate all intra modes at min-cu-size's depth when current depth is one smaller than min-cu-size's depth."
+    args:
+      name: 0..4
+  - name: --refine-inter
+    description: "Enable inter refinement for encode that uses analysis-load. - 0 : Forces both mode and depth from the save encode. - 1 : Functionality of (0) + evaluate all inter modes at min-cu-size's depth when current depth is one smaller than"
+    args:
+      name: 0..3
+  - name: --refine-mv
+    description: Enable mv refinement for load mode. Default 1
+    args:
+      name: 1..3
+  - name: --refine-ctu-distortion
+    description: "Store/normalize ctu distortion in analysis-save/load. - 0 : Disabled. - 1 : Store/Load ctu distortion to/from the file specified in analysis-save/load. Default 0 - Disabled"
+  - name: --aq-mode
+    description: Mode for Adaptive Quantization - 0:none - 1:uniform AQ - 2:auto variance - 3:auto variance with bias to dark scenes - 4:auto variance with edge information. Default 2
+    args:
+      name: integer
+  - name: --aq-strength
+    description: Reduces blocking and blurring in flat and textured areas (0 to 3.0). Default 1.00
+    args:
+      name: float
+  - name: --qp-adaptation-range
+    args:
+      name: float
+  - name: --qg-size
+    description: Specifies the size of the quantization group (64, 32, 16, 8). Default 32
+    args:
+      name: int
+  - name: --zonefile
+    description: Zone file containing the zone boundaries and the parameters to be reconfigured.
+    args:
+      name: filename
+  - name: --no-zonefile-rc-init
+    description: This allows the use of rate-control history across zones in zonefile.
+  - name: --max-ausize-factor
+    description: This value controls the maximum AU size defined in the specification. It represents the percentage of maximum AU size used. Default 1.0
+    args:
+      name: float
+  - name: --selective-sao
+    description: Enable slice-level SAO filter. Default 0
+    args:
+      name: int
+  - name: --sar
+    description: Sample Aspect Ratio, the ratio of width to height of an individual pixel. Choose from 0=undef, 1=1:1("square"), 2=12:11, 3=10:11, 4=16:11, 5=40:33, 6=24:11, 7=20:11, 8=32:11, 9=80:33, 10=18:11, 11=15:11,
+    args:
+      name: width:height|int
+  - name: --videoformat
+    description: Specify video format from unknown, component, pal, ntsc, secam, mac. Default unknown
+    args:
+      name: string
+  - name: --range
+    description: Specify black level and range of luma and chroma signals as full or limited Default limited
+    args:
+      name: string
+  - name: --colorprim
+    description: Specify color primaries from bt709, unknown, reserved, bt470m, bt470bg, smpte170m, smpte240m, film, bt2020, smpte428, smpte431, smpte432. Default unknown
+    args:
+      name: string
+  - name: --transfer
+    description: Specify transfer characteristics from bt709, unknown, reserved, bt470m, bt470bg, smpte170m, smpte240m, linear, log100, log316, iec61966-2-4, bt1361e, iec61966-2-1, bt2020-10, bt2020-12, smpte2084, smpte428, arib-std-b67. Default unknown
+    args:
+      name: string
+  - name: --master-display
+    description: "SMPTE ST 2086 master display color volume info SEI (HDR) format: G(x,y)B(x,y)R(x,y)WP(x,y)L(max,min)"
+    args:
+      name: string
+  - name: --max-cll
+    description: Specify content light level info SEI as "cll,fall" (HDR).
+    args:
+      name: string
+  - name: --video-signal-type-preset
+    description: "Specify combinations of color primaries, transfer characteristics, color matrix, range of luma and chroma signals, and chroma sample location format: <system-id>[:<color-volume>] This has higher precedence than individual VUI parameters. If any individual VUI option is specified together with this,"
+    args:
+      name: string
+  - name: --min-luma
+    description: Minimum luma plane value of input source picture
+    args:
+      name: integer
+  - name: --max-luma
+    description: Maximum luma plane value of input source picture
+    args:
+      name: integer
+  - name: --temporal-layers
+    description: Enable a temporal sublayer for unreferenced B frames. Default disabled
+  - name: --atc-sei
+    description: Emit the alternative transfer characteristics SEI message where the integer is the preferred transfer characteristic. Default disabled
+    args:
+      name: integer
+  - name: --pic-struct
+    description: Set the picture structure and emit it in the picture timing SEI message. Values in the range 0..12. See D.3.3 of the HEVC spec. for a detailed explanation.
+    args:
+      name: integer
+  - name: --log2-max-poc-lsb
+    description: Maximum of the picture order count
+    args:
+      name: integer
+  - name: --lowpass-dct
+    description: Use low-pass subband DCT approximation. Default disabled
+  - name: --dup-threshold
+    description: PSNR threshold for Frame duplication. Default 70
+    args:
+      name: integer
+  - name: --abr-ladder
+    description: File containing config settings required for the generation of ABR-ladder
+    args:
+      name: file
+  - name: --film-grain
+    description: File containing Film Grain Characteristics to be written as a SEI Message
+    args:
+      name: filename
+  - name: --aom-film-grain
+    description: File containing Aom Film Grain Characteristics to be written as a SEI Message
+    args:
+      name: filename
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

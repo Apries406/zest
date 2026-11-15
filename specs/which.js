@@ -1,0 +1,5 @@
+var __zestModule=(()=>{var n=Object.defineProperty;var a=Object.getOwnPropertyDescriptor;var o=Object.getOwnPropertyNames;var p=Object.prototype.hasOwnProperty;var c=(t,e)=>{for(var i in e)n(t,i,{get:e[i],enumerable:!0})},u=(t,e,i,s)=>{if(e&&typeof e=="object"||typeof e=="function")for(let r of o(e))!p.call(t,r)&&r!==i&&n(t,r,{get:()=>e[r],enumerable:!(s=a(e,r))||s.enumerable});return t};var l=t=>u(n({},"__esModule",{value:!0}),t);var g={};c(g,{default:()=>m});var f={script:["bash","-c",`for i in $(echo $PATH | tr ":" "
+"); do find $i -maxdepth 1 -perm -111 -type f; done`],postProcess:t=>t.split(`
+`).map(e=>e.split("/")[e.split("/").length-1]).map(e=>({name:e,description:"Executable file",type:"arg"}))},d={name:"which",description:"Locate a program in the user's PATH",args:{name:"names",isVariadic:!0,generators:f,filterStrategy:"fuzzy",suggestCurrentToken:!0},options:[{name:"-s",description:"No output, return 0 if all the executables are found, 1 if not"},{name:"-a",description:"List all instances of executables found, instead of just the first"}]},m=d;return l(g);})();
+
+var __zestSpec = __zestModule.default;

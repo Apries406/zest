@@ -1,0 +1,148 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: zstd
+options:
+  - name: -o
+    description: Write output to a single file, OUTPUT.
+    args:
+      name: OUTPUT
+  - name:
+      - -k
+      - --keep
+    description: Preserve INPUT file(s). [Default]
+  - name: --rm
+    description: Remove INPUT file(s) after successful (de)compression.
+  - name: -#
+    description: "Desired compression level, where `#` is a number between 1 and 19; lower numbers provide faster compression, higher numbers yield better compression ratios. [Default: 3]"
+  - name:
+      - -d
+      - --decompress
+    description: Perform decompression.
+  - name: -D
+    description: Use DICT as the dictionary for compression or decompression.
+    args:
+      name: DICT
+  - name:
+      - -f
+      - --force
+    description: Disable input and output checks. Allows overwriting existing files, receiving input from the console, printing output to STDOUT, and operating on links, block devices, etc. Unrecognized formats will be
+  - name: -h
+    description: Display short usage and exit.
+  - name:
+      - -H
+      - --help
+    description: Display full help and exit.
+  - name:
+      - -V
+      - --version
+    description: Display the program version and exit.
+  - name:
+      - -c
+      - --stdout
+    description: Write to STDOUT (even if it is a console) and keep the INPUT file(s).
+  - name:
+      - -v
+      - --verbose
+    description: Enable verbose output; pass multiple times to increase verbosity.
+  - name:
+      - -q
+      - --quiet
+    description: Suppress warnings; pass twice to suppress errors.
+  - name: --trace
+    description: Log tracing information to LOG.
+    args:
+      name: LOG
+  - name: -r
+    description: Operate recursively on directories.
+  - name: --filelist
+    description: Read a list of files to operate on from LIST.
+    args:
+      name: LIST
+  - name: --output-dir-flat
+    description: Store processed files in DIR.
+    args:
+      name: DIR
+  - name: --output-dir-mirror
+    description: Store processed files in DIR, respecting original directory structure.
+    args:
+      name: DIR
+  - name: --ultra
+    description: Enable levels beyond 19, up to 22; requires more memory.
+  - name: --fast
+    description: "Use to very fast compression levels. [Default: 1]"
+    args:
+      name: =#
+      isOptional: true
+  - name: --adapt
+    description: Dynamically adapt compression level to I/O conditions.
+  - name: --long
+    description: "Enable long distance matching with window log #. [Default: 27]"
+    args:
+      name: =#
+      isOptional: true
+  - name: --patch-from
+    description: Use REF as the reference point for Zstandard's diff engine.
+    args:
+      name: REF
+  - name: -T#
+    description: "Spawn # compression threads. [Default: 1; pass 0 for core count.]"
+  - name: --single-thread
+    description: Share a single thread for I/O and compression (slightly different than `-T1`).
+  - name: --auto-threads
+    description: "Use physical/logical cores when using `-T0`. [Default: Physical]"
+  - name: -B#
+    description: "Set job size to #. [Default: 0 (automatic)]"
+  - name: --rsyncable
+    description: Compress using a rsync-friendly method (`-B` sets block size).
+  - name: --exclude-compressed
+    description: Only compress files that are not already compressed.
+  - name: --stream-size
+    description: Specify size of streaming input from STDIN.
+  - name: --size-hint
+    description: "Optimize compression parameters for streaming input of approximately size #."
+  - name: --target-compressed-block-size
+    description: "Generate compressed blocks of approximately # size."
+  - name: --no-dictID
+    description: Don't write `dictID` into the header (dictionary compression only).
+  - name: --format
+    description: Compress files to the `.zst` format. [Default]
+  - name: -l
+    description: Print information about Zstandard-compressed files.
+  - name: --test
+    description: Test compressed file integrity.
+  - name: -M#
+    description: "Set the memory usage limit to # megabytes."
+  - name: --train
+    description: Create a dictionary from a training set of files.
+  - name: --train-cover
+    description: Use the cover algorithm (with optional arguments).
+    args:
+      name: =k=#,d=#,steps=#,split=#,shrink[=#
+      isOptional: true
+  - name: --train-fastcover
+    description: Use the fast cover algorithm (with optional arguments).
+    args:
+      name: =k=#,d=#,f=#,steps=#,split=#,accel=#,shrink[=#
+      isOptional: true
+  - name: --train-legacy
+    description: "Use the legacy algorithm with selectivity #. [Default: 9]"
+    args:
+      name: =s=#
+      isOptional: true
+  - name: --maxdict
+    description: "Limit dictionary to specified size #. [Default: 112640]"
+  - name: --dictID
+    description: "Force dictionary ID to #. [Default: Random]"
+  - name: -b#
+    description: "Perform benchmarking with compression level #. [Default: 3]"
+  - name: -e#
+    description: "Test all compression levels up to #; starting level is `-b#`. [Default: 1]"
+  - name: -i#
+    description: "Set the minimum evaluation to time # seconds. [Default: 3]"
+  - name: -S
+    description: "Output one benchmark result per input file. [Default: Consolidated result]"
+  - name: --priority
+    description: Set process priority to real-time.
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

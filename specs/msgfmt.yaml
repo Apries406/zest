@@ -1,0 +1,138 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: msgfmt
+options:
+  - name:
+      - -D
+      - --directory
+    description: add DIRECTORY to list for input files search
+    args:
+      name: DIRECTORY
+  - name:
+      - -j
+      - --java
+    description: "Java mode: generate a Java ResourceBundle class"
+  - name: --java2
+    description: like --java, and assume Java2 (JDK 1.2 or higher)
+  - name: --csharp
+    description: "C# mode: generate a .NET .dll file"
+  - name: --csharp-resources
+    description: "C# resources mode: generate a .NET .resources file"
+  - name: --tcl
+    description: "Tcl mode: generate a tcl/msgcat .msg file"
+  - name: --qt
+    description: "Qt mode: generate a Qt .qm file"
+  - name: --desktop
+    description: "Desktop Entry mode: generate a .desktop file"
+  - name: --xml
+    description: "XML mode: generate XML file"
+  - name:
+      - -o
+      - --output-file
+    description: write output to specified file
+    args:
+      name: FILE
+  - name: --strict
+    description: enable strict Uniforum mode
+  - name:
+      - -r
+      - --resource
+    description: resource name
+    args:
+      name: RESOURCE
+  - name:
+      - -l
+      - --locale
+    description: locale name, either language or language_COUNTRY
+    args:
+      name: LOCALE
+  - name: --source
+    description: produce a .java file, instead of a .class file
+  - name: -d
+    description: base directory of classes directory hierarchy
+    args:
+      name: DIRECTORY
+  - name: --template
+    description: a .desktop file used as a template
+    args:
+      name: TEMPLATE
+  - name:
+      - -kWORD
+      - --keyword
+    description: look for WORD as an additional keyword
+    args:
+      name: WORD
+  - name:
+      - -k
+      - --keyword
+    description: do not to use default keywords
+  - name:
+      - -L
+      - --language
+    description: recognise the specified XML language
+    args:
+      name: NAME
+  - name: --replace-text
+    description: output XML with translated text replacing the original text, not augmenting the original text
+  - name:
+      - -P
+      - --properties-input
+    description: input files are in Java .properties syntax
+  - name: --stringtable-input
+    description: input files are in NeXTstep/GNUstep .strings syntax
+  - name:
+      - -c
+      - --check
+    description: perform all the checks implied by --check-format, --check-header, --check-domain
+  - name: --check-format
+    description: check language dependent format strings
+  - name: --check-header
+    description: verify presence and contents of the header entry
+  - name: --check-domain
+    description: check for conflicts between domain directives and the --output-file option
+  - name:
+      - -C
+      - --check-compatibility
+    description: check that GNU msgfmt behaves like X/Open msgfmt
+  - name: --check-accelerators
+    description: check presence of keyboard accelerators for menu items
+    args:
+      name: =CHAR
+      isOptional: true
+  - name:
+      - -f
+      - --use-fuzzy
+    description: use fuzzy entries in output
+  - name: --no-convert
+    description: don't convert the messages to UTF-8 encoding
+  - name: --no-redundancy
+    description: don't pre-expand ISO C 99 <inttypes.h> format string directive macros
+  - name:
+      - -a
+      - --alignment
+    description: "align strings to NUMBER bytes (default: 1)"
+    args:
+      name: NUMBER
+  - name: --endianness
+    description: write out 32-bit numbers in the given byte order (big or little, default depends on platform)
+    args:
+      name: BYTEORDER
+  - name: --no-hash
+    description: binary file will not include the hash table
+  - name:
+      - -h
+      - --help
+    description: display this help and exit
+  - name:
+      - -V
+      - --version
+    description: output version information and exit
+  - name: --statistics
+    description: print statistics about translations
+  - name:
+      - -v
+      - --verbose
+    description: increase verbosity level
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

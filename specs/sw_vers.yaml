@@ -1,0 +1,10 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: sw_vers
+description: Print macOS version information
+options:
+  - name: -productName
+    description: Print product name
+  - name: -productVersion
+    description: Print product version
+  - name: -buildVersion
+    description: Print build version

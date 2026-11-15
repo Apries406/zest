@@ -1,0 +1,41 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: dwebp
+options:
+  - name: -pam
+  - name: -ppm
+  - name: -bmp
+  - name: -tiff
+  - name: -pgm
+    description: file with IMC4 layout
+  - name: -yuv
+  - name: -version
+  - name: -nofancy
+  - name: -nofilter
+  - name: -nodither
+  - name: -dither
+    args:
+      name: d
+  - name: -alpha_dither
+    description: use alpha-plane dithering if needed
+  - name: -mt
+  - name: -crop
+    args:
+      - name: x
+      - name: "y"
+      - name: w
+      - name: h
+  - name: -resize
+    args:
+      - name: w
+      - name: h
+  - name: -flip
+  - name: -alpha
+  - name: -incremental
+  - name: -h
+  - name: -v
+  - name: -quiet
+  - name: -noasm
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

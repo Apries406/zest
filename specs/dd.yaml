@@ -1,0 +1,95 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: dd
+description: Convert and copy a file
+options:
+  - name: bs
+    description: Set input and output block size
+    icon: fig://icon?type=asterisk
+    args:
+      name: size
+    requiresSeparator: true
+  - name: cbs
+    description: Set the conversion record size
+    icon: fig://icon?type=asterisk
+    args:
+      name: size
+    requiresSeparator: true
+  - name: count
+    description: Copy this many input blocks
+    icon: fig://icon?type=asterisk
+    args:
+      name: number
+    requiresSeparator: true
+  - name: files
+    description: Copy this many files before terminating
+    icon: fig://icon?type=asterisk
+    args:
+      name: number
+    requiresSeparator: true
+  - name: ibs
+    description: Set the input block size
+    icon: fig://icon?type=asterisk
+    args:
+      name: size
+      default: "512"
+    requiresSeparator: true
+  - name: if
+    description: Read an input file instead of stdin
+    icon: fig://icon?type=asterisk
+    priority: 60
+    args:
+      name: file
+      template: filepaths
+    requiresSeparator: true
+  - name: iseek
+    description: Seek this many blocks on the input file
+    icon: fig://icon?type=asterisk
+    args:
+      name: blocks
+    requiresSeparator: true
+  - name: obs
+    description: Set the output block size
+    icon: fig://icon?type=asterisk
+    args:
+      name: size
+      default: "512"
+    requiresSeparator: true
+  - name: of
+    description: Write to an output file instead of stdout
+    icon: fig://icon?type=asterisk
+    priority: 59
+    args:
+      name: file
+      template: filepaths
+      suggestCurrentToken: true
+    requiresSeparator: true
+  - name: oseek
+    description: Seek this many blocks on the output file
+    icon: fig://icon?type=asterisk
+    args:
+      name: blocks
+    requiresSeparator: true
+  - name: seek
+    description: Seek this many blocks from the beginning of the output before copying
+    icon: fig://icon?type=asterisk
+    args:
+      name: blocks
+    requiresSeparator: true
+  - name: skip
+    description: Skip this many blocks from the beginning of the input before copying
+    icon: fig://icon?type=asterisk
+    args:
+      name: blocks
+    requiresSeparator: true
+  - name: conv
+    description: Convert input data (comma-separated list)
+    icon: fig://icon?type=asterisk
+    args:
+      name: value
+      generators:
+        getQueryTerm: ","
+        js:
+          custom: 0
+    requiresSeparator: true
+parserDirectives:
+  flagsArePosixNoncompliant: true

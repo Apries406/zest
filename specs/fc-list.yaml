@@ -1,0 +1,33 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: fc-list
+options:
+  - name:
+      - -v
+      - --verbose
+    description: display entire font pattern verbosely
+  - name:
+      - -b
+      - --brief
+    description: display entire font pattern briefly
+  - name:
+      - -f
+      - --format
+    description: use the given output format
+    args:
+      name: FORMAT
+  - name:
+      - -q
+      - --quiet
+    description: suppress all normal output, exit 1 if no fonts matched
+  - name:
+      - -V
+      - --version
+    description: display font config version and exit
+  - name:
+      - -h
+      - --help
+    description: display this help and exit
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

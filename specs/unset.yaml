@@ -1,0 +1,13 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: unset
+description: Named variable shall be undefined
+options:
+  - name: -v
+    description: Variable definition will be unset
+args:
+  name: string
+  generators:
+    script:
+      - env
+    js:
+      postProcess: 0

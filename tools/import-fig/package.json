@@ -1,0 +1,17 @@
+{
+  "name": "zest-import-fig",
+  "private": true,
+  "description": "Converts Fig completion specs (withfig/autocomplete) to zest YAML specs.",
+  "type": "module",
+  "scripts": {
+    "import": "node import.mjs"
+  },
+  "dependencies": {
+    "@fig/autocomplete-generators": "2.4.0",
+    "@fig/autocomplete-helpers": "1.0.7",
+    "esbuild": "0.25.0",
+    "semver": "7.6.3",
+    "strip-json-comments": "5.0.1",
+    "yaml": "2.6.1"
+  }
+}

@@ -1,0 +1,34 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: kubens
+description: Switch between Kubernetes-namespaces
+options:
+  - name:
+      - --help
+      - -h
+    description: Show help for kubens
+  - name:
+      - --current
+      - -c
+    description: Show current namespace
+args:
+  name: namespace
+  isOptional: true
+  generators:
+    - script:
+        - bash
+        - -c
+        - kubens | grep -v $(kubens -c)
+      js:
+        postProcess: 0
+    - script:
+        - kubens
+        - -c
+      js:
+        postProcess: 1
+parserDirectives:
+  flagsArePosixNoncompliant: true
+additionalSuggestions:
+  - name: "-"
+    description: Switch to previous namespace within the current context
+    icon: fig://icon?type=asterisk
+    priority: 85

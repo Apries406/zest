@@ -437,6 +437,10 @@ public final class Engine: @unchecked Sendable {
                 } else {
                     c.isLoading = true
                 }
+            } else if let filter = g.filter {
+                addFiles(token: token, foldersOnly: !templates.contains(.filepaths), request: request, into: &c) {
+                    filter.accepts($0, isDirectory: $0.hasSuffix("/"))
+                }
             } else {
                 addFiles(token: token, foldersOnly: !templates.contains(.filepaths), request: request, into: &c)
             }

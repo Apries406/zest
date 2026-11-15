@@ -1,0 +1,30 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: kill
+description: Terminate or signal a process
+options:
+  - name: -s
+    description: A symbolic signal name specifying the signal to be sent
+    args:
+      name: signal_name
+      generators:
+        script:
+          - env
+          - kill
+          - -l
+        js:
+          postProcess: 1
+  - name: -l
+    description: If no operand is given, list the signal names; otherwise, write the signal name corresponding to exit_status
+    args:
+      name: exit_status
+      isOptional: true
+args:
+  name: pid
+  isVariadic: true
+  generators:
+    script:
+      - bash
+      - -c
+      - ps axo pid,comm | sed 1d
+    js:
+      postProcess: 0

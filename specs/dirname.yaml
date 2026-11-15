@@ -1,0 +1,8 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: dirname
+description: Return directory portion of pathname
+args:
+  name: string
+  description: String to operate on (typically filenames)
+  isVariadic: true
+  template: filepaths

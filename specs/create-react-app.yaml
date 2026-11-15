@@ -1,0 +1,58 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: create-react-app
+description: Creates a new React project
+options:
+  - name: --template
+    description: Specify a template for the created project (a custom template on npm (search for "cra-template-*"), a relative path, or an archive (.tgz or .tar.gz))
+    icon: https://raw.githubusercontent.com/expo/expo-cli/master/assets/fig/path.png
+    priority: 76
+    args:
+      name: name or url
+  - name: --use-npm
+    description: Use npm to install dependencies (default when Yarn is not installed)
+    icon: fig://icon?type=npm
+    priority: 75
+    args:
+      name: boolean
+      isOptional: true
+      suggestions:
+        - name: "true"
+          icon: https://raw.githubusercontent.com/expo/expo-cli/master/assets/fig/true.png
+        - name: "false"
+          icon: https://raw.githubusercontent.com/expo/expo-cli/master/assets/fig/false.png
+  - name: --use-pnp
+    description: Use Yarn Plug'n'Play to create the app
+    icon: fig://icon?type=yarn
+    priority: 75
+    args:
+      name: boolean
+      isOptional: true
+      suggestions:
+        - name: "true"
+          icon: https://raw.githubusercontent.com/expo/expo-cli/master/assets/fig/true.png
+        - name: "false"
+          icon: https://raw.githubusercontent.com/expo/expo-cli/master/assets/fig/false.png
+  - name: --scripts-version
+    description: Use a non-standard version of react-scripts (a specific npm version or npm tag, a custom fork published on npm, a relative path, or an archive (.tgz or .tar.gz))
+    priority: 74
+    args:
+      name: alternative package
+  - name: --verbose
+    description: Print additional logs
+    icon: https://raw.githubusercontent.com/expo/expo-cli/master/assets/fig/string.png
+    priority: 1
+  - name:
+      - -h
+      - --help
+    description: Output usage information
+    icon: https://raw.githubusercontent.com/expo/expo-cli/master/assets/fig/help.png
+    priority: 1
+  - name:
+      - -V
+      - --version
+    description: Output the version number
+    icon: https://raw.githubusercontent.com/expo/expo-cli/master/assets/fig/info.png
+    priority: 1
+args:
+  name: name
+  template: folders

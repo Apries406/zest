@@ -1,0 +1,5 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: until
+description: Repeat a command until this is true
+args:
+  isCommand: true

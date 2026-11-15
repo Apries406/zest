@@ -1,0 +1,70 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: lz4
+options:
+  - name: "-1"
+    description: ": fast compression (default)"
+  - name: "-12"
+    description: ": slowest compression level"
+  - name: -T#
+    description: ": use # threads for compression (default:0==auto)"
+  - name: -d
+    description: ": decompression (default for .lz4 extension)"
+  - name: -f
+    description: ": overwrite output without prompting"
+  - name: -k
+    description: ": preserve source files(s)  (default)"
+  - name: --rm
+    description: ": remove source file(s) after successful de/compression"
+  - name: -h
+    description: ": display help/long help and exit"
+  - name: -V
+    description: ": display Version number and exit"
+  - name: -v
+    description: ": verbose mode"
+  - name: -q
+    description: ": suppress warnings; specify twice to suppress errors too"
+  - name: -c
+    description: ": force write to standard output, even if it is the console"
+  - name: -t
+    description: ": test compressed file integrity"
+  - name: -m
+    description: ": multiple input files (implies automatic output filenames)"
+  - name: -r
+    description: ": operate recursively on directories (sets also -m)"
+  - name: -l
+    description: ": compress using Legacy format (Linux kernel compression)"
+  - name: -z
+    description: ": force compression"
+  - name: -D
+    args:
+      name: FILE
+  - name: -B#
+    description: ": cut file into blocks of size # bytes [32+] or predefined block size [4-7] (default: 7)"
+  - name: -BI
+    description: ": Block Independence (default)"
+  - name: -BD
+    description: ": Block dependency (improves compression ratio)"
+  - name: -BX
+    description: ": enable block checksum (default:disabled)"
+  - name: --no-frame-crc
+  - name: --content-size
+  - name: --list
+    args:
+      name: FILE
+  - name: --favor-decSpeed
+  - name: --fast
+    args:
+      name: =#
+      isOptional: true
+  - name: --best
+    description: ": same as -12"
+  - name: -b#
+    description: ": benchmark file(s), using # compression level (default : 1)"
+  - name: -e#
+    description: ": test all compression levels from -bX to # (default : 1)"
+  - name: -i#
+    description: ": minimum evaluation time in seconds (default : 3s)"
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

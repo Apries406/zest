@@ -1,0 +1,23 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: trap
+description: Automatically execute commands after receiving signals by processes or the operating system
+options:
+  - name:
+      - --print
+      - -p
+    description: Prints all defined signal handlers
+  - name:
+      - --help
+      - -h
+    description: Displays help about using this command
+args:
+  - name: function name
+    isOptional: true
+  - name: reason
+    generators:
+      script:
+        - command
+        - kill
+        - -l
+      js:
+        postProcess: 0

@@ -1,0 +1,4 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: speedtest
+description: ""
+loadSpec: speedtest-cli

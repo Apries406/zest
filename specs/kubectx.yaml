@@ -1,0 +1,48 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: kubectx
+description: Switch between Kubernetes-contexts
+options:
+  - name:
+      - --help
+      - -h
+    description: Show help for kubectx
+  - name:
+      - --current
+      - -c
+    description: Show current context
+  - name:
+      - --unset
+      - -u
+    description: Unset the current context
+  - name: -d
+    description: Delete context
+    args:
+      name: context
+      isVariadic: true
+      generators:
+        script:
+          - kubectx
+        js:
+          postProcess: 0
+args:
+  name: context
+  isOptional: true
+  generators:
+    - script:
+        - bash
+        - -c
+        - kubectx | grep -v $(kubectx -c)
+      js:
+        postProcess: 1
+    - script:
+        - kubectx
+        - -c
+      js:
+        postProcess: 2
+parserDirectives:
+  flagsArePosixNoncompliant: true
+additionalSuggestions:
+  - name: "-"
+    description: Switch to previous context
+    icon: fig://icon?type=asterisk
+    priority: 85

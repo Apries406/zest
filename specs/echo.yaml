@@ -1,0 +1,19 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: echo
+description: Write arguments to the standard output
+options:
+  - name: -n
+    description: Do not print the trailing newline character
+  - name: -e
+    description: Interpret escape sequences
+  - name: -E
+    description: Disable escape sequences
+args:
+  name: string
+  isVariadic: true
+  optionsCanBreakVariadicArg: false
+  generators:
+    trigger: $
+    js:
+      custom: 0
+  suggestCurrentToken: true

@@ -1,0 +1,668 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: gitleaks
+subcommands:
+  - name: completion
+    description: Generate the autocompletion script for the specified shell
+    subcommands:
+      - name: bash
+        description: Generate the autocompletion script for bash
+        options:
+          - name:
+              - -h
+              - --help
+            description: help for bash
+          - name: --no-descriptions
+            description: disable completion descriptions
+          - name:
+              - -b
+              - --baseline-path
+            description: path to baseline with issues that can be ignored
+          - name:
+              - -c
+              - --config
+            description: "config file path order of precedence: 1. --config/-c 2. env var GITLEAKS_CONFIG 3. env var GITLEAKS_CONFIG_TOML with the file content 4. (target path)/.gitleaks.toml If none of the four options are used, then gitleaks will use the default config"
+          - name: --diagnostics
+            description: "enable diagnostics (http OR comma-separated list: cpu,mem,trace). cpu=CPU prof, mem=memory prof, trace=exec tracing, http=serve via net/http/pprof"
+          - name: --diagnostics-dir
+            description: directory to store diagnostics output files when not using http mode (defaults to current directory)
+          - name: --enable-rule
+            description: only enable specific rules by id
+          - name: --exit-code
+            description: exit code when leaks have been encountered (default 1)
+          - name:
+              - -i
+              - --gitleaks-ignore-path
+            description: path to .gitleaksignore file or folder containing one (default ".")
+          - name: --ignore-gitleaks-allow
+            description: ignore gitleaks:allow comments
+          - name:
+              - -l
+              - --log-level
+            description: log level (trace, debug, info, warn, error, fatal) (default "info")
+          - name: --max-archive-depth
+            description: allow scanning into nested archives up to this depth (default "0", no archive traversal is done)
+          - name: --max-decode-depth
+            description: allow recursive decoding up to this depth (default 5)
+          - name: --max-target-megabytes
+            description: files larger than this will be skipped
+          - name: --no-banner
+            description: suppress banner
+          - name: --no-color
+            description: turn off color for verbose output
+          - name: --redact
+            description: redact secrets from logs and stdout. To redact only parts of the secret just apply a percent value from 0..100. For example --redact=20 (default 100%)
+            args:
+              name: =100
+              isOptional: true
+          - name:
+              - -f
+              - --report-format
+            description: output format (json, csv, junit, sarif, template)
+          - name:
+              - -r
+              - --report-path
+            description: report file (use "-" for stdout)
+          - name: --report-template
+            description: template file used to generate the report (implies --report-format=template)
+          - name: --timeout
+            description: set a timeout for gitleaks commands in seconds (default "0", no timeout is set)
+          - name:
+              - -v
+              - --verbose
+            description: show verbose output from scan
+      - name: fish
+        description: Generate the autocompletion script for fish
+        options:
+          - name:
+              - -h
+              - --help
+            description: help for fish
+          - name: --no-descriptions
+            description: disable completion descriptions
+          - name:
+              - -b
+              - --baseline-path
+            description: path to baseline with issues that can be ignored
+          - name:
+              - -c
+              - --config
+            description: "config file path order of precedence: 1. --config/-c 2. env var GITLEAKS_CONFIG 3. env var GITLEAKS_CONFIG_TOML with the file content 4. (target path)/.gitleaks.toml If none of the four options are used, then gitleaks will use the default config"
+          - name: --diagnostics
+            description: "enable diagnostics (http OR comma-separated list: cpu,mem,trace). cpu=CPU prof, mem=memory prof, trace=exec tracing, http=serve via net/http/pprof"
+          - name: --diagnostics-dir
+            description: directory to store diagnostics output files when not using http mode (defaults to current directory)
+          - name: --enable-rule
+            description: only enable specific rules by id
+          - name: --exit-code
+            description: exit code when leaks have been encountered (default 1)
+          - name:
+              - -i
+              - --gitleaks-ignore-path
+            description: path to .gitleaksignore file or folder containing one (default ".")
+          - name: --ignore-gitleaks-allow
+            description: ignore gitleaks:allow comments
+          - name:
+              - -l
+              - --log-level
+            description: log level (trace, debug, info, warn, error, fatal) (default "info")
+          - name: --max-archive-depth
+            description: allow scanning into nested archives up to this depth (default "0", no archive traversal is done)
+          - name: --max-decode-depth
+            description: allow recursive decoding up to this depth (default 5)
+          - name: --max-target-megabytes
+            description: files larger than this will be skipped
+          - name: --no-banner
+            description: suppress banner
+          - name: --no-color
+            description: turn off color for verbose output
+          - name: --redact
+            description: redact secrets from logs and stdout. To redact only parts of the secret just apply a percent value from 0..100. For example --redact=20 (default 100%)
+            args:
+              name: =100
+              isOptional: true
+          - name:
+              - -f
+              - --report-format
+            description: output format (json, csv, junit, sarif, template)
+          - name:
+              - -r
+              - --report-path
+            description: report file (use "-" for stdout)
+          - name: --report-template
+            description: template file used to generate the report (implies --report-format=template)
+          - name: --timeout
+            description: set a timeout for gitleaks commands in seconds (default "0", no timeout is set)
+          - name:
+              - -v
+              - --verbose
+            description: show verbose output from scan
+      - name: powershell
+        description: Generate the autocompletion script for powershell
+        options:
+          - name:
+              - -h
+              - --help
+            description: help for powershell
+          - name: --no-descriptions
+            description: disable completion descriptions
+          - name:
+              - -b
+              - --baseline-path
+            description: path to baseline with issues that can be ignored
+          - name:
+              - -c
+              - --config
+            description: "config file path order of precedence: 1. --config/-c 2. env var GITLEAKS_CONFIG 3. env var GITLEAKS_CONFIG_TOML with the file content 4. (target path)/.gitleaks.toml If none of the four options are used, then gitleaks will use the default config"
+          - name: --diagnostics
+            description: "enable diagnostics (http OR comma-separated list: cpu,mem,trace). cpu=CPU prof, mem=memory prof, trace=exec tracing, http=serve via net/http/pprof"
+          - name: --diagnostics-dir
+            description: directory to store diagnostics output files when not using http mode (defaults to current directory)
+          - name: --enable-rule
+            description: only enable specific rules by id
+          - name: --exit-code
+            description: exit code when leaks have been encountered (default 1)
+          - name:
+              - -i
+              - --gitleaks-ignore-path
+            description: path to .gitleaksignore file or folder containing one (default ".")
+          - name: --ignore-gitleaks-allow
+            description: ignore gitleaks:allow comments
+          - name:
+              - -l
+              - --log-level
+            description: log level (trace, debug, info, warn, error, fatal) (default "info")
+          - name: --max-archive-depth
+            description: allow scanning into nested archives up to this depth (default "0", no archive traversal is done)
+          - name: --max-decode-depth
+            description: allow recursive decoding up to this depth (default 5)
+          - name: --max-target-megabytes
+            description: files larger than this will be skipped
+          - name: --no-banner
+            description: suppress banner
+          - name: --no-color
+            description: turn off color for verbose output
+          - name: --redact
+            description: redact secrets from logs and stdout. To redact only parts of the secret just apply a percent value from 0..100. For example --redact=20 (default 100%)
+            args:
+              name: =100
+              isOptional: true
+          - name:
+              - -f
+              - --report-format
+            description: output format (json, csv, junit, sarif, template)
+          - name:
+              - -r
+              - --report-path
+            description: report file (use "-" for stdout)
+          - name: --report-template
+            description: template file used to generate the report (implies --report-format=template)
+          - name: --timeout
+            description: set a timeout for gitleaks commands in seconds (default "0", no timeout is set)
+          - name:
+              - -v
+              - --verbose
+            description: show verbose output from scan
+      - name: zsh
+        description: Generate the autocompletion script for zsh
+        options:
+          - name:
+              - -h
+              - --help
+            description: help for zsh
+          - name: --no-descriptions
+            description: disable completion descriptions
+          - name:
+              - -b
+              - --baseline-path
+            description: path to baseline with issues that can be ignored
+          - name:
+              - -c
+              - --config
+            description: "config file path order of precedence: 1. --config/-c 2. env var GITLEAKS_CONFIG 3. env var GITLEAKS_CONFIG_TOML with the file content 4. (target path)/.gitleaks.toml If none of the four options are used, then gitleaks will use the default config"
+          - name: --diagnostics
+            description: "enable diagnostics (http OR comma-separated list: cpu,mem,trace). cpu=CPU prof, mem=memory prof, trace=exec tracing, http=serve via net/http/pprof"
+          - name: --diagnostics-dir
+            description: directory to store diagnostics output files when not using http mode (defaults to current directory)
+          - name: --enable-rule
+            description: only enable specific rules by id
+          - name: --exit-code
+            description: exit code when leaks have been encountered (default 1)
+          - name:
+              - -i
+              - --gitleaks-ignore-path
+            description: path to .gitleaksignore file or folder containing one (default ".")
+          - name: --ignore-gitleaks-allow
+            description: ignore gitleaks:allow comments
+          - name:
+              - -l
+              - --log-level
+            description: log level (trace, debug, info, warn, error, fatal) (default "info")
+          - name: --max-archive-depth
+            description: allow scanning into nested archives up to this depth (default "0", no archive traversal is done)
+          - name: --max-decode-depth
+            description: allow recursive decoding up to this depth (default 5)
+          - name: --max-target-megabytes
+            description: files larger than this will be skipped
+          - name: --no-banner
+            description: suppress banner
+          - name: --no-color
+            description: turn off color for verbose output
+          - name: --redact
+            description: redact secrets from logs and stdout. To redact only parts of the secret just apply a percent value from 0..100. For example --redact=20 (default 100%)
+            args:
+              name: =100
+              isOptional: true
+          - name:
+              - -f
+              - --report-format
+            description: output format (json, csv, junit, sarif, template)
+          - name:
+              - -r
+              - --report-path
+            description: report file (use "-" for stdout)
+          - name: --report-template
+            description: template file used to generate the report (implies --report-format=template)
+          - name: --timeout
+            description: set a timeout for gitleaks commands in seconds (default "0", no timeout is set)
+          - name:
+              - -v
+              - --verbose
+            description: show verbose output from scan
+    options:
+      - name:
+          - -h
+          - --help
+        description: help for completion
+      - name:
+          - -b
+          - --baseline-path
+        description: path to baseline with issues that can be ignored
+      - name:
+          - -c
+          - --config
+        description: "config file path order of precedence: 1. --config/-c 2. env var GITLEAKS_CONFIG 3. env var GITLEAKS_CONFIG_TOML with the file content 4. (target path)/.gitleaks.toml If none of the four options are used, then gitleaks will use the default config"
+      - name: --diagnostics
+        description: "enable diagnostics (http OR comma-separated list: cpu,mem,trace). cpu=CPU prof, mem=memory prof, trace=exec tracing, http=serve via net/http/pprof"
+      - name: --diagnostics-dir
+        description: directory to store diagnostics output files when not using http mode (defaults to current directory)
+      - name: --enable-rule
+        description: only enable specific rules by id
+      - name: --exit-code
+        description: exit code when leaks have been encountered (default 1)
+      - name:
+          - -i
+          - --gitleaks-ignore-path
+        description: path to .gitleaksignore file or folder containing one (default ".")
+      - name: --ignore-gitleaks-allow
+        description: ignore gitleaks:allow comments
+      - name:
+          - -l
+          - --log-level
+        description: log level (trace, debug, info, warn, error, fatal) (default "info")
+      - name: --max-archive-depth
+        description: allow scanning into nested archives up to this depth (default "0", no archive traversal is done)
+      - name: --max-decode-depth
+        description: allow recursive decoding up to this depth (default 5)
+      - name: --max-target-megabytes
+        description: files larger than this will be skipped
+      - name: --no-banner
+        description: suppress banner
+      - name: --no-color
+        description: turn off color for verbose output
+      - name: --redact
+        description: redact secrets from logs and stdout. To redact only parts of the secret just apply a percent value from 0..100. For example --redact=20 (default 100%)
+        args:
+          name: =100
+          isOptional: true
+      - name:
+          - -f
+          - --report-format
+        description: output format (json, csv, junit, sarif, template)
+      - name:
+          - -r
+          - --report-path
+        description: report file (use "-" for stdout)
+      - name: --report-template
+        description: template file used to generate the report (implies --report-format=template)
+      - name: --timeout
+        description: set a timeout for gitleaks commands in seconds (default "0", no timeout is set)
+      - name:
+          - -v
+          - --verbose
+        description: show verbose output from scan
+  - name: dir
+    description: scan directories or files for secrets
+    options:
+      - name: --follow-symlinks
+        description: scan files that are symlinks to other files
+      - name:
+          - -h
+          - --help
+        description: help for dir
+      - name:
+          - -b
+          - --baseline-path
+        description: path to baseline with issues that can be ignored
+      - name:
+          - -c
+          - --config
+        description: "config file path order of precedence: 1. --config/-c 2. env var GITLEAKS_CONFIG 3. env var GITLEAKS_CONFIG_TOML with the file content 4. (target path)/.gitleaks.toml If none of the four options are used, then gitleaks will use the default config"
+      - name: --diagnostics
+        description: "enable diagnostics (http OR comma-separated list: cpu,mem,trace). cpu=CPU prof, mem=memory prof, trace=exec tracing, http=serve via net/http/pprof"
+      - name: --diagnostics-dir
+        description: directory to store diagnostics output files when not using http mode (defaults to current directory)
+      - name: --enable-rule
+        description: only enable specific rules by id
+      - name: --exit-code
+        description: exit code when leaks have been encountered (default 1)
+      - name:
+          - -i
+          - --gitleaks-ignore-path
+        description: path to .gitleaksignore file or folder containing one (default ".")
+      - name: --ignore-gitleaks-allow
+        description: ignore gitleaks:allow comments
+      - name:
+          - -l
+          - --log-level
+        description: log level (trace, debug, info, warn, error, fatal) (default "info")
+      - name: --max-archive-depth
+        description: allow scanning into nested archives up to this depth (default "0", no archive traversal is done)
+      - name: --max-decode-depth
+        description: allow recursive decoding up to this depth (default 5)
+      - name: --max-target-megabytes
+        description: files larger than this will be skipped
+      - name: --no-banner
+        description: suppress banner
+      - name: --no-color
+        description: turn off color for verbose output
+      - name: --redact
+        description: redact secrets from logs and stdout. To redact only parts of the secret just apply a percent value from 0..100. For example --redact=20 (default 100%)
+        args:
+          name: =100
+          isOptional: true
+      - name:
+          - -f
+          - --report-format
+        description: output format (json, csv, junit, sarif, template)
+      - name:
+          - -r
+          - --report-path
+        description: report file (use "-" for stdout)
+      - name: --report-template
+        description: template file used to generate the report (implies --report-format=template)
+      - name: --timeout
+        description: set a timeout for gitleaks commands in seconds (default "0", no timeout is set)
+      - name:
+          - -v
+          - --verbose
+        description: show verbose output from scan
+  - name: git
+    description: scan git repositories for secrets
+    options:
+      - name:
+          - -h
+          - --help
+        description: help for git
+      - name: --log-opts
+        description: git log options
+      - name: --platform
+        description: the target platform used to generate links (github, gitlab)
+      - name: --pre-commit
+        description: scan using git diff
+      - name: --staged
+        description: scan staged commits (good for pre-commit)
+      - name:
+          - -b
+          - --baseline-path
+        description: path to baseline with issues that can be ignored
+      - name:
+          - -c
+          - --config
+        description: "config file path order of precedence: 1. --config/-c 2. env var GITLEAKS_CONFIG 3. env var GITLEAKS_CONFIG_TOML with the file content 4. (target path)/.gitleaks.toml If none of the four options are used, then gitleaks will use the default config"
+      - name: --diagnostics
+        description: "enable diagnostics (http OR comma-separated list: cpu,mem,trace). cpu=CPU prof, mem=memory prof, trace=exec tracing, http=serve via net/http/pprof"
+      - name: --diagnostics-dir
+        description: directory to store diagnostics output files when not using http mode (defaults to current directory)
+      - name: --enable-rule
+        description: only enable specific rules by id
+      - name: --exit-code
+        description: exit code when leaks have been encountered (default 1)
+      - name:
+          - -i
+          - --gitleaks-ignore-path
+        description: path to .gitleaksignore file or folder containing one (default ".")
+      - name: --ignore-gitleaks-allow
+        description: ignore gitleaks:allow comments
+      - name:
+          - -l
+          - --log-level
+        description: log level (trace, debug, info, warn, error, fatal) (default "info")
+      - name: --max-archive-depth
+        description: allow scanning into nested archives up to this depth (default "0", no archive traversal is done)
+      - name: --max-decode-depth
+        description: allow recursive decoding up to this depth (default 5)
+      - name: --max-target-megabytes
+        description: files larger than this will be skipped
+      - name: --no-banner
+        description: suppress banner
+      - name: --no-color
+        description: turn off color for verbose output
+      - name: --redact
+        description: redact secrets from logs and stdout. To redact only parts of the secret just apply a percent value from 0..100. For example --redact=20 (default 100%)
+        args:
+          name: =100
+          isOptional: true
+      - name:
+          - -f
+          - --report-format
+        description: output format (json, csv, junit, sarif, template)
+      - name:
+          - -r
+          - --report-path
+        description: report file (use "-" for stdout)
+      - name: --report-template
+        description: template file used to generate the report (implies --report-format=template)
+      - name: --timeout
+        description: set a timeout for gitleaks commands in seconds (default "0", no timeout is set)
+      - name:
+          - -v
+          - --verbose
+        description: show verbose output from scan
+  - name: help
+    description: Help about any command
+  - name: stdin
+    description: detect secrets from stdin
+    options:
+      - name:
+          - -h
+          - --help
+        description: help for stdin
+      - name:
+          - -b
+          - --baseline-path
+        description: path to baseline with issues that can be ignored
+      - name:
+          - -c
+          - --config
+        description: "config file path order of precedence: 1. --config/-c 2. env var GITLEAKS_CONFIG 3. env var GITLEAKS_CONFIG_TOML with the file content 4. (target path)/.gitleaks.toml If none of the four options are used, then gitleaks will use the default config"
+      - name: --diagnostics
+        description: "enable diagnostics (http OR comma-separated list: cpu,mem,trace). cpu=CPU prof, mem=memory prof, trace=exec tracing, http=serve via net/http/pprof"
+      - name: --diagnostics-dir
+        description: directory to store diagnostics output files when not using http mode (defaults to current directory)
+      - name: --enable-rule
+        description: only enable specific rules by id
+      - name: --exit-code
+        description: exit code when leaks have been encountered (default 1)
+      - name:
+          - -i
+          - --gitleaks-ignore-path
+        description: path to .gitleaksignore file or folder containing one (default ".")
+      - name: --ignore-gitleaks-allow
+        description: ignore gitleaks:allow comments
+      - name:
+          - -l
+          - --log-level
+        description: log level (trace, debug, info, warn, error, fatal) (default "info")
+      - name: --max-archive-depth
+        description: allow scanning into nested archives up to this depth (default "0", no archive traversal is done)
+      - name: --max-decode-depth
+        description: allow recursive decoding up to this depth (default 5)
+      - name: --max-target-megabytes
+        description: files larger than this will be skipped
+      - name: --no-banner
+        description: suppress banner
+      - name: --no-color
+        description: turn off color for verbose output
+      - name: --redact
+        description: redact secrets from logs and stdout. To redact only parts of the secret just apply a percent value from 0..100. For example --redact=20 (default 100%)
+        args:
+          name: =100
+          isOptional: true
+      - name:
+          - -f
+          - --report-format
+        description: output format (json, csv, junit, sarif, template)
+      - name:
+          - -r
+          - --report-path
+        description: report file (use "-" for stdout)
+      - name: --report-template
+        description: template file used to generate the report (implies --report-format=template)
+      - name: --timeout
+        description: set a timeout for gitleaks commands in seconds (default "0", no timeout is set)
+      - name:
+          - -v
+          - --verbose
+        description: show verbose output from scan
+  - name: version
+    description: display gitleaks version
+    options:
+      - name:
+          - -h
+          - --help
+        description: help for version
+      - name:
+          - -b
+          - --baseline-path
+        description: path to baseline with issues that can be ignored
+      - name:
+          - -c
+          - --config
+        description: "config file path order of precedence: 1. --config/-c 2. env var GITLEAKS_CONFIG 3. env var GITLEAKS_CONFIG_TOML with the file content 4. (target path)/.gitleaks.toml If none of the four options are used, then gitleaks will use the default config"
+      - name: --diagnostics
+        description: "enable diagnostics (http OR comma-separated list: cpu,mem,trace). cpu=CPU prof, mem=memory prof, trace=exec tracing, http=serve via net/http/pprof"
+      - name: --diagnostics-dir
+        description: directory to store diagnostics output files when not using http mode (defaults to current directory)
+      - name: --enable-rule
+        description: only enable specific rules by id
+      - name: --exit-code
+        description: exit code when leaks have been encountered (default 1)
+      - name:
+          - -i
+          - --gitleaks-ignore-path
+        description: path to .gitleaksignore file or folder containing one (default ".")
+      - name: --ignore-gitleaks-allow
+        description: ignore gitleaks:allow comments
+      - name:
+          - -l
+          - --log-level
+        description: log level (trace, debug, info, warn, error, fatal) (default "info")
+      - name: --max-archive-depth
+        description: allow scanning into nested archives up to this depth (default "0", no archive traversal is done)
+      - name: --max-decode-depth
+        description: allow recursive decoding up to this depth (default 5)
+      - name: --max-target-megabytes
+        description: files larger than this will be skipped
+      - name: --no-banner
+        description: suppress banner
+      - name: --no-color
+        description: turn off color for verbose output
+      - name: --redact
+        description: redact secrets from logs and stdout. To redact only parts of the secret just apply a percent value from 0..100. For example --redact=20 (default 100%)
+        args:
+          name: =100
+          isOptional: true
+      - name:
+          - -f
+          - --report-format
+        description: output format (json, csv, junit, sarif, template)
+      - name:
+          - -r
+          - --report-path
+        description: report file (use "-" for stdout)
+      - name: --report-template
+        description: template file used to generate the report (implies --report-format=template)
+      - name: --timeout
+        description: set a timeout for gitleaks commands in seconds (default "0", no timeout is set)
+      - name:
+          - -v
+          - --verbose
+        description: show verbose output from scan
+options:
+  - name:
+      - -b
+      - --baseline-path
+    description: path to baseline with issues that can be ignored
+  - name:
+      - -c
+      - --config
+    description: "config file path order of precedence: 1. --config/-c 2. env var GITLEAKS_CONFIG 3. env var GITLEAKS_CONFIG_TOML with the file content 4. (target path)/.gitleaks.toml If none of the four options are used, then gitleaks will use the default config"
+  - name: --diagnostics
+    description: "enable diagnostics (http OR comma-separated list: cpu,mem,trace). cpu=CPU prof, mem=memory prof, trace=exec tracing, http=serve via net/http/pprof"
+  - name: --diagnostics-dir
+    description: directory to store diagnostics output files when not using http mode (defaults to current directory)
+  - name: --enable-rule
+    description: only enable specific rules by id
+  - name: --exit-code
+    description: exit code when leaks have been encountered (default 1)
+  - name:
+      - -i
+      - --gitleaks-ignore-path
+    description: path to .gitleaksignore file or folder containing one (default ".")
+  - name:
+      - -h
+      - --help
+    description: help for gitleaks
+  - name: --ignore-gitleaks-allow
+    description: ignore gitleaks:allow comments
+  - name:
+      - -l
+      - --log-level
+    description: log level (trace, debug, info, warn, error, fatal) (default "info")
+  - name: --max-archive-depth
+    description: allow scanning into nested archives up to this depth (default "0", no archive traversal is done)
+  - name: --max-decode-depth
+    description: allow recursive decoding up to this depth (default 5)
+  - name: --max-target-megabytes
+    description: files larger than this will be skipped
+  - name: --no-banner
+    description: suppress banner
+  - name: --no-color
+    description: turn off color for verbose output
+  - name: --redact
+    description: redact secrets from logs and stdout. To redact only parts of the secret just apply a percent value from 0..100. For example --redact=20 (default 100%)
+    args:
+      name: =100
+      isOptional: true
+  - name:
+      - -f
+      - --report-format
+    description: output format (json, csv, junit, sarif, template)
+  - name:
+      - -r
+      - --report-path
+    description: report file (use "-" for stdout)
+  - name: --report-template
+    description: template file used to generate the report (implies --report-format=template)
+  - name: --timeout
+    description: set a timeout for gitleaks commands in seconds (default "0", no timeout is set)
+  - name:
+      - -v
+      - --verbose
+    description: show verbose output from scan
+  - name: --version
+    description: version for gitleaks
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

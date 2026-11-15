@@ -1,0 +1,13 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: lima
+description: Lima is an alias for "limactl shell $LIMA_INSTANCE"
+options:
+  - name:
+      - -h
+      - --help
+    description: Help for lima
+args:
+  name: COMMAND
+  isOptional: true
+  isVariadic: true
+  isCommand: true

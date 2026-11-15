@@ -1,0 +1,9 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: rmdir
+description: Remove directories
+options:
+  - name: -p
+    description: Remove each directory of path
+args:
+  isVariadic: true
+  template: folders

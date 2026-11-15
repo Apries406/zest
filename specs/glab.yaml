@@ -1,0 +1,3301 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: glab
+subcommands:
+  - name: alias
+    description: Create, list, and delete aliases.
+    subcommands:
+      - name: delete
+        description: Delete an alias.
+        args:
+          name: alias name
+      - name: list
+        description: List aliases.
+        options:
+          - name: -h
+            description: Show help for this command.
+      - name: set
+        description: Set an alias for a longer command.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -s
+            description: Declare an alias to be passed through a shell interpreter.
+        args:
+          name: alias name
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: api
+    description: Make an authenticated request to the GitLab API.
+    options:
+      - name: -F
+        description: Add a parameter of inferred type. Using this flag changes the default HTTP method to POST.
+      - name: --form
+        description: Add a multipart form field. To upload a file, prefix the value with @ followed by the file path. To read from standard input, use @- (at most once). Using this flag changes the default HTTP method to POST.
+      - name: -H
+        description: Add an additional HTTP request header.
+      - name: -h
+        description: Show help for this command.
+      - name: --hostname
+        description: The GitLab hostname for the request. Defaults to gitlab.com, or the authenticated host in the current Git directory.
+      - name: -i
+        description: Include HTTP response headers in the output.
+      - name: --input
+        description: The file to use as the body for the HTTP request.
+      - name: -X
+        description: The HTTP method for the request. (GET)
+      - name: --output
+        description: "Format output as: json, ndjson. (json)"
+      - name: --paginate
+        description: Make additional HTTP requests to fetch all pages of results.
+      - name: -f
+        description: Add a string parameter.
+      - name: --silent
+        description: Do not print the response body.
+    args:
+      name: endpoint
+  - name: artifact-registry
+    description: Authenticate with GitLab Artifact Registry. (EXPERIMENTAL)
+    subcommands:
+      - name: get-token
+        description: Get a short-lived access token for the GitLab Artifact Registry. (EXPERIMENTAL)
+        options:
+          - name: --duration
+            description: How long the token should remain valid. Must be between 1s and 12h0m0s. (15m0s)
+          - name: -h
+            description: Show help for this command.
+          - name: --hostname
+            description: Gitlab hostname to request the token from. Defaults to the configured GitLab instance.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+      - name: login
+        description: Authenticate a package manager against the GitLab Artifact Registry. (EXPERIMENTAL)
+      - name: status
+        description: Check your access to the GitLab Artifact Registry. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --hostname
+            description: Gitlab hostname to check. Defaults to the configured GitLab instance.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: attestation
+    description: Manage software attestations. (EXPERIMENTAL)
+    subcommands:
+      - name: verify
+        description: Verify the provenance of a specific artifact or file. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+        args:
+          - name: project-id
+          - name: artifact-path
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: auth
+    description: Manage authentication for glab.
+    subcommands:
+      - name: configure-docker
+        description: Register glab as a Docker credential helper.
+        options:
+          - name: -h
+            description: Show help for this command.
+      - name: docker-helper
+        description: A Docker credential helper for GitLab container and artifact registries.
+        options:
+          - name: -h
+            description: Show help for this command.
+      - name: dpop-gen
+        description: Generate a DPoP (demonstrating-proof-of-possession) proof JWT. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --hostname
+            description: The hostname of the GitLab instance to authenticate with. (gitlab.com)
+          - name: --pat
+            description: Personal access token (PAT) to generate a DPoP proof for. Defaults to the token set with 'glab auth login'.
+          - name: -p
+            description: Location of the private SSH key on the local system.
+      - name: login
+        description: Authenticate with a GitLab instance.
+      - name: logout
+        description: Log out from a GitLab instance.
+      - name: status
+        description: View authentication status.
+        options:
+          - name: -a
+            description: Check the authentication status of all configured instances.
+          - name: -h
+            description: Show help for this command.
+          - name: --hostname
+            description: Check the authentication status of a specific instance.
+          - name: -t
+            description: Display the authentication token.
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: changelog
+    description: Generate changelogs from your project's commit history.
+    subcommands:
+      - name: generate
+        description: Generate a changelog for the current project.
+        options:
+          - name: --config-file
+            description: Path to the changelog configuration file in the project's Git repository. Defaults to '.gitlab/changelog_config.yml'.
+          - name: --date
+            description: Date and time of the release, in ISO 8601 format (2016-03-11T03:45:40Z). Defaults to the current time.
+          - name: --from
+            description: Start of the range of commits to use when generating the changelog, as a SHA. This commit is not included in the range.
+          - name: -h
+            description: Show help for this command.
+          - name: --to
+            description: End of the range of commits to use when generating the changelog, as a SHA. This commit is included in the range. Defaults to the HEAD of the project's default branch.
+          - name: --trailer
+            description: The Git trailer to use to include commits. Defaults to 'Changelog'.
+          - name: -v
+            description: Version to generate the changelog for. Must follow semantic versioning. Defaults to the version detected by 'git describe'.
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: check-update
+    description: Check for the latest glab version.
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: ci
+    description: Work with GitLab CI/CD pipelines and jobs.
+    subcommands:
+      - name: artifact
+        description: Download all artifacts from the last pipeline.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -p
+            description: Path to download the artifact files. (./)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: refName
+          - name: jobName
+      - name: cancel
+        description: Cancel a running pipeline or job.
+        subcommands:
+          - name: job
+            description: Cancel CI/CD jobs.
+            args:
+              - name: id
+              - name: <id
+                isOptional: true
+          - name: pipeline
+            description: Cancel CI/CD pipelines.
+            args:
+              - name: id
+              - name: <id
+                isOptional: true
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: config
+        description: View and inspect GitLab CI/CD configuration.
+        subcommands:
+          - name: compile
+            description: View the merged CI/CD configuration.
+            args:
+              name: <path
+              isOptional: true
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: delete
+        description: Delete CI/CD pipelines.
+        args:
+          name: id
+      - name: get
+        description: Get the details of a CI/CD pipeline.
+        options:
+          - name: -b
+            description: Get the pipeline for a branch. Defaults to the current branch.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: --merge-request
+            description: Show the pipeline for the given merge request <iid>.
+          - name: -F
+            description: "Format output. Options: text, json. (text)"
+          - name: -p
+            description: Get the pipeline with the given <id>.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -s
+            description: Show only jobs in the given state. Passed through to the API's scope parameter.
+          - name: -d
+            description: Show extended job information.
+          - name: --with-variables
+            description: Show variables in pipeline. Requires the Maintainer role.
+      - name: lint
+        description: Check if your `.gitlab-ci.yml` file is valid.
+        options:
+          - name: --dry-run
+            description: Run pipeline creation simulation.
+          - name: -h
+            description: Show help for this command.
+          - name: --include-jobs
+            description: Include the list of jobs that would exist in a static check or pipeline simulation.
+          - name: --ref
+            description: When '--dry-run' is true, sets the branch or tag context for validating the CI/CD YAML configuration.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: list
+        description: List CI/CD pipelines.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -n
+            description: Return only pipelines with the given name.
+          - name: -o
+            description: "Order pipelines by this field. Options: id, status, ref, updated_at, user_id. (id)"
+          - name: -F
+            description: "Format output. Options: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. Defaults to the GitLab API default (20).
+          - name: -r
+            description: Return only pipelines for the given ref.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --scope
+            description: "Return only pipelines with the given scope. Options: running, pending, finished, branches, tags."
+          - name: --sha
+            description: Return only pipelines with the given SHA.
+          - name: --sort
+            description: "Sort direction for '--order': asc or desc. (desc)"
+          - name: --source
+            description: "Return only pipelines triggered by the given source. For the full list, see https://docs.gitlab.com/ci/jobs/job_rules/#ci_pipeline_source-predefined-variable. Commonly used options: merge_request_event, parent_pipeline, pipeline, push, trigger."
+          - name: -s
+            description: "Filter pipelines by status. Options: running, pending, success, failed, canceled, skipped, created, manual, waiting_for_resource, preparing, scheduled."
+          - name: -a
+            description: Return only pipelines updated after the specified date. Expected in ISO 8601 format (2019-03-15T08:00:00Z).
+          - name: -b
+            description: Return only pipelines updated before the specified date. Expected in ISO 8601 format (2019-03-15T08:00:00Z).
+          - name: -u
+            description: Return only pipelines triggered by the given username.
+          - name: -y
+            description: Return only pipelines with invalid configurations.
+      - name: retry
+        description: Retry a CI/CD job.
+        options:
+          - name: -b
+            description: The branch to search for the job. Defaults to the current branch.
+          - name: -h
+            description: Show help for this command.
+          - name: -p
+            description: The pipeline ID to search for the job.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: <job-id | job-name
+          isOptional: true
+      - name: run
+        description: Create a new CI/CD pipeline.
+        options:
+          - name: -b
+            description: Create pipeline on branch or reference <string>.
+          - name: -h
+            description: Show help for this command.
+          - name: -i
+            description: Pass inputs to pipeline in format '<key>:<value>'. Cannot be used for merge request pipelines. See documentation for examples.
+          - name: --mr
+            description: Run merge request pipeline instead of branch pipeline.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --variables
+            description: Pass variables to the pipeline in the format <key>:<value>. Cannot be used for MR pipelines.
+          - name: --variables-env
+            description: Pass variables to the pipeline in the format <key>:<value>. Cannot be used for MR pipelines.
+          - name: --variables-file
+            description: Pass file contents as a file variable to the pipeline in the format <key>:<filename>. Cannot be used for MR pipelines.
+          - name: -f
+            description: Json file with variables for pipeline execution. Expects array of hashes, each with at least 'key' and 'value'. Cannot be used for MR pipelines.
+          - name: -w
+            description: Open pipeline in a browser. Uses default browser, or browser specified in BROWSER environment variable.
+      - name: run-trig
+        description: Run a CI/CD pipeline trigger.
+        options:
+          - name: -b
+            description: Create pipeline on branch or reference <string>.
+          - name: -h
+            description: Show help for this command.
+          - name: -i
+            description: Pass inputs to pipeline in format '<key>:<value>'. Cannot be used for merge request pipelines. See documentation for examples.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -t
+            description: Pipeline trigger token. Can be omitted only if the 'CI_JOB_TOKEN' environment variable is set.
+          - name: --variables
+            description: Pass variables to pipeline in the format <key>:<value>. Multiple variables can be comma-separated or specified by repeating the flag.
+      - name: status
+        description: View CI/CD pipeline status.
+        options:
+          - name: -b
+            description: Check pipeline status for a branch. Defaults to the current branch.
+          - name: -c
+            description: Show status in compact format.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -l
+            description: Show status in real time until the pipeline ends.
+          - name: -F
+            description: "Format output as: text, json. Note: JSON output is not compatible with --live, --wait, or --compact flags. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -w
+            description: Wait to return until the pipeline is finished, and provide output without a prompt.
+      - name: trace
+        description: Trace a CI/CD job log in real time.
+        options:
+          - name: -b
+            description: The branch to search for the job. Defaults to the current branch.
+          - name: -h
+            description: Show help for this command.
+          - name: -p
+            description: The pipeline ID to search for the job.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <job-id
+            isOptional: true
+          - name: job-name
+      - name: trigger
+        description: Trigger a manual CI/CD job.
+        options:
+          - name: -b
+            description: The branch to search for the job. Defaults to the current branch.
+          - name: -h
+            description: Show help for this command.
+          - name: -p
+            description: The pipeline ID to search for the job.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: <job-id | job-name
+          isOptional: true
+      - name: view
+        description: View, run, retry, and cancel CI/CD pipeline jobs.
+        options:
+          - name: -b
+            description: Check pipeline status for a branch or tag. Defaults to the current branch.
+          - name: -h
+            description: Show help for this command.
+          - name: -p
+            description: Check pipeline status for a specific pipeline ID.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -w
+            description: Open pipeline in a browser. Uses the default browser, or the browser specified in the BROWSER environment variable.
+        args:
+          name: <branch | tag
+          isOptional: true
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: cluster
+    description: Manage GitLab Agents for Kubernetes and their clusters.
+    subcommands:
+      - name: agent
+        description: Manage GitLab Agents for Kubernetes.
+        subcommands:
+          - name: bootstrap
+            description: Bootstrap a GitLab Agent for Kubernetes in a project.
+            args:
+              name: agent-name
+          - name: check-manifest-usage
+            description: Find agents using deprecated GitOps manifest settings. (EXPERIMENTAL)
+          - name: get-token
+            description: Create a personal access token for a GitLab Agent for Kubernetes.
+          - name: list
+            description: List GitLab Agents for Kubernetes in a project.
+          - name: token
+            description: Manage GitLab Agents for Kubernetes tokens.
+          - name: token-cache
+            description: Manage cached GitLab Agent tokens.
+          - name: update-kubeconfig
+            description: Update your kubeconfig for use with a GitLab Agent for Kubernetes.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: graph
+        description: Query the Kubernetes object graph using the GitLab Agent for Kubernetes. (EXPERIMENTAL)
+        options:
+          - name: -a
+            description: The numeric agent ID to connect to.
+          - name: --apps
+            description: Watch deployments, replicasets, daemonsets, and statefulsets in the apps/v1 group.
+          - name: --batch
+            description: Watch jobs and cronjobs in the batch/v1 group.
+          - name: --cluster-rbac
+            description: Watch clusterroles and clusterrolebindings in the rbac.authorization.k8s.io/v1 group.
+          - name: --core
+            description: Watch pods, secrets, configmaps, and serviceaccounts in the core/v1 group.
+          - name: --crd
+            description: Watch customresourcedefinitions in the apiextensions.k8s.io/v1 group.
+          - name: -h
+            description: Show help for this command.
+          - name: --ignore-arc-direction
+            description: Ignore arc direction when evaluating root connectivity. Requires GitLab and agent version 18.3 or later.
+          - name: --listen-addr
+            description: Address to listen on. (localhost:0)
+          - name: --listen-net
+            description: Network on which to listen for connections. (tcp)
+          - name: --log-watch-request
+            description: Log watch request to stdout. Helpful for debugging.
+          - name: -n
+            description: Namespaces to watch. If not specified, all namespaces are watched with label and field selectors filtering.
+          - name: --ns-expression
+            description: Cel expression to select namespaces. Evaluated before a namespace is watched and on any updates for the namespace object.
+          - name: --ns-field-selector
+            description: Field selector to select namespaces.
+          - name: --ns-label-selector
+            description: Label selector to select namespaces.
+          - name: --rbac
+            description: Watch roles and rolebindings in the rbac.authorization.k8s.io/v1 group.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -r
+            description: Resources to watch. You can see the list of resources your cluster supports by running 'kubectl api-resources'.
+          - name: --root-expression
+            description: Cel expression to select root objects. Requires GitLab and agent version 18.3 or later.
+          - name: --stdin
+            description: Read watch request from standard input.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: completion
+    description: Generate shell completion scripts.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: --no-desc
+        description: Do not include shell completion description.
+      - name: -s
+        description: "Shell type: bash, zsh, fish, powershell. (bash)"
+  - name: config
+    description: Manage glab settings.
+    subcommands:
+      - name: edit
+        description: Opens the glab configuration file.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -l
+            description: Open '.git/glab-cli/config.yml' file instead of the global '~/.config/glab-cli/config.yml' file.
+      - name: get
+        description: Prints the value of a given configuration key.
+        options:
+          - name: -g
+            description: Read from global config file (~/.config/glab-cli/config.yml). (default checks 'Environment variables → Local → Global')
+          - name: -h
+            description: Show help for this command.
+          - name: --host
+            description: Get per-host setting.
+        args:
+          name: key
+      - name: path
+        description: Print the location of the global configuration file.
+        options:
+          - name: --dir
+            description: Print the configuration directory instead of the configuration file.
+          - name: -h
+            description: Show help for this command.
+      - name: set
+        description: Updates configuration with the value of a given key.
+        options:
+          - name: -g
+            description: Write to global '~/.config/glab-cli/config.yml' file rather than the repository's '.git/glab-cli/config.yml' file.
+          - name: -h
+            description: Show help for this command.
+          - name: --host
+            description: Set per-host setting.
+        args:
+          - name: key
+          - name: value
+    options:
+      - name: -g
+        description: Use global config file.
+      - name: -h
+        description: Show help for this command.
+  - name: container-registry
+    description: Work with GitLab container registries.
+    subcommands:
+      - name: repository
+        description: Manage container registry repositories.
+        subcommands:
+          - name: delete
+            description: Delete a container registry repository.
+            args:
+              name: repository-id
+          - name: list
+            description: List container registry repositories.
+          - name: view
+            description: View a container registry repository.
+            args:
+              name: repository-id
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: tag
+        description: Manage container registry tags.
+        subcommands:
+          - name: delete
+            description: Delete container registry tags.
+            args:
+              - name: repository-id
+              - name: <tag-name
+                isOptional: true
+          - name: list
+            description: List container registry repository tags.
+            args:
+              name: repository-id
+          - name: view
+            description: View a container registry tag.
+            args:
+              - name: repository-id
+              - name: tag-name
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: dependency-firewall
+    description: Configure and monitor GitLab Dependency Firewall for local package managers. (EXPERIMENTAL)
+    subcommands:
+      - name: bundle
+        description: Run Bundler through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: bundle args
+      - name: ci-summary
+        description: Summarize Dependency Firewall activity from the CI log. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+      - name: gem
+        description: Run gem through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: gem args
+      - name: gradle
+        description: Run Gradle through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: gradle args
+      - name: maven
+        description: Run Maven through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: mvn args
+      - name: npm
+        description: Run npm through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: npm args
+      - name: package
+        description: Check a package against the GitLab Dependency Firewall. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+        args:
+          name: purl
+      - name: pip
+        description: Run Pip through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: pip args
+      - name: pipenv
+        description: Run Pipenv through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: pipenv args
+      - name: pnpm
+        description: Run pnpm through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: pnpm args
+      - name: poetry
+        description: Run Poetry through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: poetry args
+      - name: twine
+        description: Run Twine through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: twine args
+      - name: uv
+        description: Run uv through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: uv args
+      - name: yarn
+        description: Run Yarn through the GitLab Dependency Firewall. (EXPERIMENTAL)
+        args:
+          name: yarn args
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: deploy-key
+    description: Manage deploy keys.
+    subcommands:
+      - name: add
+        description: Add a deploy key to a GitLab project.
+        options:
+          - name: -c
+            description: If true, deploy keys can be used for pushing code to the repository.
+          - name: -e
+            description: "The expiration date of the deploy key, using the ISO-8601 format: YYYY-MM-DDTHH:MM:SSZ."
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -t
+            description: New deploy key's title.
+        args:
+          name: key-file
+          isOptional: true
+      - name: delete
+        description: Deletes a single deploy key specified by the ID.
+        args:
+          name: key-id
+      - name: get
+        description: Returns a single deploy key specified by the ID.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: key-id
+      - name: list
+        description: Get a list of deploy keys for the current project.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --show-id
+            description: Shows IDs of deploy keys.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: duo
+    description: Work with GitLab Duo.
+    subcommands:
+      - name: cli
+        description: Run the GitLab Duo CLI.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --install
+            description: Install the GitLab Duo CLI binary without running it.
+          - name: --update
+            description: Check for and install updates to the binary.
+          - name: -y
+            description: Skip confirmation prompts.
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: govern
+    description: Manage AI agent governance. (EXPERIMENTAL)
+    subcommands:
+      - name: audit
+        description: Manage AI agent audit events and sessions. (EXPERIMENTAL)
+        subcommands:
+          - name: sync
+            description: Sync agent session data to GitLab. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+      - name: doctor
+        description: Diagnose AI agent governance configuration, authentication, and hook setup. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+      - name: setup
+        description: Configure this machine to record AI agent sessions. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -y
+            description: Skip confirmation prompt.
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: gpg-key
+    description: Manage GPG keys registered with your GitLab account.
+    subcommands:
+      - name: add
+        description: Add a GPG key to your GitLab account.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: key-file
+          isOptional: true
+      - name: delete
+        description: Deletes a single GPG key specified by the ID.
+        args:
+          name: key-id
+      - name: get
+        description: Returns a single GPG key specified by the ID.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: key-id
+      - name: list
+        description: Get a list of GPG keys for the currently authenticated user.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --show-id
+            description: Shows IDs of GPG keys.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: help
+    description: Help about any command
+  - name: incident
+    description: Work with GitLab incidents.
+    subcommands:
+      - name: close
+        description: Close an incident.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: url
+      - name: list
+        description: List project incidents.
+        options:
+          - name: -A
+            description: Get all incidents.
+          - name: -a
+            description: Filter incident by assignee <username>.
+          - name: --author
+            description: Filter incident by author <username>.
+          - name: -c
+            description: Get only closed incidents.
+          - name: -C
+            description: Filter by confidential incidents.
+          - name: -e
+            description: List issues belonging to a given epic (requires --group, no pagination support).
+          - name: -g
+            description: Select a group or subgroup. Ignored if a repo argument is set.
+          - name: -h
+            description: Show help for this command.
+          - name: --in
+            description: "Search in: title, description. (title,description)"
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -l
+            description: Filter incident by label <name>. Multiple labels can be comma-separated or specified by repeating the flag.
+          - name: -m
+            description: Filter incident by milestone <id>.
+          - name: --not-assignee
+            description: Filter incident by not being assigned to <username>.
+          - name: --not-author
+            description: Filter incident by not being by author(s) <username>.
+          - name: --not-label
+            description: Filter incident by lack of label <name>. Multiple labels can be comma-separated or specified by repeating the flag.
+          - name: --order
+            description: "Order incident by <field>. Order options: created_at, updated_at, priority, due_date, relative_position, label_priority, milestone_due, popularity, weight. (created_at)"
+          - name: -O
+            description: "Options: 'text' or 'json'. (text)"
+          - name: -F
+            description: "Options: 'details', 'ids', 'urls'. (details)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --search
+            description: Search <string> in the fields defined by '--in'.
+          - name: -s
+            description: "Sort direction for --order field: asc or desc. (desc)"
+      - name: note
+        description: Comment on an incident in GitLab.
+        options:
+          - name: --attach
+            description: (Experimental) Upload a file and reference it at the end of the comment. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
+          - name: -h
+            description: Show help for this command.
+          - name: -m
+            description: Message text.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: incident-id
+      - name: reopen
+        description: Reopen a resolved incident.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: url
+      - name: subscribe
+        description: Subscribe to an incident.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: id
+      - name: unsubscribe
+        description: Unsubscribe from an incident.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: id
+      - name: view
+        description: Display the title, body, and other information about an incident.
+        options:
+          - name: -c
+            description: Show incident comments and activities.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (20)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -s
+            description: Show system activities and logs.
+          - name: -w
+            description: Open incident in a browser. Uses the default browser, or the browser specified in the $BROWSER variable.
+        args:
+          name: id
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: issue
+    description: Work with GitLab issues.
+    subcommands:
+      - name: board
+        description: Work with GitLab issue boards in the given project.
+        subcommands:
+          - name: create
+            description: Create a project issue board.
+          - name: view
+            description: View project issue board.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository using the OWNER/REPO format or the project ID. Supports group namespaces.
+      - name: close
+        description: Close an issue.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: url
+      - name: create
+        description: Create an issue.
+        options:
+          - name: -a
+            description: Assign issue to people by their `usernames`. Multiple usernames can be comma-separated or specified by repeating the flag.
+          - name: --attach
+            description: (Experimental) Upload a file and reference it at the end of the description. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
+          - name: -c
+            description: Set an issue to be confidential.
+          - name: -d
+            description: Issue description. Set to "-" to open an editor.
+          - name: --description-file
+            description: Read the issue description from a file. Use "-" to read from standard input.
+          - name: --due-date
+            description: A date in 'YYYY-MM-DD' format.
+          - name: --epic
+            description: Id of the epic to add the issue to.
+          - name: -h
+            description: Show help for this command.
+          - name: -l
+            description: Add label by name. Multiple labels can be comma-separated or specified by repeating the flag.
+          - name: --link-type
+            description: Type for the issue link. (relates_to)
+          - name: --linked-issues
+            description: The IIDs of issues that this issue links to. Multiple IIDs can be comma-separated or specified by repeating the flag.
+          - name: --linked-mr
+            description: The IID of a merge request in which to resolve all issues.
+          - name: -m
+            description: The global ID or title of a milestone to assign.
+          - name: --no-editor
+            description: Don't open editor to enter a description. If set to true, uses prompt.
+          - name: --recover
+            description: Save the options to a file if the issue fails to be created. If the file exists, the options will be loaded from the recovery file. (EXPERIMENTAL)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --template
+            description: Name of a template in '.gitlab/issue_templates/' to pre-populate the description. The '.md' extension is optional. Templates are loaded from the local repository only.
+          - name: -e
+            description: Set time estimate for the issue.
+          - name: -s
+            description: Set time spent for the issue.
+          - name: -t
+            description: Issue title.
+          - name: --web
+            description: Continue issue creation with web interface.
+          - name: -w
+            description: Issue weight. Valid values are greater than or equal to 0.
+          - name: -y
+            description: Don't prompt for confirmation to submit the issue.
+      - name: delete
+        description: Delete an issue.
+        args:
+          name: id
+      - name: list
+        description: List project issues.
+        options:
+          - name: -A
+            description: Get all issues.
+          - name: -a
+            description: Filter issue by assignee <username>.
+          - name: --author
+            description: Filter issue by author <username>.
+          - name: -c
+            description: Get only closed issues.
+          - name: -C
+            description: Filter by confidential issues.
+          - name: -e
+            description: List issues belonging to a given epic (requires --group, no pagination support).
+          - name: -g
+            description: Select a group or subgroup. Ignored if a repo argument is set.
+          - name: -h
+            description: Show help for this command.
+          - name: --in
+            description: "Search in: title, description. (title,description)"
+          - name: -t
+            description: "Filter issue by its type. Options: issue, incident, test_case."
+          - name: -i
+            description: Filter issue by iteration <id>.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -l
+            description: Filter issue by label <name>. Multiple labels can be comma-separated or specified by repeating the flag.
+          - name: -m
+            description: Filter issue by milestone <id>.
+          - name: --not-assignee
+            description: Filter issue by not being assigned to <username>.
+          - name: --not-author
+            description: Filter issue by not being by author(s) <username>.
+          - name: --not-label
+            description: Filter issue by lack of label <name>. Multiple labels can be comma-separated or specified by repeating the flag.
+          - name: --order
+            description: "Order issue by <field>. Order options: created_at, updated_at, priority, due_date, relative_position, label_priority, milestone_due, popularity, weight. (created_at)"
+          - name: -O
+            description: "Options: 'text' or 'json'. (text)"
+          - name: -F
+            description: "Options: 'details', 'ids', 'urls'. (details)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --search
+            description: Search <string> in the fields defined by '--in'.
+          - name: -s
+            description: "Sort direction for --order field: asc or desc. (desc)"
+      - name: note
+        description: Comment on an issue in GitLab.
+        options:
+          - name: --attach
+            description: (Experimental) Upload a file and reference it at the end of the comment. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
+          - name: -h
+            description: Show help for this command.
+          - name: -m
+            description: Message text.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: issue-id
+      - name: reopen
+        description: Reopen a closed issue.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: url
+      - name: subscribe
+        description: Subscribe to an issue.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: id
+      - name: unsubscribe
+        description: Unsubscribe from an issue.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: id
+      - name: update
+        description: Update issue.
+        args:
+          name: id
+      - name: view
+        description: Display the title, body, and other information about an issue.
+        options:
+          - name: -c
+            description: Show issue comments and activities.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (20)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -s
+            description: Show system activities and logs.
+          - name: -w
+            description: Open issue in a browser. Uses the default browser, or the browser specified in the $BROWSER variable.
+        args:
+          name: id
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: iteration
+    description: Retrieve iteration information.
+    subcommands:
+      - name: list
+        description: List project iterations.
+        options:
+          - name: -g
+            description: List iterations for a group.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: job
+    description: Work with GitLab CI/CD jobs.
+    subcommands:
+      - name: artifact
+        description: Download all artifacts from the most recent pipeline.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -l
+            description: Print the paths of downloaded artifacts.
+          - name: -p
+            description: Path to download the artifact files. (./)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: refName
+          - name: jobName
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: label
+    description: Manage project and group labels.
+    subcommands:
+      - name: create
+        description: Create a label in a project.
+        options:
+          - name: -c
+            description: Color of the label, in plain or HEX code. (#428BCA)
+          - name: -d
+            description: Label description.
+          - name: -h
+            description: Show help for this command.
+          - name: -n
+            description: Name of the label.
+          - name: -p
+            description: Label priority.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: delete
+        description: Delete a label from a project.
+        args:
+          name: name
+      - name: edit
+        description: Edit a label in a project.
+        options:
+          - name: -c
+            description: The color of the label given in 6-digit hex notation with leading ‘#’ sign.
+          - name: -d
+            description: Label description.
+          - name: -h
+            description: Show help for this command.
+          - name: -l
+            description: The label ID we are updating.
+          - name: -n
+            description: The new name of the label.
+          - name: -p
+            description: Label priority.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: get
+        description: Get information about a single label by ID.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: label-id
+      - name: list
+        description: List labels in a project or group.
+        options:
+          - name: -g
+            description: List labels for a group.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: mcp
+    description: Work with a Model Context Protocol (MCP) server. (EXPERIMENTAL)
+    subcommands:
+      - name: serve
+        description: Start a MCP server with stdio transport. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: milestone
+    description: Manage group or project milestones.
+    subcommands:
+      - name: create
+        description: Create a milestone in a project or group.
+        options:
+          - name: --description
+            description: Description of the milestone.
+          - name: --due-date
+            description: Due date for the milestone. Expected in ISO 8601 format (2025-04-15T08:00:00Z).
+          - name: --group
+            description: The ID or URL-encoded path of the group.
+          - name: -h
+            description: Show help for this command.
+          - name: --project
+            description: The ID or URL-encoded path of the project.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --start-date
+            description: Start date for the milestone. Expected in ISO 8601 format (2025-04-15T08:00:00Z).
+          - name: --title
+            description: Title of the milestone.
+      - name: delete
+        description: Delete a milestone from a project or group.
+        args:
+          name: id
+      - name: edit
+        description: Edit a milestone in a project or group.
+        options:
+          - name: --description
+            description: Description of the milestone.
+          - name: --due-date
+            description: Due date for the milestone. Expected in ISO 8601 format (2025-04-15T08:00:00Z).
+          - name: --group
+            description: The ID or URL-encoded path of the group.
+          - name: -h
+            description: Show help for this command.
+          - name: --project
+            description: The ID or URL-encoded path of the project.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --start-date
+            description: Start date for the milestone. Expected in ISO 8601 format (2025-04-15T08:00:00Z).
+          - name: --state
+            description: State of the milestone. Can be 'activate' or 'close'.
+          - name: --title
+            description: Title of the milestone.
+        args:
+          name: id
+      - name: get
+        description: Get a milestone by ID in a project or group.
+        options:
+          - name: --group
+            description: The ID or URL-encoded path of the group.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: --project
+            description: The ID or URL-encoded path of the project.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: <id
+          isOptional: true
+      - name: list
+        description: List milestones in a project or group.
+        options:
+          - name: --group
+            description: The ID or URL-encoded path of the group.
+          - name: -h
+            description: Show help for this command.
+          - name: --include-ancestors
+            description: Include milestones from all parent groups.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (20)
+          - name: --project
+            description: The ID or URL-encoded path of the project.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --search
+            description: Return only milestones with a title or description matching the provided string.
+          - name: --show-id
+            description: Show IDs in table output.
+          - name: --state
+            description: Return only 'active' or 'closed' milestones.
+          - name: --title
+            description: Return only the milestones having the given title.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: mr
+    description: Create, view, and manage merge requests.
+    subcommands:
+      - name: approve
+        description: Approve merge requests.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -s
+            description: Sha, which must match the SHA of the HEAD commit of the merge request.
+        args:
+          name: <id | branch
+          isOptional: true
+      - name: approvers
+        description: List eligible approvers for merge requests in any state.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: checkout
+        description: Check out an open merge request.
+        options:
+          - name: -b
+            description: Check out merge request with name <branch>.
+          - name: -f
+            description: Reset local branch to remote when they have diverged. Refuses if working tree has changes that would be lost.
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -u
+            description: Set tracking of checked-out branch to [REMOTE/]BRANCH.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+          - name: url
+      - name: close
+        description: Close a merge request.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: create
+        description: Create a new merge request.
+        options:
+          - name: --allow-collaboration
+            description: Allow commits from other members. Set to true/false to override project defaults, or omit to use project settings.
+          - name: -a
+            description: Assign merge request to people by their `usernames`. Multiple usernames can be comma-separated or specified by repeating the flag.
+          - name: --attach
+            description: (Experimental) Upload a file and reference it at the end of the description. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
+          - name: --auto-merge
+            description: Set the merge request to merge when all merge checks pass.
+          - name: --copy-issue-labels
+            description: Copy labels from issue to the merge request. Used with --related-issue.
+          - name: --create-source-branch
+            description: Create a source branch if it does not exist.
+          - name: -d
+            description: Supply a description for the merge request. Set to "-" to open an editor.
+          - name: --description-file
+            description: Read the merge request description from a file. Use "-" to read from standard input.
+          - name: --draft
+            description: Mark merge request as a draft.
+          - name: -f
+            description: Do not prompt for title or description, and just use commit info. Sets `push` to `true`, and pushes the branch.
+          - name: --fill-commit-body
+            description: Fill description with each commit body when multiple commits. Can only be used with --fill.
+          - name: -H
+            description: Select another head repository using the `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format, the project ID, or the full URL.
+          - name: -h
+            description: Show help for this command.
+          - name: -l
+            description: Add label by name. Multiple labels can be comma-separated or specified by repeating the flag.
+          - name: -m
+            description: The global ID or title of a milestone to assign.
+          - name: --no-editor
+            description: Don't open editor to enter a description. If true, uses prompt. Defaults to false.
+          - name: --push
+            description: Push committed changes after creating merge request. Make sure you have committed changes.
+          - name: --recover
+            description: Save the options to a file if the merge request creation fails. If the file exists, the options are loaded from the recovery file. (EXPERIMENTAL)
+          - name: -i
+            description: Create a merge request for an issue. If --title is not provided, uses the issue title.
+          - name: --remove-source-branch
+            description: Remove source branch on merge. Set to true/false to override project defaults, or omit to use project settings.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --reviewer
+            description: Request review from users by their `usernames`. Multiple usernames can be comma-separated or specified by repeating the flag.
+          - name: --signoff
+            description: Append a DCO signoff to the merge request description.
+          - name: -s
+            description: Create a merge request from this branch. Default is the current branch.
+          - name: --squash-before-merge
+            description: Squash commits into a single commit when merging. Set to true/false to override project defaults, or omit to use project settings.
+          - name: -b
+            description: The target or base branch into which you want your code merged into.
+          - name: --template
+            description: Name of a template in '.gitlab/merge_request_templates/' to pre-populate the description. The '.md' extension is optional. Templates are loaded from the local repository only.
+          - name: -t
+            description: Supply a title for the merge request.
+          - name: -w
+            description: Continue merge request creation in a browser.
+          - name: --wip
+            description: Mark merge request as a draft. Alternative to --draft.
+          - name: -y
+            description: Skip submission confirmation prompt. Use --fill to skip all optional prompts.
+      - name: delete
+        description: Delete a merge request.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: diff
+        description: View changes in a merge request.
+        options:
+          - name: --color
+            description: "Use color in diff output: always, never, auto. (auto)"
+          - name: -h
+            description: Show help for this command.
+          - name: --raw
+            description: Use raw diff format that can be piped to commands.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: for
+        description: Create a new merge request for an issue.
+        options:
+          - name: --allow-collaboration
+            description: Allow commits from other members.
+          - name: -a
+            description: Assign merge request to people by their IDs. Multiple values should be comma-separated.
+          - name: --draft
+            description: Mark merge request as a draft. (true)
+          - name: -h
+            description: Show help for this command.
+          - name: -l
+            description: Add label by name. Multiple labels should be comma-separated.
+          - name: -m
+            description: Add milestone by <id> for this merge request. (-1)
+          - name: --remove-source-branch
+            description: Remove source branch on merge.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -b
+            description: The target or base branch into which you want your code merged.
+          - name: --wip
+            description: Mark merge request as a work in progress. Overrides --draft.
+          - name: --with-labels
+            description: Copy labels from issue to the merge request.
+      - name: issues
+        description: Get issues that close when a merge request is merged.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: list
+        description: List merge requests.
+        options:
+          - name: -A
+            description: Get all merge requests.
+          - name: -a
+            description: Get only merge requests assigned to users. Multiple users can be comma-separated or specified by repeating the flag.
+          - name: --author
+            description: Filter merge request by author <username>.
+          - name: -c
+            description: Get only closed merge requests.
+          - name: --created-after
+            description: Filter merge requests created after a certain date (ISO 8601 format).
+          - name: --created-before
+            description: Filter merge requests created before a certain date (ISO 8601 format).
+          - name: --deployed-after
+            description: Filter merge requests deployed after a certain date (ISO 8601 format).
+          - name: --deployed-before
+            description: Filter merge requests deployed before a certain date (ISO 8601 format).
+          - name: -d
+            description: Filter by draft merge requests.
+          - name: --environment
+            description: Filter merge requests deployed to the given environment <name>.
+          - name: -g
+            description: Select a group/subgroup. This option is ignored if a repo argument is set.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -l
+            description: Filter merge request by label <name>. Multiple labels can be comma-separated or specified by repeating the flag.
+          - name: -M
+            description: Get only merged merge requests.
+          - name: -m
+            description: Filter merge request by milestone <id>.
+          - name: --not-draft
+            description: Filter by non-draft merge requests.
+          - name: --not-label
+            description: Filter merge requests by not having label <name>. Multiple labels can be comma-separated or specified by repeating the flag.
+          - name: -o
+            description: "Order merge requests by <field>. Order options: created_at, updated_at, merged_at, title, priority, label_priority, milestone_due, and popularity."
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -r
+            description: Get only merge requests with users as reviewer. Multiple users can be comma-separated or specified by repeating the flag.
+          - name: --search
+            description: Filter by <string> in title and description.
+          - name: -S
+            description: "Sort direction for --order field: asc or desc."
+          - name: -s
+            description: Filter by source branch <name>.
+          - name: -t
+            description: Filter by target branch <name>.
+      - name: merge
+        description: Merge or accept a merge request.
+        options:
+          - name: --auto-merge
+            description: Set auto-merge. (true)
+          - name: -h
+            description: Show help for this command.
+          - name: -m
+            description: Custom merge commit message.
+          - name: -r
+            description: Rebase the commits onto the base branch.
+          - name: -d
+            description: Remove source branch on merge.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --sha
+            description: Merge only if the HEAD of the source branch matches this SHA. Use to ensure that only reviewed commits are merged.
+          - name: -s
+            description: Squash commits on merge.
+          - name: --squash-message
+            description: Custom squash commit message.
+          - name: -y
+            description: Skip submission confirmation prompt.
+        args:
+          name: <id | branch
+          isOptional: true
+      - name: note
+        description: Manage comments and discussions on a merge request.
+        subcommands:
+          - name: create
+            description: Create a comment or discussion on a merge request. (EXPERIMENTAL)
+            args:
+              - name: <id
+                isOptional: true
+              - name: branch
+          - name: delete
+            description: <note-id> [<id> | <branch>] [--flags]  Delete a note from a merge request. (EXPERIMENTAL)
+          - name: list
+            description: List merge request discussions. (EXPERIMENTAL)
+            args:
+              - name: <id
+                isOptional: true
+              - name: branch
+          - name: publish
+            description: Publish all pending review comments on a merge request. (EXPERIMENTAL)
+            args:
+              - name: <id
+                isOptional: true
+              - name: branch
+          - name: reopen
+            description: <discussion-id> [<id> | <branch>]      Reopen a discussion on a merge request. (EXPERIMENTAL)
+          - name: resolve
+            description: <discussion-id> [<id> | <branch>]     Resolve a discussion on a merge request. (EXPERIMENTAL)
+          - name: update
+            description: <note-id> [<id> | <branch>] [--flags]  Update the body of a note on a merge request. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: rebase
+        description: Rebase the source branch of a merge request against its target branch.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --skip-ci
+            description: Rebase merge request while skipping CI/CD pipeline.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: reopen
+        description: Reopen a merge request.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: revoke
+        description: Revoke approval on a merge request.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: subscribe
+        description: Subscribe to a merge request.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: todo
+        description: Add a to-do item to a merge request.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: unsubscribe
+        description: Unsubscribe from a merge request.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: update
+        description: Update a merge request.
+        args:
+          - name: <id
+            isOptional: true
+          - name: branch
+      - name: view
+        description: Display the title, body, and other information about a merge request.
+        options:
+          - name: -c
+            description: Show merge request comments and activities.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number.
+          - name: -P
+            description: Number of items to list per page. (20)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --resolved
+            description: Show only resolved discussions (implies --comments).
+          - name: -s
+            description: Show system activities and logs.
+          - name: --unresolved
+            description: Show only unresolved discussions (implies --comments).
+          - name: -w
+            description: Open merge request in a browser. Uses default browser or browser specified in BROWSER variable.
+        args:
+          name: <id | branch
+          isOptional: true
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: opentofu
+    description: Work with the OpenTofu or Terraform integration.
+    subcommands:
+      - name: init
+        description: Initialize OpenTofu or Terraform.
+        options:
+          - name: -b
+            description: Name or path of the OpenTofu or Terraform binary to use for the initialization. (tofu)
+          - name: -d
+            description: Directory of the OpenTofu or Terraform project to initialize. (.)
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: state
+      - name: state
+        description: Work with the OpenTofu or Terraform states.
+        subcommands:
+          - name: delete
+            description: Delete a state or a specific version of a state.
+            args:
+              - name: state
+              - name: <serial
+                isOptional: true
+          - name: download
+            description: Download the given state and output as JSON to stdout.
+            args:
+              - name: state
+              - name: <serial
+                isOptional: true
+          - name: list
+            description: List states.
+          - name: lock
+            description: Lock the given state.
+            args:
+              name: state
+          - name: unlock
+            description: Unlock the given state.
+            args:
+              name: state
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: orbit
+    description: Run the Orbit CLI. (EXPERIMENTAL)
+    options:
+      - name: -h
+        description: Show the Orbit binary's help, or this text until the binary is installed.
+      - name: --install
+        description: Install the Orbit binary without running it.
+      - name: --update
+        description: Check for and install updates to the binary.
+      - name: -y
+        description: Skip confirmation prompts.
+    args:
+      name: <command
+      isOptional: true
+  - name: packages
+    description: Manage packages in the GitLab package registry.
+    subcommands:
+      - name: delete
+        description: Delete a package from a project's package registry.
+        args:
+          name: id
+      - name: download
+        description: Download a file from a project's package registry.
+        options:
+          - name: --filename
+            description: Name of the file within the package to download.
+          - name: --force
+            description: Overwrite the target file if it already exists.
+          - name: -h
+            description: Show help for this command.
+          - name: -n
+            description: Name of the package.
+          - name: --no-verify
+            description: "Do not verify the checksum of the downloaded file. Warning: when enabled, this setting allows the download of files that are corrupt or tampered with."
+          - name: -p
+            description: Directory to save the file in (keeps its original name) or a full file path to rename it. Defaults to the original name in the current directory.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --version
+            description: Version of the package.
+        args:
+          - name: package
+          - name: version
+          - name: file
+      - name: list
+        description: List packages in a project's package registry.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -n
+            description: Filter packages by name (substring match).
+          - name: --package-type
+            description: "Filter packages by type. One of: composer, conan, debian, generic, golang, helm, maven, npm, nuget, pypi, terraform_module."
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: upload
+        description: Upload a file to a project's package registry.
+        options:
+          - name: --filename
+            description: Name to store the file under. Defaults to the local file name.
+          - name: -h
+            description: Show help for this command.
+          - name: -n
+            description: Name of the package.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -v
+            description: Version of the package.
+        args:
+          - name: file
+          - name: package
+          - name: version
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: release
+    description: Manage GitLab releases.
+    subcommands:
+      - name: create
+        description: Create a new GitLab release, or update an existing one.
+        options:
+          - name: -a
+            description: Json string representation of assets links. See Examples for usage.
+          - name: -h
+            description: Show help for this command.
+          - name: -m
+            description: The title of each milestone the release is associated with. Multiple milestones can be comma-separated or specified by repeating the flag.
+          - name: -n
+            description: The release name or title.
+          - name: --no-close-milestone
+            description: Prevent closing milestones after creating the release.
+          - name: --no-update
+            description: Prevent updating the existing release.
+          - name: -N
+            description: The release notes or description. Accepts Markdown.
+          - name: -F
+            description: Read release notes 'file'. To read from stdin, use '-'.
+          - name: --package-name
+            description: The package name, when uploading assets to the generic package release with --use-package-registry. (release-assets)
+          - name: --publish-to-catalog
+            description: (Experimental) Publish the release to the GitLab CI/CD catalog.
+          - name: -r
+            description: If the specified tag doesn't exist, create a release from the ref and tag it with the specified tag name. Accepts a commit SHA, tag name, or branch name.
+          - name: -D
+            description: Iso 8601 datetime when the release was ready. Defaults to the current datetime.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -T
+            description: Message to use if creating a new annotated tag.
+          - name: --use-package-registry
+            description: Upload release assets to the generic package registry of the project. Overrides the GITLAB_RELEASE_ASSETS_USE_PACKAGE_REGISTRY environment variable.
+        args:
+          - name: tag
+          - name: <files
+            isOptional: true
+      - name: delete
+        description: Delete a GitLab release.
+        args:
+          name: tag
+      - name: download
+        description: Download asset files from a GitLab release.
+        options:
+          - name: -n
+            description: Download only assets that match the name or a glob pattern.
+          - name: -D
+            description: Directory to download the release assets to. (.)
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: <tag
+          isOptional: true
+      - name: list
+        description: List releases in a repository.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: upload
+        description: Upload release asset files or links to a GitLab release.
+        options:
+          - name: -a
+            description: "`Json` string representation of assets links, like: `--assets-links='[{\"name\": \"Asset1\", \"url\":\"https://<domain>/some/location/1\", \"link_type\": \"other\", \"direct_asset_path\": \"path/to/file\"}]'`."
+          - name: -h
+            description: Show help for this command.
+          - name: --package-name
+            description: The package name to use when uploading the assets to the generic package release with --use-package-registry. (release-assets)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --use-package-registry
+            description: Upload release assets to the generic package registry of the project. Alternatively to this flag you may also set the GITLAB_RELEASE_ASSETS_USE_PACKAGE_REGISTRY environment variable to either the value true or 1. The flag takes precedence over this environment variable.
+        args:
+          - name: tag
+          - name: <files
+            isOptional: true
+      - name: view
+        description: View information about a GitLab release.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -w
+            description: Open the release in the browser.
+        args:
+          name: <tag
+          isOptional: true
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: repo
+    description: Work with GitLab repositories and projects.
+    subcommands:
+      - name: archive
+        description: Get an archive of the repository.
+        options:
+          - name: -f
+            description: "Optional. Specify format if you want a downloaded archive: tar.gz, tar.bz2, tbz, tbz2, tb2, bz2, tar, zip. (zip)"
+          - name: -h
+            description: Show help for this command.
+          - name: -s
+            description: The commit SHA to download. A tag, branch reference, or SHA can be used. Defaults to the tip of the default branch if not specified.
+        args:
+          - name: <repo
+            isOptional: true
+          - name: <dir
+            isOptional: true
+      - name: clone
+        description: "[-- <gitflags>...] [--flags]  Clone a GitLab repository or project."
+        options:
+          - name: -g
+            description: Specify the group to clone repositories from.
+          - name: -p
+            description: Clone the repository in a subdirectory based on namespace.
+          - name: --active
+            description: Limit by project status. When true, returns active projects. When false, returns projects that are archived or marked for deletion. Used with the --group flag.
+          - name: -a
+            description: Limit by archived status. Use with '-a=false' to exclude archived repositories. Used with the --group flag.
+          - name: -G
+            description: Include projects in subgroups of this group. Default is true. Used with the --group flag. (true)
+          - name: -m
+            description: Limit by projects in the group owned by the current authenticated user. Used with the --group flag.
+          - name: -v
+            description: "Limit by visibility: public, internal, private. Used with the --group flag."
+          - name: -I
+            description: Limit by projects with the issues feature enabled. Default is false. Used with the --group flag.
+          - name: -M
+            description: Limit by projects with the merge request feature enabled. Default is false. Used with the --group flag.
+          - name: -S
+            description: Include projects shared to this group. Default is true. Used with the --group flag. (true)
+          - name: --paginate
+            description: Make additional HTTP requests to fetch all pages of projects before cloning. Respects --per-page.
+          - name: --page
+            description: Page number. (1)
+          - name: --per-page
+            description: Number of items to list per page. (30)
+          - name: --wiki
+            description: Clone the project's wiki repository.
+          - name: -h
+            description: Show help for this command.
+        args:
+          - name: <repo
+            isOptional: true
+          - name: group
+          - name: <dir
+            isOptional: true
+      - name: contributors
+        description: Get repository contributors list.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -o
+            description: Return contributors ordered by name, email, or commits (orders by commit date) fields. (commits)
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -s
+            description: "Sort direction for --order field: asc or desc."
+      - name: create
+        description: Create a new GitLab project/repository.
+        options:
+          - name: --defaultBranch
+            description: Branch name for the new project, overriding both the GitLab instance default and your local git configuration.
+          - name: -d
+            description: Description of the new project. Set to "-" to open an editor.
+          - name: -g
+            description: Namespace or group for the new project. Defaults to the current user's namespace.
+          - name: -h
+            description: Show help for this command.
+          - name: --internal
+            description: "Make project internal: visible to any authenticated user. Default."
+          - name: -n
+            description: Name of the new project.
+          - name: -p
+            description: "Make project private: visible only to project members."
+          - name: -P
+            description: "Make project public: visible without any authentication."
+          - name: --readme
+            description: Initialize project with `README.md`. The repository is cloned locally after creation to ensure the local branch matches the remote.
+          - name: --remoteName
+            description: Remote name for the Git repository you're in. Defaults to `origin` if not provided. (origin)
+          - name: -s
+            description: Skip local repository setup (skips both 'git init' and cloning).
+          - name: -t
+            description: The list of tags for the project.
+        args:
+          name: path
+          isOptional: true
+      - name: delete
+        description: Delete an existing project on GitLab.
+        args:
+          - name: "[<NAMESPACE"
+            isOptional: true
+          - name: NAME
+      - name: fork
+        description: Fork a GitLab repository.
+        options:
+          - name: -c
+            description: "Clone the fork. Options: true, false."
+          - name: -h
+            description: Show help for this command.
+          - name: -n
+            description: The name assigned to the new project after forking.
+          - name: -p
+            description: The path assigned to the new project after forking.
+          - name: --remote
+            description: "Add a remote for the fork. Options: true, false."
+        args:
+          name: <repo
+          isOptional: true
+      - name: list
+        description: Get list of repositories.
+        options:
+          - name: -a
+            description: List all projects on the instance. Removes the ownership filter. Results are still paginated. Use --page to navigate.
+          - name: --archived
+            description: Limit by archived status. Use 'false' to exclude archived repositories. Used with the '--group' flag.
+          - name: -g
+            description: Return repositories in only the given group.
+          - name: -h
+            description: Show help for this command.
+          - name: -G
+            description: Include projects in subgroups of this group. Default is false. Used with the '--group' flag.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: --member
+            description: List only projects of which you are a member.
+          - name: -m
+            description: List only projects you own. Default if no filters are provided.
+          - name: -o
+            description: Return repositories ordered by id, name, path, created_at, updated_at, similarity, star_count, last_activity_at. (last_activity_at)
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -s
+            description: "Sort direction for --order field: asc or desc."
+          - name: --starred
+            description: List only starred projects.
+          - name: -u
+            description: List user projects.
+      - name: members
+        description: Manage project members.
+        subcommands:
+          - name: add
+            description: Add a member to the project.
+          - name: remove
+            description: Remove a member from the project.
+        options:
+          - name: -h
+            description: Show help for this command.
+      - name: mirror
+        description: Configure mirroring on an existing project to sync with a remote repository.
+        options:
+          - name: --allow-divergence
+            description: Determines if divergent refs are skipped.
+          - name: --direction
+            description: "Mirror direction. Options: pull, push. (pull)"
+          - name: --enabled
+            description: Determines if the mirror is enabled. (true)
+          - name: -h
+            description: Show help for this command.
+          - name: --protected-branches-only
+            description: Determines if only protected branches are mirrored.
+          - name: --url
+            description: The target URL to which the repository is mirrored.
+        args:
+          name: <id | url | path
+          isOptional: true
+      - name: prune
+        description: Delete local Git branches whose merge request has been merged.
+        options:
+          - name: --dry-run
+            description: Preview branches that would be deleted without deleting them.
+          - name: -e
+            description: Branch name or glob pattern to exclude. Comma-separated or repeated.
+          - name: -h
+            description: Show help for this command.
+          - name: --merged
+            description: Use 'git branch --merged' instead of querying GitLab. Detects fast-forward merges only.
+          - name: -y
+            description: Skip the confirmation prompt.
+      - name: publish
+        description: Publishes resources in the project.
+        subcommands:
+          - name: catalog
+            description: "[Experimental] Publishes CI/CD components to the catalog."
+            args:
+              name: tag-name
+        options:
+          - name: -h
+            description: Show help for this command.
+      - name: remote
+        description: Manage Git remotes for a GitLab project.
+        subcommands:
+          - name: add
+            description: Add a Git remote for a GitLab project.
+            args:
+              name: namespace/project
+        options:
+          - name: -h
+            description: Show help for this command.
+        args:
+          name: subcommand
+      - name: search
+        description: Search for GitLab repositories and projects by name.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (20)
+          - name: -s
+            description: A string contained in the project name.
+      - name: transfer
+        description: Transfer a repository to a new namespace.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -t
+            description: The namespace where your project should be transferred to.
+          - name: -y
+            description: "Warning: Skip confirmation prompt and force transfer operation. Transfer cannot be undone."
+        args:
+          name: repo
+          isOptional: true
+      - name: update
+        description: Update an existing GitLab project or repository.
+        args:
+          name: path
+          isOptional: true
+      - name: view
+        description: View a project or repository.
+        options:
+          - name: -b
+            description: View a specific branch of the repository.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -w
+            description: Open a project in the browser.
+        args:
+          name: repository
+          isOptional: true
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: runner
+    description: Manage GitLab CI/CD runners.
+    subcommands:
+      - name: assign
+        description: Assign a runner to a project.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: runner-id
+      - name: delete
+        description: Delete a runner.
+        args:
+          name: runner-id
+      - name: jobs
+        description: List jobs processed by a runner.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: --order-by
+            description: "Order jobs by: id. (id)"
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --sort
+            description: "Sort order: asc or desc. (desc)"
+          - name: --status
+            description: "Filter jobs by status: running, success, failed, canceled."
+        args:
+          name: runner-id
+      - name: list
+        description: List runners.
+        options:
+          - name: -g
+            description: List runners for a group. Ignored if -R/--repo is set.
+          - name: -h
+            description: Show help for this command.
+          - name: -i
+            description: List all runners available to the user (instance scope).
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: managers
+        description: List runner managers.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: runner-id
+      - name: unassign
+        description: Unassign a runner from a project.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: runner-id
+      - name: update
+        description: Update a runner.
+        args:
+          name: runner-id
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: runner-controller
+    description: Manage runner controllers. (EXPERIMENTAL)
+    subcommands:
+      - name: create
+        description: Create a runner controller. (EXPERIMENTAL)
+        options:
+          - name: -d
+            description: Description of the runner controller.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: --state
+            description: "State of the runner controller: disabled, enabled, dry_run."
+      - name: delete
+        description: Delete a runner controller. (EXPERIMENTAL)
+        args:
+          name: id
+      - name: get
+        description: Get details of a runner controller. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+        args:
+          name: controller-id
+      - name: list
+        description: List runner controllers. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items per page. (30)
+      - name: scope
+        description: Manage runner controller scopes. (EXPERIMENTAL)
+        subcommands:
+          - name: create
+            description: Create a scope for a runner controller. (EXPERIMENTAL)
+            args:
+              name: controller-id
+          - name: delete
+            description: Delete a scope from a runner controller. (EXPERIMENTAL)
+            args:
+              name: controller-id
+          - name: list
+            description: List scopes for a runner controller. (EXPERIMENTAL)
+            args:
+              name: controller-id
+        options:
+          - name: -h
+            description: Show help for this command.
+      - name: token
+        description: Manage runner controller tokens. (EXPERIMENTAL)
+        subcommands:
+          - name: create
+            description: Create a token for a runner controller. (EXPERIMENTAL)
+            args:
+              name: controller-id
+          - name: list
+            description: List tokens for a runner controller. (EXPERIMENTAL)
+            args:
+              name: controller-id
+          - name: revoke
+            description: Revoke a token from a runner controller. (EXPERIMENTAL)
+            args:
+              - name: controller-id
+              - name: token-id
+          - name: rotate
+            description: Rotate a token for a runner controller. (EXPERIMENTAL)
+            args:
+              - name: controller-id
+              - name: token-id
+        options:
+          - name: -h
+            description: Show help for this command.
+      - name: update
+        description: Update a runner controller. (EXPERIMENTAL)
+        args:
+          name: id
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: schedule
+    description: Work with GitLab CI/CD schedules.
+    subcommands:
+      - name: create
+        description: Create a new pipeline schedule.
+        options:
+          - name: --active
+            description: Whether or not the schedule is active. (true)
+          - name: --cron
+            description: Cron interval pattern.
+          - name: --cronTimeZone
+            description: Cron timezone. (UTC)
+          - name: --description
+            description: Description of the schedule.
+          - name: -h
+            description: Show help for this command.
+          - name: --ref
+            description: Target branch or tag.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --variable
+            description: Pass variables to schedule in the format <key>:<value>. Repeat flag for multiple variables.
+      - name: delete
+        description: Delete a pipeline schedule by ID.
+        args:
+          name: id
+      - name: list
+        description: List pipeline schedules in a project.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: run
+        description: Trigger a pipeline schedule to run immediately.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: id
+      - name: update
+        description: Update a pipeline schedule.
+        args:
+          name: id
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: search
+    description: Search for code and resources in a GitLab project. (BETA)
+    subcommands:
+      - name: semantic
+        description: Search project code using natural language.
+        options:
+          - name: -d
+            description: Restrict search to files under this path (e.g. app/services/).
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: --knn
+            description: Nearest neighbours to retrieve (1–100). Defaults to 64 server-side.
+          - name: -l
+            description: Maximum number of results (1–100). Defaults to 20 server-side.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -q
+            description: Natural language search query.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: securefile
+    description: Manage secure files for a project.
+    subcommands:
+      - name: create
+        description: Upload a new secure file to a project.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: name
+          - name: path
+      - name: download
+        description: Download one or more secure files from a project.
+        options:
+          - name: --all
+            description: Download all of a project's secure files. Files are downloaded with their original name and file extension.
+          - name: --force-download
+            description: "Force download file(s) even if checksum verification fails. Warning: when enabled, this setting allows the download of files that are corrupt or tampered with."
+          - name: -h
+            description: Show help for this command.
+          - name: --id
+            description: Id of the secure file to download.
+          - name: --name
+            description: Name of the secure file to download. Saves the file with this name, or to the path specified by --path.
+          - name: --no-verify
+            description: "Do not verify the checksum of the downloaded file(s). Warning: when enabled, this setting allows the download of files that are corrupt or tampered with."
+          - name: --output-dir
+            description: Output directory for files downloaded with --all. (.)
+          - name: -p
+            description: Path to download the secure file to, including filename and extension. (./downloaded.tmp)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          - name: <id
+            isOptional: true
+          - name: id
+          - name: name
+      - name: get
+        description: Get details of a secure file by ID.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: id
+      - name: list
+        description: List secure files in a project.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: remove
+        description: Remove a secure file from a project.
+        args:
+          - name: <id
+            isOptional: true
+          - name: id
+          - name: name
+      - name: update
+        description: Update a secure file in a project.
+        args:
+          - name: name
+          - name: path
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: security
+    description: Manage GitLab security scan profiles for a project. (EXPERIMENTAL)
+    subcommands:
+      - name: config
+        description: Configure security scan profiles for a project. (EXPERIMENTAL)
+        subcommands:
+          - name: disable
+            description: Disable a security scan profile for a project. (EXPERIMENTAL)
+            args:
+              name: profile
+          - name: enable
+            description: Enable a security scan profile for a project. (EXPERIMENTAL)
+            args:
+              name: profile
+          - name: status
+            description: Show the status of a security scan profile for a project. (EXPERIMENTAL)
+            args:
+              name: profile
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: skills
+    description: Manage glab agent skills. (EXPERIMENTAL)
+    subcommands:
+      - name: get
+        description: Print a bundled agent skill file. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+        args:
+          - name: name
+          - name: <path
+            isOptional: true
+      - name: install
+        description: Install glab's bundled agent skills. (EXPERIMENTAL)
+        args:
+          name: name
+          isOptional: true
+      - name: list
+        description: List the available bundled agent skills. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+      - name: update
+        description: Update installed agent skills to the current shipped version. (EXPERIMENTAL)
+        args:
+          name: name
+          isOptional: true
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: snippet
+    description: Create snippets.
+    subcommands:
+      - name: create
+        description: -t <title> <file1>                                        [<file2>...] [--flags]  Create a new snippet.
+        options:
+          - name: -d
+            description: Description of the snippet. Set to "-" to open an editor.
+          - name: -f
+            description: Filename of the snippet in GitLab.
+          - name: -h
+            description: Show help for this command.
+          - name: -p
+            description: Create a personal snippet.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -t
+            description: (Required) Title of the snippet.
+          - name: -v
+            description: "Limit by visibility: 'public', 'internal', or 'private'. (private)"
+      - name: glab
+        description: "-t <title> -f <filename>  # reads from stdin"
+        subcommands:
+          - name: create
+            description: -t <title> <file1>                                        [<file2>...] [--flags]  Create a new snippet.
+          - name: glab
+            description: "-t <title> -f <filename>  # reads from stdin"
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: ssh-key
+    description: Manage SSH keys registered with your GitLab account.
+    subcommands:
+      - name: add
+        description: Add an SSH key to your GitLab account.
+        options:
+          - name: -e
+            description: "The expiration date of the SSH key. Uses ISO 8601 format: YYYY-MM-DDTHH:MM:SSZ."
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -t
+            description: New SSH key's title.
+          - name: -u
+            description: "Usage scope for the key. Possible values: 'auth', 'signing' or 'auth_and_signing'. Default value: 'auth_and_signing'. (auth_and_signing)"
+        args:
+          name: key-file
+          isOptional: true
+      - name: delete
+        description: Deletes a single SSH key specified by the ID.
+        args:
+          name: <key-id
+          isOptional: true
+      - name: get
+        description: Returns a single SSH key specified by the ID.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (20)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: <key-id
+          isOptional: true
+      - name: list
+        description: Get a list of SSH keys for the currently authenticated user.
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --show-id
+            description: Shows IDs of SSH keys.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: stack
+    description: Create, manage, and work with stacked diffs. (EXPERIMENTAL)
+    subcommands:
+      - name: amend
+        description: Save more changes to a stacked diff. (EXPERIMENTAL)
+        options:
+          - name: -a
+            description: Automatically stage modified and deleted tracked files.
+          - name: -d
+            description: A description of the change.
+          - name: -h
+            description: Show help for this command.
+          - name: -m
+            description: Alias for the description flag.
+          - name: --no-verify
+            description: Bypass the pre-commit and commit-msg hooks of git-commit(1).
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --reword
+            description: Only update the commit message without staging any files.
+      - name: create
+        description: Create a new stacked diff. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: delete
+        description: Delete a stack. (EXPERIMENTAL)
+        args:
+          name: <stack-name
+          isOptional: true
+      - name: first
+        description: Moves to the first diff in the stack. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: infer
+        description: Add layers to a stack based on a range of commits. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -n
+            description: Name for the new stack (used when creating a stack)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: revision-range
+      - name: last
+        description: Moves to the last diff in the stack. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: list
+        description: Lists all entries in the stack. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: move
+        description: Moves to any selected entry in the stack. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: next
+        description: Moves to the next diff in the stack. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: prev
+        description: Moves to the previous diff in the stack. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: reorder
+        description: Reorder a stack of diffs. (EXPERIMENTAL)
+        options:
+          - name: --abort
+            description: Abort a reorder and restore original branch state.
+          - name: --continue
+            description: Continue a reorder after resolving conflicts.
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: save
+        description: Save your progress within a stacked diff. (EXPERIMENTAL)
+        options:
+          - name: -a
+            description: Automatically stage modified and deleted tracked files.
+          - name: -d
+            description: Description of the change.
+          - name: -h
+            description: Show help for this command.
+          - name: -m
+            description: Alias for the description flag.
+          - name: --no-verify
+            description: Bypass the pre-commit and commit-msg hooks of git-commit(1).
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: switch
+        description: Switch between stacks. (EXPERIMENTAL)
+        options:
+          - name: -h
+            description: Show help for this command.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+        args:
+          name: stack-name
+          isOptional: true
+      - name: sync
+        description: Sync and submit progress on a stacked diff. (EXPERIMENTAL)
+        options:
+          - name: -a
+            description: Assign merge request to people by their `usernames`. Multiple usernames can be comma-separated or specified by repeating the flag.
+          - name: -h
+            description: Show help for this command.
+          - name: -l
+            description: Add label by `name`. Multiple labels can be comma-separated or specified by repeating the flag.
+          - name: --no-verify
+            description: Bypass the pre-push hook. (See githooks(5) for more information.)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --reviewer
+            description: Request review from users by their `usernames`. Multiple usernames can be comma-separated or specified by repeating the flag.
+          - name: --skip-mr-creation
+            description: Skip creating merge requests for branches that don't have one yet.
+          - name: --update-base
+            description: Rebase the stack onto the latest version of the base branch.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: todo
+    description: Manage your to-do list.
+    subcommands:
+      - name: done
+        description: Mark a to-do item as done.
+        options:
+          - name: --all
+            description: Mark all pending to-do items as done.
+          - name: -h
+            description: Show help for this command.
+        args:
+          name: <id
+          isOptional: true
+      - name: list
+        description: List your to-do items.
+        options:
+          - name: -a
+            description: "Filter by action: assigned, mentioned, build_failed, marked, approval_required, directly_addressed."
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+          - name: -s
+            description: "Filter by state: pending, done, all. (pending)"
+          - name: -t
+            description: "Filter by target type: Issue, MergeRequest."
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: token
+    description: Manage personal, project, or group tokens.
+    subcommands:
+      - name: create
+        description: Creates user, group, or project access tokens.
+        options:
+          - name: -A
+            description: "Access level of the token: one of 'guest', 'reporter', 'developer', 'maintainer', 'owner'. (no)"
+          - name: --description
+            description: Sets the token's description.
+          - name: -D
+            description: "Sets the token lifetime in days. Accepts: days (30d), weeks (4w), or hours in multiples of 24 (24h, 168h, 720h). Maximum: 365d. The token expires at midnight UTC on the calculated date. (30d)"
+          - name: -E
+            description: Sets the token's expiration date and time, in YYYY-MM-DD format. If not specified, --duration is used. (0001-01-01)
+          - name: -g
+            description: Create a group access token. Ignored if a user or repository argument is set.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: Format output as 'text' for the token value, 'json' for the actual API token structure. (text)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -S
+            description: Scopes for the token. Multiple scopes can be comma-separated or specified by repeating the flag. For a list, see https://docs.gitlab.com/security/tokens/access_token_scopes/. ([read_repository])
+          - name: -U
+            description: Create a personal access token. For the current user, use @me.
+        args:
+          name: name
+      - name: list
+        description: List user, group, or project access tokens.
+        options:
+          - name: -a
+            description: List only the active tokens.
+          - name: -g
+            description: List group access tokens. Ignored if a user or repository argument is set.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. text provides a readable table, json outputs the tokens with metadata. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -U
+            description: List personal access tokens. Use @me for the current user.
+      - name: revoke
+        description: Revoke user, group, or project access tokens.
+        options:
+          - name: -g
+            description: Revoke group access token. Ignored if a user or repository argument is set.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. 'text' provides the name and ID of the revoked token; 'json' outputs the token with metadata. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -U
+            description: Revoke personal access token. Use @me for the current user.
+        args:
+          name: token-name|token-id
+      - name: rotate
+        description: Rotate user, group, or project access tokens.
+        options:
+          - name: -D
+            description: "Sets the token lifetime in days. Accepts: days (30d), weeks (4w), or hours in multiples of 24 (24h, 168h, 720h). Maximum: 365d. The token expires at 00:00 UTC on the calculated date. (30d)"
+          - name: -E
+            description: Sets the token's expiration date and time, in YYYY-MM-DD format. If not specified, --duration is used. (0001-01-01)
+          - name: -g
+            description: Rotate group access token. Ignored if a user or repository argument is set.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. 'text' provides the new token value; 'json' outputs the token with metadata. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -U
+            description: Rotate personal access token. Use @me for the current user.
+        args:
+          name: token-name|token-id
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: user
+    description: Interact with a GitLab user account.
+    subcommands:
+      - name: events
+        description: View user events.
+        options:
+          - name: -a
+            description: Get events from all projects.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: 'text', 'json'. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (30)
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: variable
+    description: Manage variables for a GitLab project or group.
+    subcommands:
+      - name: delete
+        description: Delete a variable for a project or group.
+        args:
+          name: key
+      - name: export
+        description: Export variables from a project or group.
+        options:
+          - name: -g
+            description: Select a group or subgroup. Ignored if a repository argument is set.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: json, export, env. (json)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (100)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -s
+            description: "The environment_scope of the variables. Values: '*' (default), or specific environments. (*)"
+      - name: get
+        description: Get a variable for a project or group.
+        options:
+          - name: -g
+            description: Get variable for a group.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -s
+            description: "The environment_scope of the variable. Values: all (*), or specific environments. (*)"
+        args:
+          name: key
+      - name: import
+        description: Import variables from a JSON file or standard input.
+      - name: list
+        description: List variables for a project or group.
+        options:
+          - name: -g
+            description: Select a group or subgroup. Ignored if a repository argument is set.
+          - name: -h
+            description: Show help for this command.
+          - name: -i
+            description: Display instance variables.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -p
+            description: Page number. (1)
+          - name: -P
+            description: Number of items to list per page. (20)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+      - name: set
+        description: Create a new variable for a project or group.
+        options:
+          - name: -d
+            description: Set description of a variable.
+          - name: -g
+            description: Set variable for a group.
+          - name: -h
+            description: Show help for this command.
+          - name: --hidden
+            description: Whether the variable is hidden.
+          - name: -m
+            description: Whether the variable is masked.
+          - name: -p
+            description: Whether the variable is protected.
+          - name: -r
+            description: Whether the variable is treated as a raw string.
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -s
+            description: "The environment_scope of the variable. Values: all (*), or specific environments. (*)"
+          - name: -t
+            description: "The type of a variable: env_var, file. (env_var)"
+          - name: -v
+            description: The value of a variable.
+        args:
+          - name: key
+          - name: value
+      - name: update
+        description: Update an existing variable for a project or group.
+        args:
+          - name: key
+          - name: value
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: -R
+        description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+  - name: version
+    description: Show version information for glab.
+    options:
+      - name: -h
+        description: Show help for this command.
+  - name: whatsnew
+    description: Show release notes for new versions of glab.
+    options:
+      - name: -h
+        description: Show help for this command.
+      - name: --latest
+        description: Show release notes for the latest published release only.
+      - name: --since
+        description: Show release notes for every release newer than this version.
+    args:
+      name: version
+      isOptional: true
+  - name: work-items
+    description: Manage work items. (EXPERIMENTAL)
+    subcommands:
+      - name: create
+        description: Create work items in a project or group. (EXPERIMENTAL)
+        options:
+          - name: --attach
+            description: (Experimental) Upload a file and reference it at the end of the description. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
+          - name: -c
+            description: Mark work item confidential.
+          - name: -d
+            description: Description of the work item. Set to "-" to open an editor.
+          - name: --description-file
+            description: Read the work item description from a file. Use "-" to read from standard input.
+          - name: -g
+            description: Create work items for a group or subgroup.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: -t
+            description: Add a title for the work item.
+          - name: -T
+            description: Type of work item (epic, incident, issue, key_result, objective, requirement, task, test_case, ticket).
+      - name: delete
+        description: Delete a work item in a project or group. (EXPERIMENTAL)
+        args:
+          name: iid
+      - name: list
+        description: List work items in a project or group. (EXPERIMENTAL)
+        options:
+          - name: --after
+            description: Fetch items after this cursor (for pagination)
+          - name: -g
+            description: List work items for a group or subgroup.
+          - name: -h
+            description: Show help for this command.
+          - name: --jq
+            description: Filter JSON output with a jq expression.
+          - name: -F
+            description: "Format output as: text, json. (text)"
+          - name: -P
+            description: Number of items to list per page (max 100) (20)
+          - name: -R
+            description: Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+          - name: --state
+            description: "Filter by state: opened, closed, all. (opened)"
+          - name: -t
+            description: Filter by work item type (epic, issue, task, etc.) Multiple types can be comma-separated or specified by repeating the flag.
+      - name: update
+        description: Update work items in a project or group. (EXPERIMENTAL)
+        args:
+          name: iid
+    options:
+      - name: -h
+        description: Show help for this command.
+options:
+  - name: -h
+    description: Show help for this command.
+  - name: -v
+    description: Show glab version information.
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

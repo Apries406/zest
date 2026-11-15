@@ -1,0 +1,14 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: trigger_example
+description: ""
+subcommands:
+  - name: test
+    args:
+      name: FILE/FOLDER
+      description: must start with file://
+      generators:
+        js:
+          script: 0
+          postProcess: 1
+          trigger: 2
+          getQueryTerm: 3

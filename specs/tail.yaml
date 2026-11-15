@@ -1,0 +1,11 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: tail
+description: Display the last part of a file
+options:
+  - name: -f
+    description: Wait for additional data to be appended
+  - name: -r
+    description: Display in reverse order
+args:
+  isVariadic: true
+  template: filepaths

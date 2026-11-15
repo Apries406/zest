@@ -1,0 +1,69 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: ncdu
+options:
+  - name:
+      - -h
+      - --help
+    description: This help message
+  - name: -q
+    description: Quiet mode, refresh interval 2 seconds
+  - name:
+      - -v
+      - -V
+      - --version
+    description: Print version
+  - name: -x
+    description: Same filesystem
+  - name: -e
+    description: Enable extended information
+  - name: -t
+    description: Number of threads to use
+    args:
+      name: NUM
+  - name: -r
+    description: Read only
+  - name: -o
+    description: Export scanned directory to FILE
+    args:
+      name: FILE
+  - name: -f
+    description: Import scanned directory from FILE
+    args:
+      name: FILE
+  - name:
+      - "-0"
+      - "-1"
+      - "-2"
+    description: UI to use when scanning (0=none,2=full ncurses)
+  - name: --si
+    description: Use base 10 (SI) prefixes instead of base 2
+  - name: --exclude
+    description: Exclude files that match PATTERN
+    args:
+      name: PATTERN
+  - name:
+      - -X
+      - --exclude-from
+    description: Exclude files that match any pattern in FILE
+    args:
+      name: FILE
+  - name:
+      - -L
+      - --follow-symlinks
+    description: Follow symbolic links (excluding directories)
+  - name: --exclude-caches
+    description: Exclude directories containing CACHEDIR.TAG
+  - name: --exclude-kernfs
+    description: Exclude Linux pseudo filesystems (procfs,sysfs,cgroup,...)
+  - name: --confirm-quit
+    description: Confirm quitting ncdu
+  - name: --color
+    description: Set color scheme (off/dark/dark-bg)
+    args:
+      name: SCHEME
+  - name: --ignore-config
+    description: Don't load config files
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

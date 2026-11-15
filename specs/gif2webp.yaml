@@ -1,0 +1,44 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: gif2webp
+options:
+  - name: -h
+  - name: -lossy
+  - name: -mixed
+    description: or lossless compression heuristically
+  - name: -near_lossless
+    description: (0..100=off), default=100
+    args:
+      name: int
+  - name: -sharp_yuv
+    description: (lossy only)
+  - name: -q
+    args:
+      name: float
+  - name: -m
+    args:
+      name: int
+  - name: -min_size
+    description: lossless compression by default; can be combined with -q, -m, -lossy or -mixed options
+  - name: -kmin
+    args:
+      name: int
+  - name: -kmax
+    args:
+      name: int
+  - name: -f
+    args:
+      name: int
+  - name: -metadata
+    description: "copy from the input to the output if present Valid values: all, none, icc, xmp (default)"
+    args:
+      name: string
+  - name: -loop_compatibility
+    description: version prior to M62 (inclusive)
+  - name: -mt
+  - name: -version
+  - name: -v
+  - name: -quiet
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

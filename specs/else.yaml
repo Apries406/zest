@@ -1,0 +1,5 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: else
+description: Execute this command if the test returned 1
+args:
+  isCommand: true

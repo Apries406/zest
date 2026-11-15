@@ -1,0 +1,33 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: gettext
+options:
+  - name:
+      - -d
+      - --domain
+    description: retrieve translated messages from TEXTDOMAIN
+    args:
+      name: TEXTDOMAIN
+  - name:
+      - -c
+      - --context
+    description: specify context for MSGID
+    args:
+      name: CONTEXT
+  - name: -e
+    description: enable expansion of some escape sequences
+  - name: -n
+    description: suppress trailing newline
+  - name: -E
+    description: (ignored for compatibility)
+  - name:
+      - -h
+      - --help
+    description: display this help and exit
+  - name:
+      - -V
+      - --version
+    description: display version information and exit
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

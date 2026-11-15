@@ -34,6 +34,17 @@ import Testing
         #expect(Matcher.match("cmt", "commit")?.indices == [0, 2, 5])
     }
 
+    @Test func fuzzyMustStartAtAWord() {
+        #expect(Matcher.match("che", "archive") == nil)
+        #expect(Matcher.match("cp", "cherry-pick") != nil)
+    }
+
+    @Test func sameCaseWins() throws {
+        let lower = try #require(Matcher.match("-l", "-l"))
+        let upper = try #require(Matcher.match("-l", "-L"))
+        #expect(lower.score > upper.score)
+    }
+
     @Test func wordBoundariesWin() throws {
         let boundary = try #require(Matcher.match("pr", "git-pr"))
         let inside = try #require(Matcher.match("pr", "upright"))

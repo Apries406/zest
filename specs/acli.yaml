@@ -1,0 +1,412 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: acli
+subcommands:
+  - name: admin
+    description: Admin commands.
+    subcommands:
+      - name: auth
+        description: Authenticate to use Atlassian CLI for organization admin tasks.
+        subcommands:
+          - name: login
+            description: Authenticate for the organization admin-specific tasks.
+          - name: logout
+            description: Remove authentication and log out of organization admin account.
+          - name: status
+            description: Show status for organization admin account.
+          - name: switch
+            description: Switch between Atlassian organization admin accounts.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: user
+        description: Manage a user within your Atlassian organization.
+        subcommands:
+          - name: activate
+            description: Activate a user.
+          - name: cancel-delete
+          - name: deactivate
+            description: Deactivate a user.
+          - name: delete
+            description: Delete a managed account.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+    options:
+      - name:
+          - -h
+          - --help
+        description: Show help for command
+  - name: auth
+    description: Authenticate to multiple Atlassian accounts with OAuth.
+    subcommands:
+      - name: login
+        description: Authenticate to Jira and Confluence sites with OAuth.
+      - name: logout
+        description: Logout globally from all active OAuth accounts.
+      - name: status
+        description: Show OAuth status.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: switch
+        description: Switch between OAuth accounts for Jira and Confluence.
+        options:
+          - name:
+              - -e
+              - --email
+            description: Atlassian account email
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+          - name:
+              - -s
+              - --site
+            description: Atlassian account site
+    options:
+      - name:
+          - -h
+          - --help
+        description: Show help for command
+  - name: confluence
+    description: Confluence Cloud commands.
+    subcommands:
+      - name: auth
+        description: Authenticate to use Confluence with OAuth or API token.
+        subcommands:
+          - name: login
+            description: Authenticate to Confluence with OAuth or API token.
+          - name: logout
+            description: Logout from current Confluence account.
+          - name: status
+            description: Show Confluence account status.
+          - name: switch
+            description: Switch between Confluence accounts.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: blog
+        description: Confluence blog commands.
+        subcommands:
+          - name: create
+            description: Create a new Confluence blog post in the specified space.
+          - name: list
+            description: List Confluence blog posts.
+          - name: view
+            description: View details of a Confluence blog post.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: page
+        description: Confluence page commands.
+        subcommands:
+          - name: view
+            description: View details of a Confluence page.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: space
+        description: Confluence space commands.
+        subcommands:
+          - name: archive
+            description: Archive a Confluence space by key.
+          - name: create
+            description: Create a Confluence space.
+          - name: list
+            description: List Confluence spaces.
+          - name: restore
+            description: Restore a Confluence space from the trash or archive by key.
+          - name: update
+            description: Update details of a Confluence space, such as name, description, status, or settings by key.
+          - name: view
+            description: View details of a Confluence space.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+    options:
+      - name:
+          - -h
+          - --help
+        description: Show help for command
+  - name: guard
+    description: Atlassian Guard CLI.
+    subcommands:
+      - name: edm
+        description: Exact Data Match (EDM) commands
+        subcommands:
+          - name: hash
+            description: Hash a CSV file for EDM upload.
+          - name: verify
+            description: Verify whether a plaintext value matches a known EDM hash.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: help
+        description: Help about any command
+    options:
+      - name:
+          - -h
+          - --help
+        description: help for guard
+      - name:
+          - -v
+          - --version
+        description: version for guard
+  - name: jira
+    description: Jira Cloud commands.
+    subcommands:
+      - name: auth
+        description: Authenticate to use Jira with OAuth or API token.
+        subcommands:
+          - name: login
+            description: Authenticate to Jira with OAuth or API token.
+          - name: logout
+            description: Logout from current Jira account.
+          - name: status
+            description: Show Jira account status.
+          - name: switch
+            description: Switch between Jira accounts.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: board
+        description: Jira board commands.
+        subcommands:
+          - name: create
+            description: Create a new Jira board.
+          - name: delete
+            description: Deletes one or more Jira boards.
+          - name: get
+            description: "[DEPRECATED] Jira get board details."
+          - name: list-projects
+          - name: list-sprints
+            description: Get all sprints
+          - name: search
+            description: Search through all the boards
+          - name: view
+            description: View details of a Jira board.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: dashboard
+        description: Jira dashboard commands.
+        subcommands:
+          - name: search
+            description: Searches for Jira dashboards.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: field
+        description: Jira field commands.
+        subcommands:
+          - name: cancel-delete
+            args:
+              name: DEPRECATED
+              isOptional: true
+          - name: create
+            description: Create a custom field in Jira.
+          - name: delete
+            description: Moves a custom field to trash.
+          - name: restore
+            description: Restores the field from the trash.
+          - name: update
+            description: Update a custom field in Jira.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: filter
+        description: Jira filter commands.
+        subcommands:
+          - name: add-favourite
+          - name: change-owner
+            description: Change the owner of the provided filters.
+          - name: get
+            description: "[DEPRECATED] Retrieve a Jira filter by its ID."
+          - name: get-columns
+            description: "[DEPRECATED] Get configured columns for a filter."
+          - name: list
+            description: List filter that are either my or favourite.
+          - name: list-columns
+            description: List configured columns for a filter.
+          - name: reset-columns
+          - name: search
+            description: Searches for Jira filters.
+          - name: update
+            description: Update an existing Jira filter.
+          - name: view
+            description: View a Jira filter by its ID.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: project
+        description: Jira project commands.
+        subcommands:
+          - name: archive
+            description: Archives a Jira project.
+          - name: create
+            description: Create a Jira project – a collection of work items.
+          - name: delete
+            description: Deletes a Jira project.
+          - name: list
+            description: List of projects visible to the user.
+          - name: restore
+            description: Restore a Jira project.
+          - name: update
+            description: Update a Jira project.
+          - name: view
+            description: Fetches a Jira project.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: sprint
+        description: Jira sprint commands.
+        subcommands:
+          - name: create
+            description: Create a new sprint on the board.
+          - name: delete
+            description: Deletes one or more Jira sprints.
+          - name: list-workitems
+          - name: update
+            description: Update an existing Jira sprint.
+          - name: view
+            description: View details of a Jira sprint.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+      - name: workitem
+        description: Jira work item commands.
+        subcommands:
+          - name: archive
+            description: Archives a work item or multiple work items.
+          - name: assign
+            description: Assign a work item(s) to an assignee(s).
+          - name: attachment
+            description: Work item attachments commands.
+          - name: clone
+            description: Create a duplicate work item(s).
+          - name: comment
+            description: Work item comments commands.
+          - name: create
+            description: Create a Jira work item.
+          - name: create-bulk
+            description: Bulk create Jira issues.
+          - name: delete
+            description: Delete a work item or multiple work items.
+          - name: edit
+            description: Edit a Jira work item or multiple work items.
+          - name: link
+            description: Link work items commands.
+          - name: list-watchers
+          - name: search
+            description: Searches for work item or multiple work items.
+          - name: transition
+            description: Transitioning a work item.
+          - name: unarchive
+            description: Unarchives work item or multiple work items.
+          - name: view
+            description: Retrieve information about Jira work items.
+          - name: watcher
+            description: Work item watcher commands.
+        options:
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+    options:
+      - name:
+          - -h
+          - --help
+        description: Show help for command
+  - name: rovodev
+    description: "Atlassian’s AI coding agent: Rovo Dev (Beta)."
+  - name: config
+    description: Commands for changing configuration settings.
+    subcommands:
+      - name: gov-cloud
+        description: Atlassian Government Cloud configuration command.
+        options:
+          - name: --enable
+            description: Enable or disable Atlassian Government Cloud environment. (default true)
+          - name:
+              - -h
+              - --help
+            description: Show help for command
+          - name: --status
+            description: Displays status of Atlassian Government Cloud environment.
+    options:
+      - name:
+          - -h
+          - --help
+        description: Show help for command
+  - name: feedback
+    description: Submit a request or report a problem.
+    options:
+      - name:
+          - -a
+          - --attachments
+        description: Multiple files of attachments to be added to the request
+      - name:
+          - -d
+          - --details
+        description: Details of the feedback
+      - name:
+          - -e
+          - --email
+        description: Email address to receive feedback response
+      - name:
+          - -h
+          - --help
+        description: Show help for command
+      - name:
+          - -s
+          - --summary
+        description: Summary of the feedback
+      - name:
+          - -t
+          - --time
+        description: Provide an estimated timeframe for when the problem occurred, for example --time=1h, --time=15m
+  - name: help
+    description: Help about any command
+options:
+  - name:
+      - -h
+      - --help
+    description: Show help for command
+  - name:
+      - -v
+      - --version
+    description: version for acli
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

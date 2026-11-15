@@ -1,0 +1,125 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: cwebp
+options:
+  - name: -h
+  - name: -H
+  - name: -q
+    args:
+      name: float
+  - name: -alpha_q
+    description: default=100
+    args:
+      name: int
+  - name: -preset
+    description: default, photo, picture, drawing, icon, text
+    args:
+      name: string
+  - name: -z
+    description: level in [0:fast, ..., 9:slowest]
+    args:
+      name: int
+  - name: -m
+    args:
+      name: int
+  - name: -segments
+    args:
+      name: int
+  - name: -size
+    args:
+      name: int
+  - name: -psnr
+    args:
+      name: float
+  - name: -s
+    args:
+      - name: int
+      - name: int
+  - name: -sns
+    args:
+      name: int
+  - name: -f
+    args:
+      name: int
+  - name: -sharpness
+    args:
+      name: int
+  - name: -strong
+  - name: -nostrong
+  - name: -sharp_yuv
+  - name: -partition_limit
+    description: the first partition (0=no degradation ... 100=full)
+    args:
+      name: int
+  - name: -pass
+    args:
+      name: int
+  - name: -qrange
+    description: "(default: 0 100)"
+    args:
+      - name: min
+      - name: max
+  - name: -crop
+    args:
+      - name: x
+      - name: "y"
+      - name: w
+      - name: h
+  - name: -resize
+    args:
+      - name: w
+      - name: h
+  - name: -resize_mode
+    args:
+      name: string
+  - name: -mt
+  - name: -low_memory
+  - name: -map
+    args:
+      name: int
+  - name: -print_psnr
+  - name: -print_ssim
+  - name: -print_lsim
+  - name: -d
+    args:
+      name: file.pgm
+  - name: -alpha_method
+    args:
+      name: int
+  - name: -alpha_filter
+    description: "one of: none, fast (default) or best"
+    args:
+      name: string
+  - name: -exact
+  - name: -blend_alpha
+    description: expressed as RGB values written in hexadecimal, e.g. 0xc0e0d0 for red=0xc0 green=0xe0 and blue=0xd0
+    args:
+      name: hex
+  - name: -noalpha
+  - name: -lossless
+  - name: -near_lossless
+    description: (0..100=off), default=100
+    args:
+      name: int
+  - name: -hint
+    description: "one of: photo, picture or graph"
+    args:
+      name: string
+  - name: -metadata
+    description: "copy from the input to the output if present. Valid values: all, none (default), exif, icc, xmp"
+    args:
+      name: string
+  - name: -short
+  - name: -quiet
+  - name: -version
+  - name: -noasm
+  - name: -v
+  - name: -progress
+  - name: -jpeg_like
+  - name: -af
+  - name: -pre
+    args:
+      name: int
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

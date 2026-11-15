@@ -1,0 +1,71 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: jpegtran
+options:
+  - name: -copy
+    description: Copy no extra markers from source file
+  - name: -optimize
+    description: Optimize Huffman table (smaller file, but slow compression)
+  - name: -progressive
+    description: Create progressive JPEG file
+  - name: -crop
+    description: Crop to a rectangular region
+  - name: -drop
+    description: Drop (insert) another image
+  - name: -flip
+    description: Mirror image (left-right or top-bottom)
+    args:
+      name: horizontal|vertical
+      isOptional: true
+  - name: -grayscale
+    description: Reduce to grayscale (omit color data)
+  - name: -perfect
+    description: Fail if there is non-transformable edge blocks
+  - name: -rotate
+    description: Rotate image (degrees clockwise)
+    args:
+      name: 90|180|270
+      isOptional: true
+  - name: -transpose
+    description: Transpose image
+  - name: -transverse
+    description: Transverse transpose image
+  - name: -trim
+    description: "Drop non-transformable edge blocks with -drop: Requantize drop file to match source file"
+  - name: -wipe
+    description: Wipe (gray out) a rectangular region
+  - name: -arithmetic
+    description: Use arithmetic coding
+  - name: -icc
+    description: Embed ICC profile contained in FILE
+    args:
+      name: FILE
+  - name: -restart
+    description: Set restart interval in rows, or in blocks with B
+    args:
+      name: "N"
+  - name: -maxmemory
+    description: Maximum memory to use (in kbytes)
+    args:
+      name: "N"
+  - name: -maxscans
+    description: Maximum number of scans to allow in input file
+    args:
+      name: "N"
+  - name: -outfile
+    description: Specify name for output file
+  - name: -report
+    description: Report transformation progress
+  - name: -strict
+    description: Treat all warnings as fatal
+  - name: -verbose
+    description: or  -debug   Emit debug output
+  - name: -version
+    description: Print version information and exit
+  - name: -scans
+    description: Create multi-scan JPEG per script FILE
+    args:
+      name: FILE
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

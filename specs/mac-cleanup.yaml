@@ -1,0 +1,35 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: mac-cleanup
+options:
+  - name:
+      - -h
+      - --help
+    description: show this help message and exit
+  - name:
+      - -n
+      - --dry-run
+    description: Run without deleting stuff
+  - name:
+      - -u
+      - --update
+    description: Update Homebrew on cleanup
+  - name:
+      - -c
+      - --configure
+    description: Open module configuration screen
+  - name:
+      - -p
+      - --custom-path
+    description: Specify path for custom modules
+  - name:
+      - -f
+      - --force
+    description: Accept all warnings
+  - name:
+      - -v
+      - --verbose
+    description: Print folders to be deleted
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

@@ -1,0 +1,57 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: gulp
+options:
+  - name:
+      - --help
+      - -h
+    description: Show this help.                              [boolean]
+  - name:
+      - --version
+      - -v
+    description: Print the global and local gulp versions.    [boolean]
+  - name: --require
+    description: Will require a module before running the gulpfile. This is useful for transpilers but also has other applications.                                 [string]
+  - name:
+      - --gulpfile
+      - -f
+    description: Manually set path of gulpfile. Useful if you have multiple gulpfiles. This will set the CWD to the gulpfile directory as well.                   [string]
+  - name: --cwd
+    description: Manually set the CWD. The search for the gulpfile, as well as the relativity of all requires will be from here.                                         [string]
+  - name: --verify
+    description: Will verify plugins referenced in project's package.json against the plugins blacklist.
+  - name:
+      - --tasks
+      - -T
+    description: Print the task dependency tree for the loaded gulpfile.                                    [boolean]
+  - name: --tasks-simple
+    description: Print a plaintext list of tasks for the loaded gulpfile.                                    [boolean]
+  - name: --tasks-json
+    description: Print the task dependency tree, in JSON format, for the loaded gulpfile.
+  - name:
+      - --tasks-depth
+      - --depth
+    description: Specify the depth of the task dependency tree.[number]
+  - name: --compact-tasks
+    description: Reduce the output of task dependency tree by printing only top tasks and their child tasks.        [boolean]
+  - name: --sort-tasks
+    description: Will sort top tasks of task dependency tree. [boolean]
+  - name: --color
+    description: Will force gulp and gulp plugins to display colors, even when no color support is detected.      [boolean]
+  - name: --no-color
+    description: Will force gulp and gulp plugins to not display colors, even when color support is detected. [boolean]
+  - name:
+      - --silent
+      - -S
+    description: Suppress all gulp logging.                   [boolean]
+  - name: --continue
+    description: Continue execution of tasks upon failure.    [boolean]
+  - name: --series
+    description: Run tasks given on the CLI in series (the default is parallel).                                   [boolean]
+  - name:
+      - --log-level
+      - -L
+    description: Set the loglevel. -L for least verbose and -LLLL for most verbose. -LLL is default.                 [count]
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

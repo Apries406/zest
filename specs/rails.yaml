@@ -1,0 +1,4 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: rails
+description: Ruby on Rails CLI
+icon: https://avatars.githubusercontent.com/u/4223?s=48&v=4

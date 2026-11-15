@@ -1,0 +1,44 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: img2webp
+options:
+  - name: -min_size
+  - name: -kmax
+    description: (0=only keyframes)
+    args:
+      name: int
+  - name: -kmin
+    description: (0=disable key-frames altogether)
+    args:
+      name: int
+  - name: -mixed
+  - name: -near_lossless
+    description: (0..100=off), default=100
+    args:
+      name: int
+  - name: -sharp_yuv
+    description: (lossy only)
+  - name: -loop
+    args:
+      name: int
+  - name: -v
+  - name: -h
+  - name: -version
+  - name: -d
+    args:
+      name: int
+  - name: -lossless
+  - name: -lossy
+  - name: -q
+    args:
+      name: float
+  - name: -m
+    args:
+      name: int
+  - name:
+      - -exact
+      - -noexact
+    description: "(default: -noexact, may cause artifacts with lossy animations)"
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

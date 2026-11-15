@@ -1,0 +1,131 @@
+# Imported from a Fig spec. You can edit this file; see docs/adding-a-command.md.
+name: pkgconf
+options:
+  - name: --help
+    description: this message
+  - name: --about
+    description: print pkgconf version and license to stdout
+  - name: --version
+    description: print supported pkg-config version to stdout
+  - name: --verbose
+    description: print additional information
+  - name: --atleast-pkgconfig-version
+    description: check whether or not pkgconf is compatible with a specified pkg-config version
+  - name: --errors-to-stdout
+    description: print all errors on stdout instead of stderr
+  - name: --print-errors
+    description: ensure all errors are printed
+  - name: --short-errors
+    description: be less verbose about some errors
+  - name: --silence-errors
+    description: explicitly be silent about errors
+  - name: --list-all
+    description: list all known packages
+  - name: --list-package-names
+    description: list all known package names
+  - name: --simulate
+    description: simulate walking the calculated dependency graph
+  - name: --no-cache
+    description: do not cache already seen packages when walking the dependency graph
+  - name: --log-file
+    description: write an audit log to a specified file
+  - name: --with-path
+    description: adds a directory to the search path
+  - name: --define-prefix
+    description: override the prefix variable with one that is guessed based on the location of the .pc file
+  - name: --dont-define-prefix
+    description: do not override the prefix variable under any circumstances
+  - name: --prefix-variable
+    description: sets the name of the variable that pkgconf considers to be the package prefix
+  - name: --relocate
+    description: relocates a path and exits (mostly for testsuite)
+  - name: --dont-relocate-paths
+    description: disables path relocation support
+  - name: --personality
+    description: sets the personality to 'triplet' or a file named 'filename'
+  - name: --dump-personality
+    description: dumps details concerning selected personality
+  - name: --atleast-version
+    description: require a specific version of a module
+  - name: --exact-version
+    description: require an exact version of a module
+  - name: --max-version
+    description: require a maximum version of a module
+  - name: --exists
+    description: check whether or not a module exists
+  - name: --uninstalled
+    description: check whether or not an uninstalled module will be used
+  - name: --no-uninstalled
+    description: never use uninstalled modules when satisfying dependencies
+  - name: --no-provides
+    description: do not use 'provides' rules to resolve dependencies
+  - name: --maximum-traverse-depth
+    description: maximum allowed depth for dependency graph
+  - name: --static
+    description: be more aggressive when computing dependency graph (for static linking)
+  - name: --shared
+    description: use a simplified dependency graph (usually default)
+  - name: --pure
+    description: optimize a static dependency graph as if it were a normal dependency graph
+  - name: --env-only
+    description: look only for package entries in PKG_CONFIG_PATH
+  - name: --ignore-conflicts
+    description: ignore 'conflicts' rules in modules
+  - name: --validate
+    description: validate specific .pc files for correctness
+  - name: --define-variable
+    description: define variable 'varname' as 'value'
+  - name: --variable
+    description: print specified variable entry to stdout
+  - name: --cflags
+    description: print required CFLAGS to stdout
+  - name: --cflags-only-I
+    description: print required include-dir CFLAGS to stdout
+  - name: --cflags-only-other
+    description: print required non-include-dir CFLAGS to stdout
+  - name: --libs
+    description: print required linker flags to stdout
+  - name: --libs-only-L
+    description: print required LDPATH linker flags to stdout
+  - name: --libs-only-l
+    description: print required LIBNAME linker flags to stdout
+  - name: --libs-only-other
+    description: print required other linker flags to stdout
+  - name: --print-requires
+    description: print required dependency frameworks to stdout
+  - name: --print-requires-private
+    description: print required dependency frameworks for static linking to stdout
+  - name: --print-provides
+    description: print provided dependencies to stdout
+  - name: --print-variables
+    description: print all known variables in module to stdout
+  - name: --digraph
+    description: print entire dependency graph in graphviz 'dot' format
+  - name: --solution
+    description: print dependency graph solution in a simple format
+  - name: --keep-system-cflags
+    description: keep -I/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/usr/include entries in cflags output
+  - name: --keep-system-libs
+    description: keep -L/usr/lib entries in libs output
+  - name: --path
+    description: show the exact filenames for any matching .pc files
+  - name: --modversion
+    description: print the specified module's version to stdout
+  - name: --internal-cflags
+    description: do not filter 'internal' cflags from output
+  - name: --license
+    description: print the specified module's license to stdout if known
+  - name: --exists-cflags
+    description: add -DHAVE_FOO fragments to cflags for each found module
+  - name: --msvc-syntax
+    description: print translatable fragments in MSVC syntax
+  - name: --fragment-filter
+    description: filter output fragments to the specified types
+  - name: --env
+    description: print output as shell-compatible environmental variables
+  - name: --fragment-tree
+    description: visualize printed CFLAGS/LIBS fragments as a tree
+args:
+  name: args
+  isOptional: true
+  isVariadic: true

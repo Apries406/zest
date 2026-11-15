@@ -1,0 +1,60 @@
+# Imported from withfig/autocomplete (MIT). You can edit this file; see docs/adding-a-command.md.
+name: cal
+description: Displays a calendar and the date of Easter
+options:
+  - name: -h
+    description: Turns off highlighting of today
+  - name: -j
+    description: Display Julian days (days one-based, numbered from January 1)
+  - name: -m
+    description: Display the specified month.  If month is specified as a decimal number, it may be followed by the letter ‘f’ or ‘p’ to indicate the following or preceding month of that number, respectively
+    args:
+      name: month
+      suggestions:
+        - name: january
+          icon: 🗓
+          type: arg
+        - name: february
+          icon: 🗓
+          type: arg
+        - name: march
+          icon: 🗓
+          type: arg
+        - name: april
+          icon: 🗓
+          type: arg
+        - name: may
+          icon: 🗓
+          type: arg
+        - name: june
+          icon: 🗓
+          type: arg
+        - name: july
+          icon: 🗓
+          type: arg
+        - name: august
+          icon: 🗓
+          type: arg
+        - name: september
+          icon: 🗓
+          type: arg
+        - name: october
+          icon: 🗓
+          type: arg
+        - name: november
+          icon: 🗓
+          type: arg
+        - name: december
+          icon: 🗓
+          type: arg
+    exclusiveOn:
+      - -y
+  - name: -y
+    description: Display a calendar for the specified year
+    exclusiveOn:
+      - -m
+args:
+  name: year
+  description: Year to print calendar of
+parserDirectives:
+  optionsMustPrecedeArguments: true
