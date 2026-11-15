@@ -33,15 +33,15 @@ final class AppModel: ObservableObject {
         engine = Engine(store: store, usage: UsageStore(url: Paths.usage))
         controller = CompletionController(engine: engine)
         let icons = IconResolver(
-            indexURL: resources?.appendingPathComponent("icons/material.json"),
-            iconsDirectory: resources?.appendingPathComponent("icons/material"))
-        IconCache.shared.configure(resources: resources)
+            indexURL: Paths.icons?.appendingPathComponent("material.json"),
+            iconsDirectory: Paths.icons?.appendingPathComponent("material"))
+        IconCache.shared.configure(icons: Paths.icons)
         popup = PopupController(icons: icons)
     }
 
     func start() {
         applyPreferences()
-        ShellIntegration.copyScript(from: resources)
+        ShellIntegration.copyScript()
 
         controller.onChange = { [weak self] state in
             DispatchQueue.main.async { self?.render(state) }
@@ -91,14 +91,21 @@ final class AppModel: ObservableObject {
     }
 
     func refreshStatus() {
-        accessibilityGranted = CaretLocator.isTrusted
-        shellInstalled = ShellIntegration.isInstalled
-        launchAtLogin = SMAppService.mainApp.status == .enabled
+        // Assign only on change: every assignment re-renders the menu and settings.
+        let trusted = CaretLocator.isTrusted
+        if trusted != accessibilityGranted { accessibilityGranted = trusted }
+        let installed = ShellIntegration.isInstalled
+        if installed != shellInstalled { shellInstalled = installed }
+        let login = SMAppService.mainApp.status == .enabled
+        if login != launchAtLogin { launchAtLogin = login }
     }
+
+    private var lastGhostText: Bool?
 
     private func applyPreferences() {
         let d = Pref.defaults
-        enabled = d.bool(forKey: Pref.enabled)
+        let isEnabled = d.bool(forKey: Pref.enabled)
+        if isEnabled != enabled { enabled = isEnabled }
         var engineSettings = EngineSettings()
         engineSettings.fuzzy = d.bool(forKey: Pref.fuzzy)
         engineSettings.historySuggestions = d.bool(forKey: Pref.history)
@@ -110,10 +117,18 @@ final class AppModel: ObservableObject {
         controllerSettings.enter = CompletionController.EnterBehavior(rawValue: d.string(forKey: Pref.enter) ?? "") ?? .smart
         controller.settings = controllerSettings
 
-        popup.model.fontSize = CGFloat(d.double(forKey: Pref.fontSize))
-        popup.model.visibleRows = max(3, d.integer(forKey: Pref.rows))
-        popup.model.showDescriptions = d.bool(forKey: Pref.descriptions)
-        ShellIntegration.writeSettings(ghostText: d.bool(forKey: Pref.ghostText))
+        let model = popup.model
+        let fontSize = CGFloat(d.double(forKey: Pref.fontSize))
+        if model.fontSize != fontSize { model.fontSize = fontSize }
+        let rows = max(3, d.integer(forKey: Pref.rows))
+        if model.visibleRows != rows { model.visibleRows = rows }
+        let descriptions = d.bool(forKey: Pref.descriptions)
+        if model.showDescriptions != descriptions { model.showDescriptions = descriptions }
+        let ghost = d.bool(forKey: Pref.ghostText)
+        if ghost != lastGhostText {
+            lastGhostText = ghost
+            ShellIntegration.writeSettings(ghostText: ghost)
+        }
         if !enabled { popup.hide() }
     }
 

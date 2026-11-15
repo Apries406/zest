@@ -29,9 +29,8 @@ enum ShellIntegration {
 
     /// Copies the zsh script from the app bundle. Runs at every launch so updates of the
     /// app also update the script.
-    static func copyScript(from resources: URL?) {
-        guard let source = resources.map({ $0.appendingPathComponent("zest.zsh") }) ?? Paths.zshScript,
-              let data = try? Data(contentsOf: source) else { return }
+    static func copyScript() {
+        guard let source = Paths.zshScript, let data = try? Data(contentsOf: source) else { return }
         try? FileManager.default.createDirectory(at: Paths.appSupport, withIntermediateDirectories: true)
         if (try? Data(contentsOf: script)) != data {
             try? data.write(to: script, options: .atomic)

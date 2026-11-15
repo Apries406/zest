@@ -1,0 +1,8 @@
+{
+  "yaml.schemas": {
+    "./schema/spec.schema.json": ["specs/**/*.yaml"]
+  },
+  "files.associations": {
+    "*.zsh": "shellscript"
+  }
+}

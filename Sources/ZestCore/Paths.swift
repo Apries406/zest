@@ -21,7 +21,8 @@ public enum Paths {
         if let env = ProcessInfo.processInfo.environment["ZEST_RESOURCES"] {
             return URL(fileURLWithPath: env, isDirectory: true)
         }
-        let exe = URL(fileURLWithPath: CommandLine.arguments[0]).resolvingSymlinksInPath()
+        // The real executable path (argv[0] may be a bare name or a symlink in ~/.local/bin).
+        let exe = (Bundle.main.executableURL ?? URL(fileURLWithPath: CommandLine.arguments[0])).resolvingSymlinksInPath()
         var dir = exe.deletingLastPathComponent()
         // Inside an app: <App>.app/Contents/MacOS/<exe> or <App>.app/Contents/Helpers/<exe>.
         let contents = dir.deletingLastPathComponent()
@@ -46,6 +47,16 @@ public enum Paths {
         guard let resources else { return nil }
         let url = resources.appendingPathComponent("specs", isDirectory: true)
         return FileManager.default.fileExists(atPath: url.path) ? url : nil
+    }
+
+    /// Icon assets: `Resources/icons` in the app, `assets/icons` in a checkout.
+    public static var icons: URL? {
+        guard let resources else { return nil }
+        for candidate in ["icons", "assets/icons"] {
+            let url = resources.appendingPathComponent(candidate, isDirectory: true)
+            if FileManager.default.fileExists(atPath: url.appendingPathComponent("material.json").path) { return url }
+        }
+        return nil
     }
 
     public static var zshScript: URL? {

@@ -72,9 +72,9 @@ final class PopupController {
             return
         }
 
-        model.items = state.items
-        model.selected = state.selected
-        model.isLoading = state.isLoading
+        if model.items != state.items { model.items = state.items }
+        if model.selected != state.selected { model.selected = state.selected }
+        if model.isLoading != state.isLoading { model.isLoading = state.isLoading }
 
         let height = model.height(itemCount: state.items.count)
         // Line up the suggestion text with the start of the word being completed.
@@ -259,12 +259,12 @@ final class IconCache {
     private var images: [String: NSImage] = [:]
     private var codepoints: [String: String] = [:]
 
-    func configure(resources: URL?) {
-        guard let resources else { return }
-        materialDirectory = resources.appendingPathComponent("icons/material")
-        let font = resources.appendingPathComponent("icons/codicon.ttf")
+    func configure(icons: URL?) {
+        guard let icons else { return }
+        materialDirectory = icons.appendingPathComponent("material")
+        let font = icons.appendingPathComponent("codicon.ttf")
         CTFontManagerRegisterFontsForURL(font as CFURL, .process, nil)
-        if let data = try? Data(contentsOf: resources.appendingPathComponent("icons/codicons.json")),
+        if let data = try? Data(contentsOf: icons.appendingPathComponent("codicons.json")),
            let map = try? JSONDecoder().decode([String: String].self, from: data) {
             for (name, hex) in map {
                 if let value = UInt32(hex, radix: 16), let scalar = Unicode.Scalar(value) {

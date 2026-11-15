@@ -1,0 +1,187 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/rostik32/zest/main/schema/spec.schema.json",
+  "title": "zest completion spec",
+  "description": "Describes one command for the zest autocomplete popup. See docs/spec-format.md.",
+  "$ref": "#/definitions/subcommand",
+  "definitions": {
+    "names": {
+      "description": "One name, or a list of aliases. The first one is shown and inserted.",
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 }
+      ]
+    },
+    "common": {
+      "type": "object",
+      "properties": {
+        "displayName": { "type": "string", "description": "Text shown in the popup instead of the name." },
+        "description": { "type": "string", "description": "One short sentence shown next to the item and in the footer." },
+        "icon": { "type": "string", "description": "A Material Icon Theme icon name (e.g. `docker`), an emoji, or `fig://icon?type=<name>`." },
+        "priority": { "type": "number", "minimum": 0, "maximum": 100, "description": "Sort order; default 50. Higher comes first." },
+        "hidden": { "type": "boolean", "description": "Only shown once at least two letters of the name are typed." },
+        "deprecated": { "type": "boolean", "description": "Shown struck through and sorted lower." },
+        "insertValue": { "type": "string", "description": "Text to insert instead of the name. `{cursor}` marks where the cursor goes." }
+      }
+    },
+    "subcommand": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "$ref": "#/definitions/names" },
+        "displayName": { "$ref": "#/definitions/common/properties/displayName" },
+        "description": { "$ref": "#/definitions/common/properties/description" },
+        "icon": { "$ref": "#/definitions/common/properties/icon" },
+        "priority": { "$ref": "#/definitions/common/properties/priority" },
+        "hidden": { "$ref": "#/definitions/common/properties/hidden" },
+        "deprecated": { "$ref": "#/definitions/common/properties/deprecated" },
+        "insertValue": { "$ref": "#/definitions/common/properties/insertValue" },
+        "subcommands": { "type": "array", "items": { "$ref": "#/definitions/subcommand" } },
+        "options": { "type": "array", "items": { "$ref": "#/definitions/option" } },
+        "args": { "$ref": "#/definitions/args" },
+        "loadSpec": { "type": "string", "description": "Load this subcommand from another spec file, e.g. `aws/s3`." },
+        "requiresSubcommand": { "type": "boolean" },
+        "filterStrategy": { "$ref": "#/definitions/filterStrategy" },
+        "parserDirectives": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "flagsArePosixNoncompliant": { "type": "boolean", "description": "Options like `-name` are one option, not `-n -a -m -e`." },
+            "optionsMustPrecedeArguments": { "type": "boolean" },
+            "optionArgSeparators": { "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }] }
+          }
+        },
+        "additionalSuggestions": { "type": "array", "items": { "$ref": "#/definitions/suggestion" } }
+      }
+    },
+    "option": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "$ref": "#/definitions/names" },
+        "displayName": { "$ref": "#/definitions/common/properties/displayName" },
+        "description": { "$ref": "#/definitions/common/properties/description" },
+        "icon": { "$ref": "#/definitions/common/properties/icon" },
+        "priority": { "$ref": "#/definitions/common/properties/priority" },
+        "hidden": { "$ref": "#/definitions/common/properties/hidden" },
+        "deprecated": { "$ref": "#/definitions/common/properties/deprecated" },
+        "insertValue": { "$ref": "#/definitions/common/properties/insertValue" },
+        "args": { "$ref": "#/definitions/args" },
+        "isRepeatable": { "oneOf": [{ "type": "boolean" }, { "type": "integer", "minimum": 1 }], "description": "May be given more than once (`true`) or up to N times." },
+        "isPersistent": { "type": "boolean", "description": "Also valid in every subcommand below this one." },
+        "isRequired": { "type": "boolean" },
+        "requiresSeparator": { "oneOf": [{ "type": "boolean" }, { "type": "string" }], "description": "`true` for `--opt=value`; a string for another separator." },
+        "exclusiveOn": { "type": "array", "items": { "type": "string" }, "description": "Hidden when one of these options is already used." },
+        "dependsOn": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "args": {
+      "oneOf": [
+        { "$ref": "#/definitions/arg" },
+        { "type": "array", "items": { "$ref": "#/definitions/arg" } }
+      ]
+    },
+    "arg": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "What the argument is, e.g. `branch`." },
+        "description": { "type": "string" },
+        "isOptional": { "type": "boolean" },
+        "isVariadic": { "type": "boolean", "description": "Takes any number of values." },
+        "optionsCanBreakVariadicArg": { "type": "boolean" },
+        "isCommand": { "type": "boolean", "description": "The rest of the line is another command, as in `sudo <command>`." },
+        "isScript": { "type": "boolean" },
+        "template": { "$ref": "#/definitions/template" },
+        "suggestions": { "type": "array", "items": { "$ref": "#/definitions/suggestion" } },
+        "generators": {
+          "oneOf": [
+            { "$ref": "#/definitions/generator" },
+            { "type": "array", "items": { "$ref": "#/definitions/generator" } }
+          ]
+        },
+        "default": { "type": "string" },
+        "filterStrategy": { "$ref": "#/definitions/filterStrategy" },
+        "loadSpec": { "type": "string" },
+        "suggestCurrentToken": { "type": "boolean" }
+      }
+    },
+    "suggestion": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "required": ["name"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "$ref": "#/definitions/names" },
+            "displayName": { "$ref": "#/definitions/common/properties/displayName" },
+            "description": { "$ref": "#/definitions/common/properties/description" },
+            "icon": { "$ref": "#/definitions/common/properties/icon" },
+            "priority": { "$ref": "#/definitions/common/properties/priority" },
+            "hidden": { "$ref": "#/definitions/common/properties/hidden" },
+            "deprecated": { "$ref": "#/definitions/common/properties/deprecated" },
+            "insertValue": { "$ref": "#/definitions/common/properties/insertValue" },
+            "type": { "type": "string", "description": "`file` or `folder` changes the icon." }
+          }
+        }
+      ]
+    },
+    "generator": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "script": {
+          "description": "A shell command (run with `zsh -f -c` in the current folder) or an argv list.",
+          "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
+        },
+        "splitOn": { "type": "string", "description": "Split the output into suggestions on this string. Default: newline." },
+        "template": { "$ref": "#/definitions/template" },
+        "filter": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Which files a template shows. Folders are always shown unless filterFolders is set.",
+          "properties": {
+            "extensions": { "type": "array", "items": { "type": "string" } },
+            "equals": { "type": "array", "items": { "type": "string" } },
+            "matches": { "type": "string", "description": "A regular expression." },
+            "filterFolders": { "type": "boolean" }
+          }
+        },
+        "cache": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ttl": { "type": "number", "description": "Seconds a result stays valid. Default 10." },
+            "cacheByDirectory": { "type": "boolean" }
+          }
+        },
+        "scriptTimeout": { "type": "number", "description": "Seconds before the script is stopped. Default 5." },
+        "trigger": { "type": "string", "description": "Run the generator again when this character is typed, e.g. `/`." },
+        "getQueryTerm": { "type": "string", "description": "Match only the text after the last occurrence of this string." },
+        "js": {
+          "type": "object",
+          "description": "Imported from Fig: functions in the spec's companion .js file. Not needed for new specs.",
+          "additionalProperties": false,
+          "properties": {
+            "script": { "type": "integer" },
+            "postProcess": { "type": "integer" },
+            "custom": { "type": "integer" },
+            "trigger": { "type": "integer" },
+            "getQueryTerm": { "type": "integer" },
+            "filterTemplateSuggestions": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "template": {
+      "oneOf": [
+        { "enum": ["filepaths", "folders", "history", "help"] },
+        { "type": "array", "items": { "enum": ["filepaths", "folders", "history", "help"] } }
+      ]
+    },
+    "filterStrategy": { "enum": ["prefix", "fuzzy", "default"] }
+  }
+}

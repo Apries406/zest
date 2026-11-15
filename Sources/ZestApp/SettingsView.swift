@@ -147,8 +147,8 @@ private struct PreviewPopup: View {
 
     var body: some View {
         let icons = IconResolver(
-            indexURL: model.resources?.appendingPathComponent("icons/material.json"),
-            iconsDirectory: model.resources?.appendingPathComponent("icons/material"))
+            indexURL: Paths.icons?.appendingPathComponent("material.json"),
+            iconsDirectory: Paths.icons?.appendingPathComponent("material"))
         PopupView(model: Self.sample(model.popup.model), icons: icons)
     }
 

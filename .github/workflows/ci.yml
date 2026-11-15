@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift version
+        run: swift --version
+
+      - name: Build
+        run: swift build
+
+      - name: Unit tests
+        run: swift test
+
+      - name: Check specs
+        run: |
+          swift build -c release --product zest
+          .build/release/zest validate --quiet specs
+
+      - name: Check specs against the JSON schema
+        run: |
+          cd tools/import-fig
+          npm ci --ignore-scripts
+          node check-schema.mjs
+
+      - name: zsh integration test
+        run: scripts/test-zsh.sh
+
+      - name: Build the app
+        run: scripts/build-app.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Zest-unsigned
+          path: dist/Zest.zip
+          retention-days: 7
