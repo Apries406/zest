@@ -1,11 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.1.4 — 2026-11-16
 
 - iTerm2 is supported: the popup opens under the cursor and lines up with the word being completed.
+- zest logs where it found the text cursor, which helps with bug reports about other terminals. To
+  watch: `/usr/bin/log stream --level debug --predicate 'subsystem == "io.github.rostik32.zest"'`.
 - Ghostty is not supported yet: it doesn't report where the text cursor is.
-- Debug messages for the popup placement, for bug reports:
-  `/usr/bin/log stream --level debug --predicate 'subsystem == "io.github.rostik32.zest"'`.
 
 ## 0.1.3 — 2026-11-16
 
