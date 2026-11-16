@@ -12,7 +12,7 @@ dump=${socket:h}/buffer
 
 start_shell() {
   zpty -d z 2>/dev/null
-  zpty z "ZEST_SOCKET='$socket' ZEST_GHOST_TEXT=0 HISTFILE=/dev/null PS1='%% ' TERM=xterm zsh -f -i"
+  zpty z "$1 ZEST_SOCKET='$socket' ZEST_GHOST_TEXT=0 HISTFILE=/dev/null PS1='%% ' TERM=xterm zsh -f -i"
   # Ctrl-X Ctrl-D writes the command line to a file, so the test can read it exactly.
   zpty -w z "source '$root/shell/zest.zsh'; _dump() { print -rn -- \"\$BUFFER\" > '$dump' }; zle -N _dump; bindkey '^X^D' _dump; print READY"
   zpty -r z _ '*READY*READY*'
@@ -52,6 +52,47 @@ check "enter after a space runs the command" "g|i|t| |s|t|a|t|u|s| |"$'\r' ""
 check "escape closes the popup, so Tab does not insert" "g|i|t| |c|h|e|c|"$'\e'"|SLEEP|"$'\t' "git chec"
 check "folders" "c|d| |S|o|u|r|"$'\t' "cd Sources/"
 check "option" "l|s| |-|-|c|o|l|"$'\t' "ls --color="
+
+# Terminals like Ghostty are asked where the cursor is (CSI 6n). Keys typed before
+# the terminal answers must not get lost.
+check_position() {
+  start_shell ZEST_ASK_POSITION=1
+  : > "$dump"
+  local out="" chunk i
+  zpty -w -n z g
+  for i in {1..40}; do
+    zpty -r -t z chunk 2>/dev/null && out+=$chunk
+    [[ $out == *$'\e[6n'* ]] && break
+    sleep 0.05
+  done
+  if [[ $out != *$'\e[6n'* ]]; then
+    print "FAIL position: the shell did not ask for the cursor position"
+    (( failures++ ))
+    return
+  fi
+  zpty -w -n z i
+  zpty -w -n z t
+  zpty -w -n z $'\e[5;3R'
+  for key in " " c h; do
+    sleep 0.08
+    zpty -r -t z _ 2>/dev/null
+    zpty -w -n z "$key"
+  done
+  sleep 0.4
+  zpty -w -n z $'\x18\x04'
+  sleep 0.3
+  local got=$(<"$dump")
+  if [[ "$got" != "git ch" ]]; then
+    print "FAIL position: keys typed while waiting got lost: [$got]"
+    (( failures++ ))
+  elif ! grep -q "^position 5;3 at 0 of " "${socket:h}/server.log"; then
+    print "FAIL position: the app did not get the position"
+    (( failures++ ))
+  else
+    print "ok   position query keeps typed-ahead keys"
+  fi
+}
+check_position
 
 zpty -d z 2>/dev/null
 (( failures == 0 )) && print "all zsh tests passed" || print "$failures zsh test(s) failed"

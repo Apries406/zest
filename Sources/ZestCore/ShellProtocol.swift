@@ -20,6 +20,31 @@ public enum ShellProtocol {
         }
     }
 
+    /// Where the terminal's cursor was (1-based row and column, from CSI 6n) while it
+    /// stood at buffer index `cursor`, and the grid size. Sent for terminals that don't
+    /// report their text cursor to macOS Accessibility.
+    public struct GridPosition: Equatable, Sendable {
+        public var row: Int
+        public var column: Int
+        public var rows: Int
+        public var columns: Int
+        public var cursor: Int
+
+        public init(row: Int, column: Int, rows: Int, columns: Int, cursor: Int = 0) {
+            self.row = row
+            self.column = column
+            self.rows = rows
+            self.columns = columns
+            self.cursor = cursor
+        }
+
+        /// The 0-based row and column of buffer index `index` (one cell per character).
+        public func cell(at index: Int) -> (row: Int, column: Int) {
+            let linear = max(0, (row - 1) * columns + (column - 1) + index - cursor)
+            return (linear / columns, linear % columns)
+        }
+    }
+
     public enum Key: String, Sendable {
         case tab, up, down, enter, escape
     }
@@ -36,6 +61,11 @@ public enum ShellProtocol {
         case end(session: String)
         /// A command is about to run (for history suggestions).
         case exec(session: String, command: String)
+        /// Where the new command line starts on the terminal's grid.
+        case position(session: String, GridPosition)
+        /// The shell's connection closed (the shell exited, e.g. its window was closed).
+        /// Not sent by the shell; the server reports it.
+        case disconnected(session: String)
     }
 
     public enum Reply: Equatable, Sendable {
@@ -67,6 +97,11 @@ public enum ShellProtocol {
             return .key(sequence: f[1], key: key, state)
         case "end" where f.count >= 2:
             return .end(session: f[1])
+        case "pos" where f.count >= 6:
+            guard let row = Int(f[2]), let column = Int(f[3]), let rows = Int(f[4]), let columns = Int(f[5]),
+                  row > 0, column > 0, rows > 0, columns > 0 else { return nil }
+            let cursor = f.count >= 7 ? Int(f[6]) ?? 0 : 0
+            return .position(session: f[1], GridPosition(row: row, column: column, rows: rows, columns: columns, cursor: cursor))
         case "exec" where f.count >= 3:
             return .exec(session: f[1], command: decodeNewlines(f[2...].joined(separator: String(fieldSeparator))))
         default:

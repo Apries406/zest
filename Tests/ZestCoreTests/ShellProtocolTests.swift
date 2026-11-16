@@ -27,6 +27,26 @@ import Testing
         #expect(ShellProtocol.parse("line\(s)a\(s)/\(s)notanumber\(s)x") == nil)
     }
 
+    @Test func parsesPosition() {
+        #expect(ShellProtocol.parse(Substring("pos\(s)a\(s)12\(s)17\(s)35\(s)99\(s)4")) ==
+            .position(session: "a", .init(row: 12, column: 17, rows: 35, columns: 99, cursor: 4)))
+        // Without the cursor field, the position is where the line starts.
+        #expect(ShellProtocol.parse(Substring("pos\(s)a\(s)1\(s)1\(s)24\(s)80")) ==
+            .position(session: "a", .init(row: 1, column: 1, rows: 24, columns: 80, cursor: 0)))
+        #expect(ShellProtocol.parse(Substring("pos\(s)a\(s)0\(s)1\(s)24\(s)80")) == nil)
+        #expect(ShellProtocol.parse(Substring("pos\(s)a\(s)1\(s)1\(s)24")) == nil)
+    }
+
+    @Test func gridCellFollowsTheCursorAndWraps() {
+        // The terminal reported row 3, column 17 while the cursor was at index 2.
+        let position = ShellProtocol.GridPosition(row: 3, column: 17, rows: 24, columns: 20, cursor: 2)
+        #expect(position.cell(at: 2) == (2, 16))
+        #expect(position.cell(at: 0) == (2, 14))
+        #expect(position.cell(at: 5) == (2, 19))  // the last column
+        #expect(position.cell(at: 6) == (3, 0))   // wrapped to the next row
+        #expect(position.cell(at: 27) == (4, 1))
+    }
+
     @Test func formatsReplies() {
         #expect(ShellProtocol.format(.pass, sequence: "3") == "r\(s)3\(s)pass\n")
         #expect(ShellProtocol.format(.set(cursor: 2, buffer: "a\nb"), sequence: "3") == "r\(s)3\(s)set\(s)2\(s)a\u{1e}b\n")

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>zest: autocomplete popup for zsh on macOS, a free Fig alternative</title>
-<meta name="description" content="zest shows an IDE-style autocomplete popup for zsh on macOS: subcommands, options, git branches and files with descriptions, right under your cursor in Terminal, iTerm2, VS Code and Cursor. Free and open source, native Swift, 1,500 commands.">
+<meta name="description" content="zest shows an IDE-style autocomplete popup for zsh on macOS: subcommands, options, git branches and files with descriptions, right under your cursor in Terminal, iTerm2, Ghostty, VS Code and Cursor. Free and open source, native Swift, 1,500 commands.">
 <meta name="google-site-verification" content="yWyZBHtGdpA3YtwzlSj1x_jeTTWpvAApYY6_JdErCOU">
 <link rel="canonical" href="https://rostik32.github.io/zest/">
 <link rel="icon" href="icon.png">
@@ -23,7 +23,7 @@
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   "name": "zest",
-  "description": "Autocomplete popup for zsh on macOS. Shows subcommands, options, git branches and files with descriptions under the text cursor in Terminal.app, iTerm2, VS Code and Cursor.",
+  "description": "Autocomplete popup for zsh on macOS. Shows subcommands, options, git branches and files with descriptions under the text cursor in Terminal.app, iTerm2, Ghostty, VS Code and Cursor.",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "macOS 14 or later, Apple silicon",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
@@ -43,7 +43,7 @@
     { "@type": "Question", "name": "Can zest replace Fig, Amazon Q or Kiro CLI?",
       "acceptedAnswer": { "@type": "Answer", "text": "For the autocomplete popup, yes. zest uses the same open-source command specs Fig used. It does only completion: no AI chat, no account, no cloud service and no terminal proxy." } },
     { "@type": "Question", "name": "Which terminals does zest work in?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Terminal.app, iTerm2, VS Code and Cursor are tested. Other terminals work if they report the text cursor position through macOS Accessibility; Ghostty does not yet." } },
+      "acceptedAnswer": { "@type": "Answer", "text": "Terminal.app, iTerm2, Ghostty, VS Code and Cursor are tested. Other terminals work if they report the text cursor position through macOS Accessibility." } },
     { "@type": "Question", "name": "Does zest support bash, fish or Intel Macs?",
       "acceptedAnswer": { "@type": "Answer", "text": "Not yet. zest needs zsh, macOS 14 or later and an Apple silicon Mac." } },
     { "@type": "Question", "name": "Does zest send my commands anywhere?",
@@ -87,7 +87,7 @@
   <img class="icon" src="icon.png" alt="zest app icon" width="96" height="96">
   <h1>zest</h1>
   <p class="lead">An autocomplete popup for zsh on macOS. Subcommands, options, files and git branches,
-    with descriptions, right under your cursor in Terminal, iTerm2, VS Code and Cursor.</p>
+    with descriptions, right under your cursor in Terminal, iTerm2, Ghostty, VS Code and Cursor.</p>
 </header>
 
 <img class="demo" src="demo.gif" width="936" height="456" alt="zest suggesting git branches, npm scripts, docker options and folders while typing in the terminal">
@@ -143,7 +143,7 @@ subcommands:
 <p>For the autocomplete popup, yes. zest uses the same open-source command specs Fig used, so the suggestions will look familiar.
   It does only completion: there is no AI chat, no account and no cloud service.</p>
 <h3>Which terminals does it work in?</h3>
-<p>Terminal.app, iTerm2, VS Code and Cursor are tested. Other terminals work if they report the position of the text cursor through macOS Accessibility. Ghostty does not yet, so the popup can't open there.</p>
+<p>Terminal.app, iTerm2, Ghostty, VS Code and Cursor are tested. Other terminals work if they report the position of the text cursor through macOS Accessibility.</p>
 <h3>Does it support bash or fish, or Intel Macs?</h3>
 <p>Not yet. zest needs zsh (the default shell on macOS), macOS 14 or later and an Apple silicon Mac.</p>
 <h3>How is it different from zsh-autocomplete or zsh-autosuggestions?</h3>

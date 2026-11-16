@@ -41,8 +41,70 @@ final class PopupController {
         panel.contentView = host
     }
 
+    /// Called when the popup closed by itself: the terminal window closed or changed, or
+    /// it changed size in a terminal whose cursor position comes from the shell. The
+    /// popup stays closed until the next key, when the shell reports where it is.
+    var onDismiss: (() -> Void)?
+
+    // Follow the terminal window while the popup is open.
+    private var followTimer: Timer?
+    private var missedTicks = 0
+    private var shown: (state: CompletionController.State, width: CGFloat, window: CaretLocator.Window)?
+
     func hide() {
-        if panel.isVisible { panel.orderOut(nil) }
+        stopFollowing()
+        if panel.isVisible {
+            panel.orderOut(nil)
+            Log.popup.debug("closed")
+        }
+    }
+
+    private func stopFollowing() {
+        missedTicks = 0
+        followTimer?.invalidate()
+        followTimer = nil
+        shown = nil
+    }
+
+    private func startFollowing(_ state: CompletionController.State, width: CGFloat, front: NSRunningApplication) {
+        guard let window = CaretLocator.focusedWindow(of: front) else {
+            stopFollowing()
+            return
+        }
+        shown = (state, width, window)
+        guard followTimer == nil else { return }
+        followTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated { self?.follow() }
+        }
+    }
+
+    /// Moves the popup with the terminal window (dragging, resizing), and closes it when
+    /// that window closes or another window comes to the front.
+    private func follow() {
+        guard let shown, panel.isVisible else { return }
+        let window = NSWorkspace.shared.frontmostApplication.flatMap(CaretLocator.focusedWindow(of:))
+        // Electron apps sometimes miss an Accessibility request; give a closed window a
+        // few ticks before closing the popup.
+        guard let window,
+              CFEqual(window.element, shown.window.element) || window.frame == shown.window.frame
+        else {
+            missedTicks += 1
+            if missedTicks >= 3 {
+                Log.popup.debug("hidden: the terminal window closed or another one is in front")
+                hide()
+                onDismiss?()
+            }
+            return
+        }
+        missedTicks = 0
+        guard window.frame != shown.window.frame else { return }
+        if shown.state.start != nil, window.frame.size != shown.window.frame.size {
+            Log.popup.debug("hidden: terminal window resized; waiting for the shell to report the cursor again")
+            hide()
+            onDismiss?()
+            return
+        }
+        show(shown.state, width: shown.width)
     }
 
     func show(_ state: CompletionController.State, width: CGFloat) {
@@ -56,7 +118,7 @@ final class PopupController {
             hide()
             return
         }
-        guard let caret = CaretLocator.caret(for: front) else {
+        guard let caret = CaretLocator.caret(for: front, start: state.start, cursor: state.line?.cursor) else {
             Log.popup.debug("hidden: no text cursor found in \(bundle, privacy: .public)")
             hide()
             return
@@ -84,6 +146,7 @@ final class PopupController {
 
         panel.setFrame(NSRect(x: x, y: y, width: width, height: height), display: true)
         if !panel.isVisible { panel.orderFrontRegardless() }
+        startFollowing(state, width: width, front: front)
     }
 
     /// The popup is only shown while the terminal that sent the line is in front.

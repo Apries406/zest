@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.5 — 2026-11-16
+
+- Ghostty is supported: the shell asks Ghostty where the cursor is, so the popup opens right under
+  it.
+- The popup follows its terminal window when you move or resize it.
+- The popup closes when its terminal window closes or its shell exits.
+
 ## 0.1.4 — 2026-11-16
 
 - iTerm2 is supported: the popup opens under the cursor and lines up with the word being completed.

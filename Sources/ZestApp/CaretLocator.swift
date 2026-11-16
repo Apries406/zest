@@ -1,5 +1,6 @@
 import AppKit
 import ApplicationServices
+import ZestCore
 import OSLog
 
 /// Debug messages; watch them with
@@ -12,7 +13,8 @@ enum Log {
 ///
 /// - Terminal.app and iTerm2 expose the terminal as a text area; we ask for the bounds of
 ///   the insertion point.
-/// - Ghostty's text area has no bounds for text ranges, so the popup can't be placed there.
+/// - Ghostty's text area has no bounds for text ranges; the shell asks Ghostty where the cursor
+///   is (CSI 6n) and we place it on the terminal's grid.
 /// - VS Code and Cursor (Electron, xterm.js) only build their accessibility tree when
 ///   asked to via `AXManualAccessibility`. The focused element is then xterm's hidden
 ///   text area, which xterm keeps on top of the cursor for input methods.
@@ -33,7 +35,9 @@ enum CaretLocator {
         AXIsProcessTrustedWithOptions([key: true] as CFDictionary)
     }
 
-    static func caret(for app: NSRunningApplication) -> Caret? {
+    /// `start` and `cursor` place the caret on the terminal's grid when the terminal
+    /// doesn't report it (Ghostty): the shell asked the terminal where the line starts.
+    static func caret(for app: NSRunningApplication, start: ShellProtocol.GridPosition? = nil, cursor: Int? = nil) -> Caret? {
         let pid = app.processIdentifier
         let appElement = AXUIElementCreateApplication(pid)
         AXUIElementSetMessagingTimeout(appElement, 0.2)
@@ -56,7 +60,73 @@ enum CaretLocator {
         if let frame = frame(of: focused), isUsable(frame), frame.height < 80 {
             return Caret(rect: toCocoa(frame), cellWidth: frame.width > 2 && frame.width < 40 ? frame.width : nil)
         }
+        if let start, let cursor, let frame = frame(of: focused), frame.width > 0, frame.height > 0 {
+            let rect = gridCaret(in: frame, start: start, cursor: cursor, font: font(of: focused))
+            Log.popup.debug("grid caret: \(start.row),\(start.column) at \(start.cursor) of \(start.rows)x\(start.columns), cursor \(cursor) -> \(rect.debugDescription, privacy: .public)")
+            if isUsable(rect) { return Caret(rect: toCocoa(rect), cellWidth: rect.width) }
+        }
         return nil
+    }
+
+    /// Ghostty's terminal grid starts after a small padding at the top left (2 points by
+    /// default); the space left over at the right and bottom is smaller than one cell.
+    static let gridPadding: CGFloat = 2
+
+    /// The caret's rectangle (Accessibility coordinates) from its grid position.
+    static func gridCaret(in frame: CGRect, start: ShellProtocol.GridPosition, cursor: Int, font: CTFont?) -> CGRect {
+        let pad = gridPadding
+        // Upper bounds for the cell size: the grid plus less than one cell fills the view.
+        var cellWidth = (frame.width - 2 * pad) / CGFloat(start.columns)
+        var cellHeight = (frame.height - 2 * pad) / CGFloat(start.rows)
+        if let font {
+            var glyph = CGGlyph(0)
+            var character = UniChar(77)  // "M"
+            var advance = CGSize.zero
+            if CTFontGetGlyphsForCharacters(font, &character, &glyph, 1) {
+                CTFontGetAdvancesForGlyphs(font, .horizontal, &glyph, &advance, 1)
+            }
+            let lineHeight = CTFontGetAscent(font) + CTFontGetDescent(font) + CTFontGetLeading(font)
+            Log.popup.debug("grid font: \(CTFontCopyPostScriptName(font) as String, privacy: .public) \(CTFontGetSize(font)) advance \(advance.width) line \(lineHeight); frame cell \(cellWidth)x\(cellHeight)")
+            // Use the font when it agrees with the frame (within one cell over the grid).
+            if advance.width > 0, advance.width <= cellWidth, cellWidth - advance.width < advance.width / CGFloat(start.columns) + 0.5 {
+                cellWidth = advance.width
+            }
+            if lineHeight > 0, lineHeight <= cellHeight, cellHeight - lineHeight < lineHeight / CGFloat(start.rows) + 0.5 {
+                cellHeight = lineHeight
+            }
+        }
+        let (row, column) = start.cell(at: cursor)
+        return CGRect(x: frame.minX + pad + CGFloat(column) * cellWidth, y: frame.minY + pad + CGFloat(row) * cellHeight,
+                      width: cellWidth, height: cellHeight)
+    }
+
+    private static func font(of element: AXUIElement) -> CTFont? {
+        var range = CFRange(location: 0, length: 1)
+        guard let value = AXValueCreate(.cfRange, &range) else { return nil }
+        var result: CFTypeRef?
+        guard AXUIElementCopyParameterizedAttributeValue(
+            element, kAXAttributedStringForRangeParameterizedAttribute as CFString, value, &result) == .success,
+            let string = result as? NSAttributedString, string.length > 0
+        else { return nil }
+        let attribute = string.attribute(.font, at: 0, effectiveRange: nil)
+        if let font = attribute as? NSFont { return font as CTFont }
+        if let attribute, CFGetTypeID(attribute as CFTypeRef) == CTFontGetTypeID() { return (attribute as! CTFont) }
+        return nil
+    }
+
+    struct Window {
+        var element: AXUIElement
+        var frame: CGRect
+    }
+
+    /// The app's focused window and its frame (Accessibility coordinates).
+    static func focusedWindow(of app: NSRunningApplication) -> Window? {
+        let appElement = AXUIElementCreateApplication(app.processIdentifier)
+        AXUIElementSetMessagingTimeout(appElement, 0.1)
+        guard let window: AXUIElement = attribute(appElement, kAXFocusedWindowAttribute),
+              let frame = frame(of: window)
+        else { return nil }
+        return Window(element: window, frame: frame)
     }
 
     static func forget(pid: pid_t) {

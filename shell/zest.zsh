@@ -23,6 +23,8 @@ typeset -g _zest_fd=""
 typeset -g _zest_seq=0
 typeset -g _zest_last=""
 typeset -g _zest_retry_at=0
+typeset -g _zest_ask_position=0
+[[ "$TERM_PROGRAM" == ghostty || -n "$ZEST_ASK_POSITION" ]] && _zest_ask_position=1
 typeset -gx ZEST_SESSION="$$-$RANDOM"
 
 # Settings written by Zest.app.
@@ -99,9 +101,39 @@ _zest_ask() {
 _zest_redraw() {
   local now="$CURSOR:$BUFFER"
   [[ "$now" == "$_zest_last" ]] && return
+  local before=$_zest_last
   _zest_last=$now
   _zest_ghost
-  _zest_connect && _zest_line && _zest_write "line"$'\x1f'"$REPLY"
+  _zest_connect || return
+  # This runs before the screen is redrawn, so the terminal's cursor is still where
+  # the previous state put it.
+  if (( _zest_ask_position )) && [[ -n "$BUFFER" ]] &&
+     [[ -z "${before#*:}" || "$_zest_where_size" != "$LINES:$COLUMNS" ]]; then
+    _zest_where "${${before%%:*}:-0}"
+  fi
+  _zest_line && _zest_write "line"$'\x1f'"$REPLY"
+}
+
+# Terminals that don't tell macOS where their text cursor is (Ghostty) get asked
+# directly with CSI 6n: when you start typing a line, and when the window size
+# changes. Keys typed while we wait for the answer are put back.
+typeset -g _zest_where_size=""
+_zest_where() {
+  # $1: the buffer index the terminal's cursor is at right now.
+  setopt localoptions extendedglob
+  local reply="" c
+  _zest_where_size="$LINES:$COLUMNS"
+  print -n $'\e[6n' >/dev/tty
+  while read -s -k 1 -t 0.3 c; do
+    reply+=$c
+    [[ $c == R ]] && break
+  done
+  if [[ $reply == (#b)(*)$'\e['([0-9]##)';'([0-9]##)R ]]; then
+    [[ -n "${match[1]}" ]] && zle -U "${match[1]}"
+    _zest_write "pos"$'\x1f'"$ZEST_SESSION"$'\x1f'"${match[2]}"$'\x1f'"${match[3]}"$'\x1f'"$LINES"$'\x1f'"$COLUMNS"$'\x1f'"$1"
+  elif [[ -n "$reply" ]]; then
+    zle -U "$reply"
+  fi
 }
 
 _zest_finish() {

@@ -38,6 +38,7 @@ final class AppModel: ObservableObject {
             iconsDirectory: Paths.icons?.appendingPathComponent("material"))
         IconCache.shared.configure(icons: Paths.icons)
         popup = PopupController(icons: icons)
+        popup.onDismiss = { [controller] in controller.hide() }
     }
 
     func start() {

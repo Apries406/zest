@@ -31,8 +31,10 @@ public final class CompletionController: @unchecked Sendable {
         public var app: String
         public var shellPID: Int32
         public var line: ShellProtocol.Line?
+        /// Where the command line starts, for terminals that report it themselves.
+        public var start: ShellProtocol.GridPosition?
 
-        public static let hidden = State(visible: false, items: [], selected: 0, isLoading: false, session: "", app: "", shellPID: 0, line: nil)
+        public static let hidden = State(visible: false, items: [], selected: 0, isLoading: false, session: "", app: "", shellPID: 0, line: nil, start: nil)
 
         public var selectedItem: Completion? { items.indices.contains(selected) ? items[selected] : nil }
     }
@@ -42,6 +44,7 @@ public final class CompletionController: @unchecked Sendable {
         var pid: Int32 = 0
         var aliases: [String: String] = [:]
         var historyFile: String?
+        var start: ShellProtocol.GridPosition?
     }
 
     public let engine: Engine
@@ -74,9 +77,13 @@ public final class CompletionController: @unchecked Sendable {
         queue.sync { process(message) }
     }
 
-    /// Hides the popup, e.g. when the terminal loses focus.
+    /// Hides the popup until the command line changes, like Esc; e.g. when the
+    /// terminal window closed or changed size.
     public func hide() {
-        queue.async { self.publish(visible: false) }
+        queue.async {
+            self.dismissedLine = self.state.line?.buffer
+            self.publish(visible: false)
+        }
     }
 
     /// Accepts an item, e.g. after a mouse click. Returns the new line.
@@ -116,6 +123,17 @@ public final class CompletionController: @unchecked Sendable {
         case .exec(_, let command):
             history.add(command)
             return nil
+        case .position(let session, let start):
+            sessions[session, default: Session()].start = start
+            return nil
+        case .disconnected(let session):
+            sessions[session] = nil
+            if session == state.session {
+                dismissedLine = nil
+                state.line = nil
+                publish(visible: false)
+            }
+            return nil
         }
     }
 
@@ -125,6 +143,7 @@ public final class CompletionController: @unchecked Sendable {
         state.session = line.session
         state.app = session.app
         state.shellPID = session.pid
+        state.start = session.start
         state.line = line
         if let dismissed = dismissedLine, dismissed != line.buffer { dismissedLine = nil }
         // A new word starts a new selection.

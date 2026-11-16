@@ -89,7 +89,11 @@ public final class SocketServer: @unchecked Sendable {
     }
 
     private func serve(_ fd: Int32) {
-        defer { close(fd) }
+        var session: String?
+        defer {
+            close(fd)
+            if let session { _ = handler(.disconnected(session: session)) }
+        }
         var pending = [UInt8]()
         var chunk = [UInt8](repeating: 0, count: 8192)
         while true {
@@ -100,6 +104,7 @@ public final class SocketServer: @unchecked Sendable {
                 let line = String(decoding: pending[0..<newline], as: UTF8.self)
                 pending.removeSubrange(0...newline)
                 guard let message = ShellProtocol.parse(Substring(line)) else { continue }
+                if case .hello(let id, _, _, _) = message { session = id }
                 let reply = handler(message)
                 if case .key(let sequence, _, _) = message {
                     let text = ShellProtocol.format(reply ?? .pass, sequence: sequence)

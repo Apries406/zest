@@ -3,7 +3,7 @@
 zest has three parts that talk over a Unix socket:
 
 ```
-┌──────────── terminal app (Terminal, iTerm2, VS Code, Cursor)──────────┐
+┌─── terminal app (Terminal, iTerm2, Ghostty, VS Code, Cursor) ────┐
 │  zsh                                                             │
 │   └─ shell/zest.zsh  (ZLE hooks and key bindings)                │
 └───────────┬──────────────────────────────────────────────────────┘
@@ -40,6 +40,10 @@ terminal. The price is that only zsh is supported.
    the line and cursor).
 3. **Ghost text.** The grey rest-of-the-line suggestion comes from zsh's own `$history`, in the shell,
    without the app.
+4. **Cursor position, in Ghostty only** (or with `ZEST_ASK_POSITION=1`). When you start typing a
+   line, and after the window size changes, it asks the terminal where the cursor is (`CSI 6n`)
+   and sends the answer as `pos`. Keys typed while it waits for the answer are put back with
+   `zle -U`.
 
 If the app is not running, the script tries to connect at most every 3 seconds and otherwise stays
 out of the way. A closed socket cannot kill the shell: writes run with `SIGPIPE` ignored locally.
@@ -57,6 +61,7 @@ One message per line. Fields are separated by `U+001F`; newlines inside the comm
 | zsh | `key` | sequence number, `tab`/`up`/`down`/`enter`/`escape`, session id, folder, cursor, line |
 | zsh | `end` | session id (the line was run or cancelled) |
 | zsh | `exec` | session id, command (for history suggestions) |
+| zsh | `pos` | session id, row, column, rows, columns, cursor index at that moment (Ghostty only) |
 | app | `r` | sequence number, `pass` / `ok` / `set`, [cursor, line] — the answer to `key` |
 
 The socket file is created with mode `0600` in a folder only you can read.
@@ -89,10 +94,15 @@ The socket file is created with mode `0600` in a folder only you can read.
 - **`CaretLocator`** asks the focused app, through the Accessibility API, where its text cursor is.
   Terminal.app and iTerm2 report the bounds of the insertion point. VS Code and Cursor (Electron) build their
   accessibility tree only after `AXManualAccessibility` is set; the focused element is then xterm.js'
-  hidden text area, which sits on the cursor.
+  hidden text area, which sits on the cursor. Ghostty exposes its text but not where the cursor is,
+  so there the shell reports the cursor's row and column (see below) and the app turns them into a
+  point using the size of the terminal view and of its grid.
 - **`PopupController`** shows a borderless, non-activating `NSPanel` under the cursor (or above it
   near the bottom of the screen), aligned with the start of the word. The panel never takes keyboard
-  focus. It is only shown while the terminal that sent the line is the frontmost app.
+  focus. It is only shown while the terminal that sent the line is the frontmost app. While it is
+  open it checks the terminal window 20 times a second: it follows the window when it moves, and
+  closes when the window closes or another window comes to the front. In Ghostty a resize closes it
+  until the next key, since the text reflows and only the shell can say where the line went.
 - **`Updater`** checks GitHub Releases once a day. Before installing it verifies the SHA-256 checksum
   and that the new app is signed with the same certificate as the running one.
 

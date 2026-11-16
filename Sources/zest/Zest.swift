@@ -314,7 +314,19 @@ struct Serve: ParsableCommand {
             }
             fflush(stdout)
         }
-        let server = SocketServer(path: socket) { controller.handle($0) }
+        let server = SocketServer(path: socket) { message in
+            switch message {
+            case .position(_, let p):
+                print("position \(p.row);\(p.column) at \(p.cursor) of \(p.rows)x\(p.columns)")
+                fflush(stdout)
+            case .disconnected:
+                print("disconnected")
+                fflush(stdout)
+            default:
+                break
+            }
+            return controller.handle(message)
+        }
         try server.start()
         print("listening on \(socket)")
         fflush(stdout)

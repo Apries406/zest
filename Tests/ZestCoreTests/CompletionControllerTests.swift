@@ -51,6 +51,37 @@ import Testing
         #expect(controller.current.visible)
     }
 
+    @Test func positionTravelsWithTheLine() {
+        controller.handle(.hello(session: "s", pid: 1, app: "ghostty", historyFile: "/dev/null"))
+        let start = ShellProtocol.GridPosition(row: 5, column: 17, rows: 35, columns: 99)
+        controller.handle(.position(session: "s", start))
+        type("git ch")
+        #expect(controller.current.start == start)
+    }
+
+    @Test func disconnectHidesThatSessionsPopup() {
+        controller.handle(.hello(session: "s", pid: 1, app: "x", historyFile: "/dev/null"))
+        type("git ch")
+        #expect(controller.current.visible)
+        controller.handle(.disconnected(session: "other"))
+        #expect(controller.current.visible)
+        controller.handle(.disconnected(session: "s"))
+        #expect(!controller.current.visible)
+        #expect(controller.current.line == nil)
+    }
+
+    @Test func hiddenPopupLetsKeysThroughUntilTheLineChanges() {
+        type("git ch")
+        controller.hide()
+        #expect(!controller.current.visible)
+        #expect(press(.tab, "git ch") == .pass)
+        // Results computed again for the same line (e.g. a generator finished) keep it closed.
+        type("git ch")
+        #expect(!controller.current.visible)
+        type("git che")
+        #expect(controller.current.visible)
+    }
+
     @Test func enterAfterSpaceRunsTheCommand() {
         type("git ")
         #expect(controller.current.visible)
