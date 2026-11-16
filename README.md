@@ -6,7 +6,7 @@
 
 <p align="center">
   An autocomplete popup for zsh on macOS: subcommands, options, files and git branches,<br>
-  with descriptions, right under your cursor in Terminal, VS Code and Cursor.<br>
+  with descriptions, right under your cursor in Terminal, iTerm2, VS Code and Cursor.<br>
   A free, open-source alternative to the Fig, Amazon Q and Kiro CLI autocomplete.
 </p>
 
@@ -43,8 +43,8 @@ small native app instead of a web view with a terminal proxy in front of every s
 
 - macOS 14 Sonoma or later, on Apple silicon (M1 or newer)
 - **zsh**, the default macOS shell. bash and fish are not supported.
-- Terminal.app, VS Code or Cursor. Other terminals work if they report the text cursor
-  through macOS Accessibility.
+- Terminal.app, iTerm2, VS Code or Cursor. Other terminals work if they report the text cursor
+  through macOS Accessibility. Ghostty doesn't yet, so the popup can't open there.
 
 ## Install
 
@@ -167,7 +167,7 @@ To share a spec with everyone, add it to [`specs/`](specs) and open a pull reque
 ## How it works
 
 ```
- Terminal / VS Code / Cursor
+ Terminal / iTerm2 / VS Code / Cursor
  └─ zsh ── shell/zest.zsh ──── Unix socket ────► Zest.app (menu bar)
             sends the line on every key           ├─ parses the line, loads the spec
             asks what Tab, ↑, ↓, Enter, Esc do     ├─ fuzzy-ranks suggestions
@@ -188,8 +188,9 @@ cloud service, and it does not wrap your terminal in a proxy.
 
 ### Which terminals does it work in?
 
-Terminal.app, VS Code and Cursor are tested. Other terminals work if they report the position of
-the text cursor through macOS Accessibility; if one doesn't, the popup can't tell where to open.
+Terminal.app, iTerm2, VS Code and Cursor are tested. Other terminals work if they report the
+position of the text cursor through macOS Accessibility; if one doesn't, the popup can't tell where
+to open. Ghostty is one of them for now.
 Reports for other terminals are welcome in [issues](https://github.com/rostik32/zest/issues).
 
 ### Does it support bash or fish, or Intel Macs?

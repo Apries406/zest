@@ -1,4 +1,5 @@
 import AppKit
+import OSLog
 import SwiftUI
 import ZestCore
 import ZestUI
@@ -45,14 +46,22 @@ final class PopupController {
     }
 
     func show(_ state: CompletionController.State, width: CGFloat) {
-        guard state.visible, !state.items.isEmpty,
-              let front = NSWorkspace.shared.frontmostApplication,
-              Self.belongs(session: state.app, to: front),
-              let caret = CaretLocator.caret(for: front)
-        else {
+        guard state.visible, !state.items.isEmpty, let front = NSWorkspace.shared.frontmostApplication else {
             hide()
             return
         }
+        let bundle = front.bundleIdentifier ?? "?"
+        guard Self.belongs(session: state.app, to: front) else {
+            Log.popup.debug("hidden: shell from \(state.app, privacy: .public) is not in front (\(bundle, privacy: .public))")
+            hide()
+            return
+        }
+        guard let caret = CaretLocator.caret(for: front) else {
+            Log.popup.debug("hidden: no text cursor found in \(bundle, privacy: .public)")
+            hide()
+            return
+        }
+        Log.popup.debug("shown in \(bundle, privacy: .public) at \(caret.rect.debugDescription, privacy: .public)")
 
         if model.items != state.items { model.items = state.items }
         if model.selected != state.selected { model.selected = state.selected }
@@ -84,6 +93,7 @@ final class PopupController {
         // $TERM_PROGRAM values, when the shell did not inherit __CFBundleIdentifier.
         switch app {
         case "Apple_Terminal": return bundle == "com.apple.Terminal"
+        case "iTerm.app": return bundle == "com.googlecode.iterm2"
         case "vscode": return bundle == "com.microsoft.VSCode" || bundle.hasPrefix("com.todesktop.")
             || bundle == "com.vscodium" || bundle == "com.microsoft.VSCodeInsiders"
         default: return false

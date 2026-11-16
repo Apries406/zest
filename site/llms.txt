@@ -1,10 +1,10 @@
 # zest
 
-> zest is a free, open-source (MIT) autocomplete popup for zsh on macOS. While you type a command it shows subcommands, options, git branches, files and history, each with a description, in a popup right under the text cursor in Terminal.app, VS Code and Cursor. It is a native Swift menu bar app and an alternative to the autocomplete in Fig, Amazon Q and Kiro CLI.
+> zest is a free, open-source (MIT) autocomplete popup for zsh on macOS. While you type a command it shows subcommands, options, git branches, files and history, each with a description, in a popup right under the text cursor in Terminal.app, iTerm2, VS Code and Cursor. It is a native Swift menu bar app and an alternative to the autocomplete in Fig, Amazon Q and Kiro CLI.
 
 Facts:
 
-- Requirements: macOS 14 or later, Apple silicon, zsh. bash, fish and Intel Macs are not supported.
+- Requirements: macOS 14 or later, Apple silicon, zsh. bash, fish and Intel Macs are not supported. Ghostty is not supported yet (it does not report the text cursor position).
 - Install: `curl -fsSL https://raw.githubusercontent.com/rostik32/zest/main/install.sh | sh`, or `brew tap rostik32/tap && brew trust rostik32/tap && brew install --cask zest`.
 - Ships with specs for 1,500 commands (git, docker, kubectl, npm, brew, aws, gcloud, …) converted from the open-source Fig spec collection.
 - A new command is one YAML file in `~/.config/zest/specs`; `zest gen <command>` drafts it from `--help`, `zest validate` checks it.

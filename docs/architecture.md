@@ -3,7 +3,7 @@
 zest has three parts that talk over a Unix socket:
 
 ```
-┌──────────── terminal app (Terminal, VS Code, Cursor) ────────────┐
+┌──────────── terminal app (Terminal, iTerm2, VS Code, Cursor)──────────┐
 │  zsh                                                             │
 │   └─ shell/zest.zsh  (ZLE hooks and key bindings)                │
 └───────────┬──────────────────────────────────────────────────────┘
@@ -87,7 +87,7 @@ The socket file is created with mode `0600` in a folder only you can read.
 ## The app (Sources/ZestApp)
 
 - **`CaretLocator`** asks the focused app, through the Accessibility API, where its text cursor is.
-  Terminal.app reports the bounds of the insertion point. VS Code and Cursor (Electron) build their
+  Terminal.app and iTerm2 report the bounds of the insertion point. VS Code and Cursor (Electron) build their
   accessibility tree only after `AXManualAccessibility` is set; the focused element is then xterm.js'
   hidden text area, which sits on the cursor.
 - **`PopupController`** shows a borderless, non-activating `NSPanel` under the cursor (or above it

@@ -68,6 +68,13 @@ so you will be asked to grant it again after each rebuild: remove the old zest e
 Settings → Privacy & Security → Accessibility and add the new one. Maintainers can avoid this with
 `scripts/setup-local-signing.sh` (see [Releasing](docs/releasing.md)).
 
+If the popup doesn't open in some terminal, watch the app's debug messages while you type there. They
+say whether the terminal was in front and what it reported as the text cursor:
+
+```bash
+/usr/bin/log stream --level debug --predicate 'subsystem == "io.github.rostik32.zest"'
+```
+
 ## The README demo
 
 `docs/images/demo.gif` and `hero.png` are rendered by `make demo` (needs `ffmpeg`): it types a script

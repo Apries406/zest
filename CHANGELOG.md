@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- iTerm2 is supported: the popup opens under the cursor and lines up with the word being completed.
+- Ghostty is not supported yet: it doesn't report where the text cursor is.
+- Debug messages for the popup placement, for bug reports:
+  `/usr/bin/log stream --level debug --predicate 'subsystem == "io.github.rostik32.zest"'`.
+
 ## 0.1.3 — 2026-11-16
 
 - The update window shows a short summary of what's new; the full notes open with Release Notes.

@@ -1,10 +1,18 @@
 import AppKit
 import ApplicationServices
+import OSLog
+
+/// Debug messages; watch them with
+/// `log stream --level debug --predicate 'subsystem == "io.github.rostik32.zest"'`.
+enum Log {
+    static let popup = Logger(subsystem: "io.github.rostik32.zest", category: "popup")
+}
 
 /// Finds where the text cursor is on screen, using the Accessibility API.
 ///
-/// - Terminal.app exposes the terminal as a text area; we ask for the bounds of the
-///   insertion point.
+/// - Terminal.app and iTerm2 expose the terminal as a text area; we ask for the bounds of
+///   the insertion point.
+/// - Ghostty's text area has no bounds for text ranges, so the popup can't be placed there.
 /// - VS Code and Cursor (Electron, xterm.js) only build their accessibility tree when
 ///   asked to via `AXManualAccessibility`. The focused element is then xterm's hidden
 ///   text area, which xterm keeps on top of the cursor for input methods.
@@ -35,7 +43,12 @@ enum CaretLocator {
             manualAccessibilityEnabled.insert(pid)
         }
 
-        guard let focused: AXUIElement = attribute(appElement, kAXFocusedUIElementAttribute) else { return nil }
+        guard let focused: AXUIElement = attribute(appElement, kAXFocusedUIElementAttribute) else {
+            Log.popup.debug("no focused accessibility element")
+            return nil
+        }
+        let role: String = attribute(focused, kAXRoleAttribute) ?? "?"
+        Log.popup.debug("focused element: \(role, privacy: .public), insertion point: \(insertionPointBounds(focused).map { $0.debugDescription } ?? "none", privacy: .public), frame: \(frame(of: focused).map { $0.debugDescription } ?? "none", privacy: .public)")
 
         if let rect = insertionPointBounds(focused), isUsable(rect) {
             return Caret(rect: toCocoa(rect), cellWidth: rect.width > 2 && rect.width < 40 ? rect.width : nil)
@@ -73,18 +86,28 @@ enum CaretLocator {
         guard AXValueGetValue(rangeRef as! AXValue, .cfRange, &range) else { return nil }
 
         // Some apps return an empty rectangle for a zero-length range; try one character.
-        for length in [0, 1] {
-            var probe = CFRange(location: range.location, length: length)
-            guard let probeValue = AXValueCreate(.cfRange, &probe) else { continue }
-            var boundsRef: CFTypeRef?
-            guard AXUIElementCopyParameterizedAttributeValue(
-                element, kAXBoundsForRangeParameterizedAttribute as CFString, probeValue, &boundsRef) == .success,
-                let boundsRef, CFGetTypeID(boundsRef) == AXValueGetTypeID()
-            else { continue }
-            var rect = CGRect.zero
-            if AXValueGetValue(boundsRef as! AXValue, .cgRect, &rect), rect.height > 0 { return rect }
+        // iTerm2 returns a zero-width caret; the one-character rectangle gives the cell width.
+        guard var rect = bounds(element, location: range.location, length: 0)
+                ?? bounds(element, location: range.location, length: 1)
+        else { return nil }
+        if rect.width < 1, let cell = bounds(element, location: range.location, length: 1),
+           abs(cell.minY - rect.minY) < 1 {
+            rect.size.width = cell.width
         }
-        return nil
+        return rect
+    }
+
+    private static func bounds(_ element: AXUIElement, location: Int, length: Int) -> CGRect? {
+        var probe = CFRange(location: location, length: length)
+        guard let probeValue = AXValueCreate(.cfRange, &probe) else { return nil }
+        var boundsRef: CFTypeRef?
+        guard AXUIElementCopyParameterizedAttributeValue(
+            element, kAXBoundsForRangeParameterizedAttribute as CFString, probeValue, &boundsRef) == .success,
+            let boundsRef, CFGetTypeID(boundsRef) == AXValueGetTypeID()
+        else { return nil }
+        var rect = CGRect.zero
+        guard AXValueGetValue(boundsRef as! AXValue, .cgRect, &rect), rect.height > 0 else { return nil }
+        return rect
     }
 
     private static func frame(of element: AXUIElement) -> CGRect? {
