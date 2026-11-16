@@ -30,7 +30,7 @@ small native app instead of a web view with a terminal proxy in front of every s
 - **Native and light.** Written in Swift. About 20–30 MB of memory, a ~3 MB app binary, no
   Electron and no web view. zsh talks to it over a local socket; nothing sits between your
   terminal and your shell.
-- **750+ commands out of the box.** git, docker, kubectl, npm, brew, aws, gcloud, … imported
+- **1,500 commands out of the box.** git, docker, kubectl, npm, brew, aws, gcloud, … imported
   from the open-source [Fig spec collection](https://github.com/withfig/autocomplete), plus files,
   folders and command history.
 - **Adding a command is one YAML file.** Run `zest gen mytool` to draft it from `--help`.
@@ -201,7 +201,7 @@ Not yet. zest needs zsh (the default shell on macOS), macOS 14 or later and an A
 Those are zsh plugins that draw inside the terminal: zsh-autosuggestions shows grey text from your
 history, zsh-autocomplete lists zsh's own completions under the prompt. zest is a separate app that
 shows a floating popup with a description and an icon for every suggestion, from specs for
-750+ commands, and it also has its own grey history suggestion.
+1,500 commands, and it also has its own grey history suggestion.
 
 ### Does zest send my commands anywhere?
 

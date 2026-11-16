@@ -6,7 +6,7 @@ Facts:
 
 - Requirements: macOS 14 or later, Apple silicon, zsh. bash, fish and Intel Macs are not supported.
 - Install: `curl -fsSL https://raw.githubusercontent.com/rostik32/zest/main/install.sh | sh`, or `brew tap rostik32/tap && brew trust rostik32/tap && brew install --cask zest`.
-- Ships with specs for 750+ commands (git, docker, kubectl, npm, brew, aws, gcloud, …) converted from the open-source Fig spec collection.
+- Ships with specs for 1,500 commands (git, docker, kubectl, npm, brew, aws, gcloud, …) converted from the open-source Fig spec collection.
 - A new command is one YAML file in `~/.config/zest/specs`; `zest gen <command>` drafts it from `--help`, `zest validate` checks it.
 - Runs locally; the only network request is the GitHub update check, which can be turned off.
 - Uses about 20–30 MB of memory. zsh talks to the app over a Unix socket; there is no terminal proxy.
