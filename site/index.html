@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>zest: autocomplete popup for zsh on macOS, a free Fig alternative</title>
+<meta name="description" content="zest shows an IDE-style autocomplete popup for zsh on macOS: subcommands, options, git branches and files with descriptions, right under your cursor in Terminal, VS Code and Cursor. Free and open source, native Swift, 750+ commands.">
+<link rel="canonical" href="https://rostik32.github.io/zest/">
+<link rel="icon" href="icon.png">
+<meta name="theme-color" content="#15171b">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="zest">
+<meta property="og:title" content="zest: autocomplete popup for zsh on macOS">
+<meta property="og:description" content="Subcommands, options, git branches and files with descriptions, right under your cursor. A free, open-source alternative to the Fig, Amazon Q and Kiro CLI autocomplete.">
+<meta property="og:url" content="https://rostik32.github.io/zest/">
+<meta property="og:image" content="https://rostik32.github.io/zest/social-preview.png">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="640">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "zest",
+  "description": "Autocomplete popup for zsh on macOS. Shows subcommands, options, git branches and files with descriptions under the text cursor in Terminal.app, VS Code and Cursor.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "macOS 14 or later, Apple silicon",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "license": "https://opensource.org/licenses/MIT",
+  "url": "https://rostik32.github.io/zest/",
+  "downloadUrl": "https://github.com/rostik32/zest/releases/latest",
+  "codeRepository": "https://github.com/rostik32/zest",
+  "programmingLanguage": "Swift",
+  "image": "https://rostik32.github.io/zest/social-preview.png"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Can zest replace Fig, Amazon Q or Kiro CLI?",
+      "acceptedAnswer": { "@type": "Answer", "text": "For the autocomplete popup, yes. zest uses the same open-source command specs Fig used. It does only completion: no AI chat, no account, no cloud service and no terminal proxy." } },
+    { "@type": "Question", "name": "Which terminals does zest work in?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Terminal.app, VS Code and Cursor are tested. Other terminals work if they report the text cursor position through macOS Accessibility." } },
+    { "@type": "Question", "name": "Does zest support bash, fish or Intel Macs?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Not yet. zest needs zsh, macOS 14 or later and an Apple silicon Mac." } },
+    { "@type": "Question", "name": "Does zest send my commands anywhere?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. Everything runs on your Mac. The only network request is the update check on GitHub, which can be turned off." } }
+  ]
+}
+</script>
+<style>
+  :root {
+    --bg: #15171b; --panel: #1e2227; --line: #2c313a; --text: #d7dae0; --muted: #9aa1ad;
+    --accent: #61afef; --green: #8cc265; --code: #23272e;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  a { color: var(--accent); }
+  main { max-width: 860px; margin: 0 auto; padding: 48px 16px 64px; }
+  header { text-align: center; }
+  header img.icon { width: 96px; height: 96px; }
+  h1 { font-size: 44px; margin: 8px 0 4px; }
+  .lead { font-size: 20px; color: var(--muted); margin: 0 auto 24px; max-width: 640px; }
+  .demo { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); margin: 16px 0 8px; }
+  .install { display: flex; gap: 8px; align-items: stretch; background: var(--code); border: 1px solid var(--line); border-radius: 10px; padding: 6px 6px 6px 16px; margin: 24px 0 8px; }
+  .install code { flex: 1; align-self: center; overflow-x: auto; white-space: nowrap; font: 14px/1.5 Menlo, monospace; color: var(--green); }
+  button { background: var(--accent); color: #10131a; border: 0; border-radius: 7px; font: 600 14px/1 inherit; font-family: inherit; padding: 10px 14px; cursor: pointer; }
+  .links { text-align: center; color: var(--muted); font-size: 15px; }
+  .links a { margin: 0 6px; }
+  h2 { font-size: 26px; margin: 48px 0 12px; border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  h3 { font-size: 18px; margin: 24px 0 4px; }
+  ul.features { padding-left: 20px; }
+  ul.features li { margin: 8px 0; }
+  pre { background: var(--code); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; font: 13.5px/1.55 Menlo, monospace; }
+  kbd { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 1px 6px; font: 13px Menlo, monospace; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; }
+  td { border-top: 1px solid var(--line); padding: 8px 6px; vertical-align: top; }
+  footer { margin-top: 56px; color: var(--muted); font-size: 14px; text-align: center; }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <img class="icon" src="icon.png" alt="zest app icon" width="96" height="96">
+  <h1>zest</h1>
+  <p class="lead">An autocomplete popup for zsh on macOS. Subcommands, options, files and git branches,
+    with descriptions, right under your cursor in Terminal, VS Code and Cursor.</p>
+</header>
+
+<img class="demo" src="demo.gif" width="936" height="456" alt="zest suggesting git branches, npm scripts, docker options and folders while typing in the terminal">
+
+<div class="install">
+  <code id="cmd">curl -fsSL https://raw.githubusercontent.com/rostik32/zest/main/install.sh | sh</code>
+  <button type="button" id="copy">Copy</button>
+</div>
+<p class="links">Free and open source (MIT) ·
+  <a href="https://github.com/rostik32/zest">GitHub</a> ·
+  <a href="https://github.com/rostik32/zest/releases/latest">Download</a> ·
+  <a href="https://github.com/rostik32/zest#install">Homebrew</a></p>
+
+<h2>A free alternative to the Fig, Amazon Q and Kiro CLI autocomplete</h2>
+<p>zest does the one thing Fig, and later Amazon Q and Kiro CLI, did best: the completion popup.
+It is a small native app instead of a web view with a terminal proxy in front of every shell.</p>
+<ul class="features">
+  <li><strong>Native and light.</strong> Written in Swift. About 20–30 MB of memory, no Electron and no web view.
+    zsh talks to it over a local socket; nothing sits between your terminal and your shell.</li>
+  <li><strong>750+ commands out of the box.</strong> git, docker, kubectl, npm, brew, aws, gcloud and more,
+    imported from the open-source Fig spec collection, plus files, folders and command history.</li>
+  <li><strong>Adding a command is one YAML file.</strong> <code>zest gen mytool</code> drafts it from <code>--help</code>.</li>
+  <li><strong>Looks like your editor.</strong> One Dark Pro Darker colors, Material Icon Theme file icons and Codicons.</li>
+  <li><strong>Private.</strong> Everything runs on your Mac. The only network request is the update check, which you can turn off.</li>
+</ul>
+
+<h2>How to use it</h2>
+<table>
+  <tr><td><kbd>Tab</kbd></td><td>Insert the selected suggestion</td></tr>
+  <tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>Choose a suggestion</td></tr>
+  <tr><td><kbd>Enter</kbd></td><td>Insert while you are typing a word; after a space it runs the command</td></tr>
+  <tr><td><kbd>Esc</kbd></td><td>Close the popup for this line</td></tr>
+  <tr><td><kbd>→</kbd></td><td>Accept the grey suggestion from your history</td></tr>
+</table>
+
+<h2>Add your own command</h2>
+<pre># ~/.config/zest/specs/deploy.yaml
+name: deploy
+description: Deploy the app
+subcommands:
+  - name: staging
+    description: Deploy to staging
+  - name: production
+    description: Deploy to production
+    options:
+      - name: [-f, --force]
+        description: Skip the confirmation</pre>
+<p>Changes are picked up right away. See <a href="https://github.com/rostik32/zest/blob/main/docs/adding-a-command.md">Adding a command</a>
+  and the <a href="https://github.com/rostik32/zest/blob/main/docs/spec-format.md">spec format reference</a>.</p>
+
+<h2>FAQ</h2>
+<h3>Can zest replace Fig, Amazon Q or Kiro CLI?</h3>
+<p>For the autocomplete popup, yes. zest uses the same open-source command specs Fig used, so the suggestions will look familiar.
+  It does only completion: there is no AI chat, no account and no cloud service.</p>
+<h3>Which terminals does it work in?</h3>
+<p>Terminal.app, VS Code and Cursor are tested. Other terminals work if they report the position of the text cursor through macOS Accessibility.</p>
+<h3>Does it support bash or fish, or Intel Macs?</h3>
+<p>Not yet. zest needs zsh (the default shell on macOS), macOS 14 or later and an Apple silicon Mac.</p>
+<h3>How is it different from zsh-autocomplete or zsh-autosuggestions?</h3>
+<p>Those are zsh plugins that draw inside the terminal. zest is a separate app that shows a floating popup
+  with a description and an icon for every suggestion, from specs for 750+ commands.</p>
+<h3>Does zest send my commands anywhere?</h3>
+<p>No. Everything runs on your Mac.</p>
+
+<footer>
+  zest is not affiliated with Fig, Amazon or Kiro. ·
+  <a href="https://github.com/rostik32/zest">Source on GitHub</a>
+</footer>
+</main>
+<script>
+  document.getElementById('copy').addEventListener('click', async (e) => {
+    try { await navigator.clipboard.writeText(document.getElementById('cmd').textContent); e.target.textContent = 'Copied'; }
+    catch { e.target.textContent = 'Select and copy'; }
+    setTimeout(() => { e.target.textContent = 'Copy'; }, 1600);
+  });
+</script>
+</body>
+</html>

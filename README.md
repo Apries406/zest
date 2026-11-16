@@ -6,7 +6,8 @@
 
 <p align="center">
   An autocomplete popup for zsh on macOS: subcommands, options, files and git branches,<br>
-  with descriptions, right under your cursor in Terminal, VS Code and Cursor.
+  with descriptions, right under your cursor in Terminal, VS Code and Cursor.<br>
+  A free, open-source alternative to the Fig, Amazon Q and Kiro CLI autocomplete.
 </p>
 
 <p align="center">
@@ -29,7 +30,7 @@ small native app instead of a web view with a terminal proxy in front of every s
 - **Native and light.** Written in Swift. About 20–30 MB of memory, a ~3 MB app binary, no
   Electron and no web view. zsh talks to it over a local socket; nothing sits between your
   terminal and your shell.
-- **1,500 commands out of the box.** git, docker, kubectl, npm, brew, aws, gcloud, … imported
+- **750+ commands out of the box.** git, docker, kubectl, npm, brew, aws, gcloud, … imported
   from the open-source [Fig spec collection](https://github.com/withfig/autocomplete), plus files,
   folders and command history.
 - **Adding a command is one YAML file.** Run `zest gen mytool` to draft it from `--help`.
@@ -176,6 +177,41 @@ To share a spec with everyone, add it to [`specs/`](specs) and open a pull reque
 ```
 
 See [architecture](docs/architecture.md) for the details and the socket protocol.
+
+## FAQ
+
+### Can zest replace Fig, Amazon Q or Kiro CLI?
+
+For the autocomplete popup, yes. zest uses the same open-source command specs Fig used, so the
+suggestions will look familiar. It does only completion: there is no AI chat, no account and no
+cloud service, and it does not wrap your terminal in a proxy.
+
+### Which terminals does it work in?
+
+Terminal.app, VS Code and Cursor are tested. Other terminals work if they report the position of
+the text cursor through macOS Accessibility; if one doesn't, the popup can't tell where to open.
+Reports for other terminals are welcome in [issues](https://github.com/rostik32/zest/issues).
+
+### Does it support bash or fish, or Intel Macs?
+
+Not yet. zest needs zsh (the default shell on macOS), macOS 14 or later and an Apple silicon Mac.
+
+### How is it different from zsh-autocomplete or zsh-autosuggestions?
+
+Those are zsh plugins that draw inside the terminal: zsh-autosuggestions shows grey text from your
+history, zsh-autocomplete lists zsh's own completions under the prompt. zest is a separate app that
+shows a floating popup with a description and an icon for every suggestion, from specs for
+750+ commands, and it also has its own grey history suggestion.
+
+### Does zest send my commands anywhere?
+
+No. Everything runs on your Mac. The only network request is the update check on GitHub, which you
+can turn off in Settings.
+
+### Is it free?
+
+Yes, under the MIT license. Because it is free, it is not notarized by Apple; the install script and
+the Homebrew cask take care of the warning macOS shows for such apps.
 
 ## Contributing
 

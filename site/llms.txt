@@ -1,0 +1,26 @@
+# zest
+
+> zest is a free, open-source (MIT) autocomplete popup for zsh on macOS. While you type a command it shows subcommands, options, git branches, files and history, each with a description, in a popup right under the text cursor in Terminal.app, VS Code and Cursor. It is a native Swift menu bar app and an alternative to the autocomplete in Fig, Amazon Q and Kiro CLI.
+
+Facts:
+
+- Requirements: macOS 14 or later, Apple silicon, zsh. bash, fish and Intel Macs are not supported.
+- Install: `curl -fsSL https://raw.githubusercontent.com/rostik32/zest/main/install.sh | sh`, or `brew tap rostik32/tap && brew trust rostik32/tap && brew install --cask zest`.
+- Ships with specs for 750+ commands (git, docker, kubectl, npm, brew, aws, gcloud, …) converted from the open-source Fig spec collection.
+- A new command is one YAML file in `~/.config/zest/specs`; `zest gen <command>` drafts it from `--help`, `zest validate` checks it.
+- Runs locally; the only network request is the GitHub update check, which can be turned off.
+- Uses about 20–30 MB of memory. zsh talks to the app over a Unix socket; there is no terminal proxy.
+
+## Docs
+
+- [README](https://raw.githubusercontent.com/rostik32/zest/main/README.md): install, keys, settings, FAQ
+- [Adding a command](https://raw.githubusercontent.com/rostik32/zest/main/docs/adding-a-command.md): writing a spec step by step
+- [Spec format](https://raw.githubusercontent.com/rostik32/zest/main/docs/spec-format.md): every field of the YAML spec
+- [Architecture](https://raw.githubusercontent.com/rostik32/zest/main/docs/architecture.md): how the zsh script, the socket and the app work together
+- [Contributing](https://raw.githubusercontent.com/rostik32/zest/main/CONTRIBUTING.md): building, testing and sending pull requests
+
+## Optional
+
+- [Importing Fig specs](https://raw.githubusercontent.com/rostik32/zest/main/docs/fig-import.md)
+- [Changelog](https://raw.githubusercontent.com/rostik32/zest/main/CHANGELOG.md)
+- [Releases](https://github.com/rostik32/zest/releases)

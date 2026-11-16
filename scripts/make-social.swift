@@ -27,7 +27,7 @@ func text(_ s: String, _ font: NSFont, _ c: NSColor, _ x: CGFloat, _ y: CGFloat,
 }
 text("zest", NSFont.systemFont(ofSize: 80, weight: .bold), color(0xD7DAE0), 232, 300)
 text("Autocomplete popup for zsh on macOS", NSFont.systemFont(ofSize: 36, weight: .semibold), color(0xABB2BF), 70, 150)
-text("1,500 commands · native Swift · ~20 MB\nTerminal.app, VS Code, Cursor", NSFont.systemFont(ofSize: 25), color(0x7F848E), 70, 40)
+text("750+ commands · native Swift · ~20 MB\nTerminal.app, VS Code, Cursor", NSFont.systemFont(ofSize: 25), color(0x7F848E), 70, 40)
 
 // Right: the popup, cropped from the README hero image.
 if let hero = NSImage(contentsOf: root.appendingPathComponent("docs/images/hero.png")) {
