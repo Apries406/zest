@@ -92,7 +92,9 @@ final class Updater: ObservableObject {
         NSApp.activate(ignoringOtherApps: true)
         let alert = NSAlert()
         alert.messageText = "zest \(release.version) is available"
-        alert.informativeText = "You have \(ZestVersion.current).\n\n" + String((release.body ?? "").prefix(600))
+        // Only a short summary here; the full notes are behind "Release Notes".
+        let summary = ReleaseNotes.summary(release.body ?? "")
+        alert.informativeText = "You have \(ZestVersion.current)." + (summary.isEmpty ? "" : "\n\n" + summary)
         alert.addButton(withTitle: "Install and Restart")
         alert.addButton(withTitle: "Release Notes")
         alert.addButton(withTitle: "Later")

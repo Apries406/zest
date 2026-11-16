@@ -23,6 +23,16 @@ jobs:
             exit 1
           fi
 
+      - name: Release notes from CHANGELOG.md
+        run: |
+          version=${GITHUB_REF_NAME#v}
+          awk -v v="$version" '/^## / { if (found) exit; found = ($2 == v); next } found' CHANGELOG.md > "$RUNNER_TEMP/notes.md"
+          if ! grep -q '[^[:space:]]' "$RUNNER_TEMP/notes.md"; then
+            echo "CHANGELOG.md has no section '## $version'" >&2
+            exit 1
+          fi
+          cat "$RUNNER_TEMP/notes.md"
+
       - name: Test
         run: swift test
 
@@ -56,4 +66,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" dist/Zest.zip dist/Zest.zip.sha256 \
-            --title "zest ${GITHUB_REF_NAME#v}" --generate-notes
+            --title "zest ${GITHUB_REF_NAME#v}" --notes-file "$RUNNER_TEMP/notes.md"

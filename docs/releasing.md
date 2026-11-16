@@ -6,13 +6,17 @@ when a version tag is pushed.
 ## Steps
 
 1. Update `ZestVersion.current` in [`Sources/ZestCore/Version.swift`](../Sources/ZestCore/Version.swift)
-   and add the changes to [`CHANGELOG.md`](../CHANGELOG.md).
+   and add a `## <version> — <date>` section to [`CHANGELOG.md`](../CHANGELOG.md). That section becomes
+   the release notes, and the update dialog shows the first sentence of up to four of its items,
+   without links, issue numbers or thanks. So write each item for users: start with what changed
+   for them in one short sentence, then add details or credits after it.
 2. Commit, then tag and push:
    ```bash
    git tag v0.2.0
    git push origin main v0.2.0
    ```
-3. The workflow checks that the tag matches `Version.swift`, runs the tests, builds and signs
+3. The workflow checks that the tag matches `Version.swift` and that the changelog has a section
+   for it, runs the tests, builds and signs
    `Zest.app`, and publishes `Zest.zip` and `Zest.zip.sha256` as a GitHub release. Installed apps
    find it within a day, or right away with **Check for Updates**.
 

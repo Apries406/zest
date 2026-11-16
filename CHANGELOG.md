@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 — 2026-11-16
+
+- The update window shows a short summary of what's new; the full notes open with Release Notes.
+
 ## 0.1.2 — 2026-11-16
 
 - New spec: `tofu` (OpenTofu), with workspace and resource address suggestions. Thanks to
