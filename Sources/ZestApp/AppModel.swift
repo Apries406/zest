@@ -45,11 +45,12 @@ final class AppModel: ObservableObject {
         applyPreferences()
         ShellIntegration.copyScript()
 
-        controller.onChange = { [weak self] state in
-            DispatchQueue.main.async { self?.render(state) }
-        }
         let server = SocketServer(path: Paths.socket.path) { [controller] message in
             controller.handle(message)
+        }
+        controller.onChange = { [weak self, weak server] state in
+            server?.sendMenu(state)
+            DispatchQueue.main.async { self?.render(state) }
         }
         do {
             try server.start()
@@ -85,7 +86,7 @@ final class AppModel: ObservableObject {
     }
 
     private func render(_ state: CompletionController.State) {
-        guard enabled, accessibilityGranted else {
+        guard enabled, accessibilityGranted, !state.terminalMenu else {
             popup.hide()
             return
         }

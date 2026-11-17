@@ -3,6 +3,8 @@
 # Sends the command line to Zest.app while you type, and lets the popup handle
 # Tab, ↑, ↓, Enter and Esc while it is open. When the popup is closed (or the app
 # is not running) every key does what it did before.
+# Zed / Wu 默认由 ZLE 在命令行下方绘制文本列表，不依赖编辑器的光标坐标。
+# 加载前设置 ZEST_TERMINAL_MENU=1 / 0，可强制启用或停用文本列表。
 #
 # Load it at the END of ~/.zshrc, after other plugins have set their key bindings:
 #   source "$HOME/Library/Application Support/zest/zest.zsh"
@@ -25,6 +27,12 @@ typeset -g _zest_last=""
 typeset -g _zest_retry_at=0
 typeset -g _zest_ask_position=0
 [[ "$TERM_PROGRAM" == ghostty || -n "$ZEST_ASK_POSITION" ]] && _zest_ask_position=1
+typeset -g _zest_terminal_menu=0
+[[ "${ZEST_TERMINAL_MENU:-}" == 1 ||
+   ( -z "${ZEST_TERMINAL_MENU+x}" && ( "$TERM_PROGRAM" == zed || "$__CFBundleIdentifier" == me.farshed.Wu ) ) ]] && _zest_terminal_menu=1
+(( _zest_terminal_menu )) && _zest_ask_position=0
+typeset -ga _zest_menu_rows=()
+typeset -g _zest_menu_selected=0
 typeset -gx ZEST_SESSION="$$-$RANDOM"
 
 # Settings written by Zest.app.
@@ -44,6 +52,10 @@ _zest_connect() {
   _zest_fd=$REPLY
   local app=${__CFBundleIdentifier:-$TERM_PROGRAM}
   _zest_write "hello"$'\x1f'"$ZEST_SESSION"$'\x1f'"$$"$'\x1f'"$app"$'\x1f'"${HISTFILE:-$HOME/.zsh_history}" || return 1
+  if (( _zest_terminal_menu )); then
+    _zest_write "terminal"$'\x1f'"$ZEST_SESSION" || return 1
+    zle -F -w "$_zest_fd" _zest_receive
+  fi
   local name list=()
   for name in ${(k)aliases}; do list+=("$name=${aliases[$name]//$'\n'/ }"); done
   (( ${#list} )) && _zest_write "aliases"$'\x1f'"$ZEST_SESSION"$'\x1f'"${(pj:\x1f:)list}"
@@ -51,9 +63,12 @@ _zest_connect() {
 }
 
 _zest_disconnect() {
+  (( _zest_terminal_menu )) && [[ -n "$_zest_fd" ]] && zle -F "$_zest_fd" 2>/dev/null
   [[ -n "$_zest_fd" ]] && exec {_zest_fd}>&- 2>/dev/null
   _zest_fd=""
   _zest_retry_at=$(( EPOCHREALTIME + 3 ))
+  _zest_menu_rows=()
+  (( _zest_terminal_menu )) && zle -M '' 2>/dev/null
 }
 
 # Writes one message. A closed socket must not kill the shell with SIGPIPE.
@@ -75,6 +90,48 @@ _zest_line() {
   REPLY="$ZEST_SESSION"$'\x1f'"$PWD"$'\x1f'"$CURSOR"$'\x1f'"${BUFFER//$'\n'/$'\x1e'}"
 }
 
+# 只显示与当前输入完全匹配的快照，丢弃异步生成器迟到的旧结果。
+_zest_read_menu() {
+  local parts=("${(@ps:\x1f:)1}") count buffer
+  [[ ${parts[1]} == menu && ${parts[2]} == "$ZEST_SESSION" &&
+     ${parts[3]} == <-> && ${parts[4]} == [0-4] && ${parts[5]} == [0-5] ]] || return
+  count=${parts[5]}
+  (( ${#parts} >= count + 6 && (count == 0 || parts[4] < count) )) || return
+  buffer="${(pj:\x1f:)parts[$((count + 6)),-1]}"
+  buffer=${buffer//$'\x1e'/$'\n'}
+  [[ ${parts[3]} == "$CURSOR" && $buffer == "$BUFFER" ]] || return
+  _zest_menu_selected=${parts[4]}
+  _zest_menu_rows=()
+  (( count )) && _zest_menu_rows=("${(@)parts[6,$((count + 5))]}")
+  _zest_paint_menu
+}
+
+_zest_paint_menu() {
+  setopt localoptions
+  unsetopt promptsubst
+  local rows=() row clipped i=0 width=$(( COLUMNS > 2 ? COLUMNS - 1 : 1 ))
+  for row in "${_zest_menu_rows[@]}"; do
+    if (( i == _zest_menu_selected )); then row="› $row"; else row="  $row"; fi
+    # Prompt 截断按显示宽度处理中文；先转义 %，且禁止执行候选内容中的命令替换。
+    clipped="%${width}>…>${row//\%/%%}%>>"
+    rows+=("${(%)clipped}")
+    (( i++ ))
+  done
+  zle -M "${(F)rows}"
+}
+
+# ZLE 在 socket 可读时调用，不轮询、不占用额外后台进程。
+_zest_receive() {
+  [[ -n "$2" ]] && { _zest_disconnect; return; }
+  local line
+  if IFS= read -r -t 0.25 -u "$1" line; then
+    _zest_read_menu "$line"
+    zle -R
+  else
+    _zest_disconnect
+  fi
+}
+
 # Asks the app what a key should do. Prints "pass", "ok" or "set".
 # For "set", the new cursor and buffer are in $_zest_cursor and $_zest_buffer.
 _zest_ask() {
@@ -86,6 +143,7 @@ _zest_ask() {
   # Skip replies to earlier questions that came too late.
   while IFS= read -r -t 0.25 -u $_zest_fd line; do
     parts=("${(@ps:\x1f:)line}")
+    if [[ "${parts[1]}" == menu ]]; then _zest_read_menu "$line"; continue; fi
     [[ "${parts[1]}" == r && "${parts[2]}" == "$_zest_seq" ]] || continue
     REPLY=${parts[3]}
     if [[ $REPLY == set ]]; then
@@ -103,6 +161,10 @@ _zest_redraw() {
   [[ "$now" == "$_zest_last" ]] && return
   local before=$_zest_last
   _zest_last=$now
+  if (( _zest_terminal_menu && ${#_zest_menu_rows} )); then
+    _zest_menu_rows=()
+    zle -M ''
+  fi
   _zest_ghost
   _zest_connect || return
   # This runs before the screen is redrawn, so the terminal's cursor is still where
@@ -139,6 +201,8 @@ _zest_where() {
 _zest_finish() {
   _zest_last=""
   POSTDISPLAY=""
+  _zest_menu_rows=()
+  (( _zest_terminal_menu )) && zle -M ''
   [[ -n "$_zest_fd" ]] && _zest_write "end"$'\x1f'"$ZEST_SESSION"
 }
 
@@ -170,6 +234,8 @@ _zest_fallback() {
 }
 
 _zest_apply() {
+  _zest_menu_rows=()
+  (( _zest_terminal_menu )) && zle -M ''
   BUFFER=$_zest_buffer
   CURSOR=$_zest_cursor
   _zest_last="$CURSOR:$BUFFER"
@@ -222,6 +288,7 @@ zle -N _zest_escape
 zle -N _zest_right
 zle -N _zest_redraw
 zle -N _zest_finish
+zle -N _zest_receive
 
 # Raw key sequences, so they match $KEYS in _zest_fallback.
 _zest_bind $'\t' _zest_tab

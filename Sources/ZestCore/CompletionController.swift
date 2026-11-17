@@ -33,6 +33,8 @@ public final class CompletionController: @unchecked Sendable {
         public var line: ShellProtocol.Line?
         /// Where the command line starts, for terminals that report it themselves.
         public var start: ShellProtocol.GridPosition?
+        /// 此会话的列表由 zsh 绘制，异步结果仍由同一个引擎推送。
+        public var terminalMenu = false
 
         public static let hidden = State(visible: false, items: [], selected: 0, isLoading: false, session: "", app: "", shellPID: 0, line: nil, start: nil)
 
@@ -40,6 +42,7 @@ public final class CompletionController: @unchecked Sendable {
     }
 
     private struct Session {
+        var terminalMenu = false
         var app = ""
         var pid: Int32 = 0
         var aliases: [String: String] = [:]
@@ -107,6 +110,9 @@ public final class CompletionController: @unchecked Sendable {
         case .aliases(let session, let aliases):
             sessions[session, default: Session()].aliases = aliases
             return nil
+        case .terminal(let session):
+            sessions[session, default: Session()].terminalMenu = true
+            return nil
         case .line(let line):
             update(line)
             return nil
@@ -144,6 +150,7 @@ public final class CompletionController: @unchecked Sendable {
         state.app = session.app
         state.shellPID = session.pid
         state.start = session.start
+        state.terminalMenu = session.terminalMenu
         state.line = line
         if let dismissed = dismissedLine, dismissed != line.buffer { dismissedLine = nil }
         // A new word starts a new selection.

@@ -53,6 +53,8 @@ public enum ShellProtocol {
         /// A shell connected. `app` is the terminal's bundle id (or $TERM_PROGRAM).
         case hello(session: String, pid: Int32, app: String, historyFile: String)
         case aliases(session: String, [String: String])
+        /// 由 zsh 在命令行下方显示候选项，不使用原生悬浮窗。
+        case terminal(session: String)
         /// The command line changed.
         case line(Line)
         /// A key was pressed; the shell waits for a `Reply`.
@@ -90,6 +92,8 @@ public enum ShellProtocol {
                 map[String(item[..<eq])] = String(item[item.index(after: eq)...])
             }
             return .aliases(session: f[1], map)
+        case "terminal" where f.count == 2:
+            return .terminal(session: f[1])
         case "line" where f.count >= 5:
             return lineState(Array(f[1...])).map(Message.line)
         case "key" where f.count >= 7:

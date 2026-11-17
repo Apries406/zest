@@ -303,17 +303,6 @@ struct Serve: ParsableCommand {
     func run() throws {
         let engine = Engine(store: specs.store())
         let controller = CompletionController(engine: engine)
-        controller.onChange = { state in
-            let line = state.line.map { "\($0.buffer)|" } ?? ""
-            if state.visible {
-                let items = state.items.prefix(5).enumerated()
-                    .map { ($0.offset == state.selected ? ">" : " ") + $0.element.name }
-                print("popup [\(line)] " + items.joined(separator: " "))
-            } else {
-                print("hidden [\(line)]")
-            }
-            fflush(stdout)
-        }
         let server = SocketServer(path: socket) { message in
             switch message {
             case .position(_, let p):
@@ -326,6 +315,18 @@ struct Serve: ParsableCommand {
                 break
             }
             return controller.handle(message)
+        }
+        controller.onChange = { [weak server] state in
+            server?.sendMenu(state)
+            let line = state.line.map { "\($0.buffer)|" } ?? ""
+            if state.visible {
+                let items = state.items.prefix(5).enumerated()
+                    .map { ($0.offset == state.selected ? ">" : " ") + $0.element.name }
+                print("popup [\(line)] " + items.joined(separator: " "))
+            } else {
+                print("hidden [\(line)]")
+            }
+            fflush(stdout)
         }
         try server.start()
         print("listening on \(socket)")

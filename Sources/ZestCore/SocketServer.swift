@@ -19,6 +19,8 @@ public final class SocketServer: @unchecked Sendable {
     public let path: String
     private let handler: @Sendable (ShellProtocol.Message) -> ShellProtocol.Reply?
     private var listener: Int32 = -1
+    private let clientsLock = NSLock()
+    private var clients: [String: Client] = [:]
 
     public init(path: String, handler: @escaping @Sendable (ShellProtocol.Message) -> ShellProtocol.Reply?) {
         self.path = path
@@ -72,6 +74,55 @@ public final class SocketServer: @unchecked Sendable {
         unlink(path)
     }
 
+    /// 异步生成器与按键回复共用一个串行写入队列，避免协议消息相互穿插。
+    public func sendMenu(_ state: CompletionController.State) {
+        guard state.terminalMenu else { return }
+        clientsLock.lock()
+        let client = clients[state.session]
+        clientsLock.unlock()
+        client?.send(TerminalMenu.format(state))
+    }
+
+    private final class Client: @unchecked Sendable {
+        let fd: Int32
+        private let writer = DispatchQueue(label: "zest.socket.write")
+        private var canWrite = true
+
+        init(_ fd: Int32) {
+            self.fd = fd
+            // 不读取结果的 Shell 不能阻塞其他会话或无限积压写入任务。
+            var timeout = timeval(tv_sec: 0, tv_usec: 100_000)
+            setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &timeout, socklen_t(MemoryLayout<timeval>.size))
+        }
+
+        func send(_ text: String) {
+            writer.async { [self] in
+                guard canWrite else { return }
+                let bytes = Array(text.utf8)
+                bytes.withUnsafeBytes { raw in
+                    var offset = 0
+                    while offset < raw.count {
+                        let n = Darwin.write(fd, raw.baseAddress!.advanced(by: offset), raw.count - offset)
+                        if n < 0, errno == EINTR { continue }
+                        guard n > 0 else {
+                            canWrite = false
+                            shutdown(fd, SHUT_RDWR)
+                            return
+                        }
+                        offset += n
+                    }
+                }
+            }
+        }
+
+        func close() {
+            writer.sync {
+                canWrite = false
+                Darwin.close(fd)
+            }
+        }
+    }
+
     private func acceptLoop(_ fd: Int32) {
         while true {
             let client = accept(fd, nil, nil)
@@ -89,9 +140,13 @@ public final class SocketServer: @unchecked Sendable {
     }
 
     private func serve(_ fd: Int32) {
+        let client = Client(fd)
         var session: String?
         defer {
-            close(fd)
+            clientsLock.lock()
+            if let session, clients[session] === client { clients[session] = nil }
+            clientsLock.unlock()
+            client.close()
             if let session { _ = handler(.disconnected(session: session)) }
         }
         var pending = [UInt8]()
@@ -104,12 +159,17 @@ public final class SocketServer: @unchecked Sendable {
                 let line = String(decoding: pending[0..<newline], as: UTF8.self)
                 pending.removeSubrange(0...newline)
                 guard let message = ShellProtocol.parse(Substring(line)) else { continue }
-                if case .hello(let id, _, _, _) = message { session = id }
+                if case .hello(let id, _, _, _) = message {
+                    clientsLock.lock()
+                    if let session, clients[session] === client { clients[session] = nil }
+                    session = id
+                    clients[id] = client
+                    clientsLock.unlock()
+                }
                 let reply = handler(message)
                 if case .key(let sequence, _, _) = message {
                     let text = ShellProtocol.format(reply ?? .pass, sequence: sequence)
-                    let bytes = Array(text.utf8)
-                    _ = bytes.withUnsafeBytes { write(fd, $0.baseAddress, $0.count) }
+                    client.send(text)
                 }
             }
             // A runaway client must not grow memory without bound.

@@ -1,0 +1,6 @@
+name: zest-delayed
+description: 验证异步候选可以在停止输入后更新
+args:
+  name: value
+  generators:
+    script: "sleep 0.2; printf 'late-result\\n'"

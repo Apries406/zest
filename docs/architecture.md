@@ -57,12 +57,14 @@ One message per line. Fields are separated by `U+001F`; newlines inside the comm
 | --- | --- | --- |
 | zsh | `hello` | session id, shell pid, terminal bundle id (or `$TERM_PROGRAM`), history file |
 | zsh | `aliases` | session id, `name=value`… |
+| zsh | `terminal` | session id；由 Shell 显示此会话的文本列表 |
 | zsh | `line` | session id, folder, cursor, line |
 | zsh | `key` | sequence number, `tab`/`up`/`down`/`enter`/`escape`, session id, folder, cursor, line |
 | zsh | `end` | session id (the line was run or cancelled) |
 | zsh | `exec` | session id, command (for history suggestions) |
 | zsh | `pos` | session id, row, column, rows, columns, cursor index at that moment (Ghostty only) |
 | app | `r` | sequence number, `pass` / `ok` / `set`, [cursor, line] — the answer to `key` |
+| app | `menu` | session id、光标索引、选中索引、行数、各行候选文本、命令行原文 |
 
 The socket file is created with mode `0600` in a folder only you can read.
 
@@ -103,11 +105,18 @@ The socket file is created with mode `0600` in a folder only you can read.
   open it checks the terminal window 20 times a second: it follows the window when it moves, and
   closes when the window closes or another window comes to the front. In Ghostty a resize closes it
   until the next key, since the text reflows and only the shell can say where the line went.
-  Zed / Wu 未暴露终端光标时，使用当前窗口与屏幕可见区域的交集，将列表放在右下角并为状态栏留出空间；
-  窗口过小时缩小列表。此降级不推测终端面板的边界，不将整个编辑器窗口当成终端网格。
-  `$TERM_PROGRAM=zed` 仅匹配 Zed 的正式、Preview、Nightly、Dev 版本及 Wu，不向其他应用显示列表。
 - **`Updater`** checks GitHub Releases once a day. Before installing it verifies the SHA-256 checksum
   and that the new app is signed with the same certificate as the running one.
+
+## Zed / Wu 终端文本列表
+
+Shell 在连接后发送 `terminal<分隔符>session`，将此会话切换到终端渲染模式；原生弹窗不再显示。
+`SocketServer.sendMenu` 把引擎状态（包括异步生成器更新）发回对应会话。每条 `menu` 消息包含
+session、光标索引、列表内选中索引、行数、至多 5 行候选文本，以及最后的命令行原文。
+候选文本会移除控制字符；命令行仍按原协议编码换行。Shell 拒绝与当前输入不匹配的迟到快照，
+通过 `zle -F` 接收更新、`zle -M` 在编辑缓冲区下方显示，并按终端显示宽度截断文本。
+候选项不写入命令行，也不进入历史；Tab 等按键仍由原有控制器决定。
+每个连接的列表推送与按键回复共用串行写入队列，写入失败会断开该连接，避免阻塞其他会话。
 
 ## Files
 
