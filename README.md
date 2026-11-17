@@ -43,8 +43,11 @@ small native app instead of a web view with a terminal proxy in front of every s
 
 - macOS 14 Sonoma or later, on Apple silicon (M1 or newer)
 - **zsh**, the default macOS shell. bash and fish are not supported.
-- Terminal.app, iTerm2, Ghostty, VS Code or Cursor. Other terminals work if they report the text
-  cursor through macOS Accessibility.
+- 终端：Terminal.app、iTerm2、Ghostty、VS Code、Cursor，以及 Zed / Wu 内置终端。
+  其他终端需通过 macOS 辅助功能接口提供光标位置。
+
+Zed / Wu 未提供终端光标的辅助功能信息时，补全列表固定显示在当前窗口右下角，不跟随光标；
+能读取光标位置时仍使用原有定位方式。`zest doctor` 检查的是 Shell 接入状态，全部通过不代表编辑器提供了光标位置。
 
 ## Install
 

@@ -103,6 +103,9 @@ The socket file is created with mode `0600` in a folder only you can read.
   open it checks the terminal window 20 times a second: it follows the window when it moves, and
   closes when the window closes or another window comes to the front. In Ghostty a resize closes it
   until the next key, since the text reflows and only the shell can say where the line went.
+  Zed / Wu 未暴露终端光标时，使用当前窗口与屏幕可见区域的交集，将列表放在右下角并为状态栏留出空间；
+  窗口过小时缩小列表。此降级不推测终端面板的边界，不将整个编辑器窗口当成终端网格。
+  `$TERM_PROGRAM=zed` 仅匹配 Zed 的正式、Preview、Nightly、Dev 版本及 Wu，不向其他应用显示列表。
 - **`Updater`** checks GitHub Releases once a day. Before installing it verifies the SHA-256 checksum
   and that the new app is signed with the same certificate as the running one.
 

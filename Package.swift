@@ -45,5 +45,10 @@ let package = Package(
             dependencies: ["ZestCore"],
             resources: [.copy("Fixtures")]
         ),
+        .testTarget(
+            name: "ZestAppTests",
+            dependencies: ["ZestApp"],
+            swiftSettings: [.swiftLanguageMode(.v5)]
+        ),
     ]
 )
